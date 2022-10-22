@@ -5,12 +5,8 @@ stages:          # List of stages for jobs, and their order of execution
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
-  before_script:
-	- apt-get update
-	- apt-get install --yes xutils-dev gcc make flex bison graphviz
   script:
     - echo "Compiling the code..."
-	- make
     - echo "Compile complete."
 
 unit-test-job:   # This job runs in the test stage.
