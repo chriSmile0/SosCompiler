@@ -52,6 +52,9 @@ doc_m:
 	mv *.pdf doc 
 	-rm -f *.dot *.output
 
+test:
+	./bin/test $(ARGS) 
+
 clean:
 	-rm -r objs inc bin
 	-rm -f $(path_c).c $(dir_c)voc.c 
