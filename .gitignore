@@ -1,0 +1,8 @@
+.vscode
+/bin
+/inc
+/objs
+code/*_proj.c
+code/*voc.c
+*.dot
+*.output
