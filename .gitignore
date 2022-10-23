@@ -2,8 +2,7 @@
 /bin
 inc/*.tab.*
 /objs
-doc/*_proj.pdf
-code/*_proj.c
 code/*voc.c
 *.dot
 *.output
+docs/*_proj.pdf

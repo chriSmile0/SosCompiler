@@ -1,6 +1,6 @@
 dir_t=tests/
 dir_c=code/
-dir_d=doc/
+dir_d=docs/
 prefixe_t=tests_proj
 prefixe_c=code_proj
 obj=objs/
@@ -51,7 +51,7 @@ doc_m:
 		--graph=$(prefixe_c).dot --output=/dev/null \
 		$(path_c).y 
 	dot -Tpdf < $(prefixe_c).dot > $(prefixe_c).pdf
-	mv *.pdf doc 
+	mv *.pdf docs 
 	-rm -f *.dot *.output
 
 test:
