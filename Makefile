@@ -36,11 +36,11 @@ lex_bis:
 	$(CC) -c -o objs/main.o $(dir_c)main.c
 	$(CC) objs/*.tab.o objs/voc.o objs/main.o -o bin/main 
 	$(CC) -c -o objs/test.o $(dir_c)test.c
-	$(CC) objs/*.tab.o objs/voc.o objs/test.o -o bin/test
+	$(CC) $(dir_c)fct_tests.c $(inc)fct_tests.h  \
+		objs/*.tab.o objs/voc.o objs/test.o -o bin/test
 
 dir: # -commande pour ignorer les erreurs de la commande
 	-mkdir objs 2> /dev/null
-	-mkdir inc 2> /dev/null
 	-mkdir bin 2> /dev/null
 
 	
@@ -56,5 +56,5 @@ test:
 	./bin/test $(ARGS) 
 
 clean:
-	-rm -r objs inc bin
-	-rm -f $(path_c).c $(dir_c)voc.c 
+	-rm -r objs bin
+	-rm -f $(path_c).c $(dir_c)voc.c $(path_inc).tab.*

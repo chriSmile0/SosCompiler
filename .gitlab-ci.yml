@@ -20,7 +20,7 @@ unit-test-job:   # This job runs in the test stage.
     - apt-get update
     - apt-get install  --yes xutils-dev gcc make flex bison graphviz  
   script:
-    - make 
+    - make # peut-être inutile
     - echo "Running unit tests... This will take about 60 seconds."
     - make test ARGS=1
     - make test ARGS=2

@@ -1,24 +1,28 @@
 #include "../inc/code_proj.tab.h"
+#include "../inc/fct_tests.h"
 #include <stdio.h>
 #include <stdlib.h>
 extern int yylex();
 extern void yyerror();
 
 /**
- * @brief
+ * @brief Suite de fonctions de type_*_s()
+ * 		
+ * 
  * @param[:]
- * @return
+ * @return un entier qui est l'incrément de toutes les fonctions tests
 */
 
 int test_simple() {
 	printf("test simple\n");
-	/*int r;
-	r = yyparse();*/
-
 	/*
 		Insertion du code du test simple
+		Exemple de la structure de la fonction : 
+		int incr = 0;
+			incr+=test_nombres_s();
+			incr+=test_chaines_s();
+		return incr;
 	*/
-
 	return 0;
 }
 
@@ -31,14 +35,12 @@ int test_simple() {
 
 int test_median() {
 	printf("test median \n");
-	/*int r;
-	r = yyparse();*/
 
 	/*
 		Insertion du code du test median
+		Exemple test_nombres_m();
 	*/
-
-	return 1;
+	return 0;
 }
 
 
@@ -50,14 +52,11 @@ int test_median() {
 
 int test_difficile() {
 	printf("test difficile \n");
-	/*int r;
-	r = yyparse();*/
-
 	/*
 		Insertion du code du test difficile
+		Exemple test_nombres_d();
 	*/
-
-	return 1;
+	return 0;
 }
 
 int main(int argc, char *argv[]) {
