@@ -1,8 +1,8 @@
 .vscode
 /bin
-/inc
+inc/*.tab.*
 /objs
-code/*_proj.c
 code/*voc.c
 *.dot
 *.output
+docs/*_proj.pdf
