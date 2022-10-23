@@ -2,8 +2,7 @@
 #include "../inc/fct_tests.h"
 #include <stdio.h>
 #include <stdlib.h>
-extern int yylex();
-extern void yyerror();
+
 
 /**
  * @brief Suite de fonctions de type_*_s()
@@ -23,7 +22,7 @@ int test_simple() {
 			incr+=test_chaines_s();
 		return incr;
 	*/
-	return 0;
+	return test_motsreserves_s();
 }
 
 /**

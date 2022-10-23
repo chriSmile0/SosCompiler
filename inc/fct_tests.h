@@ -2,6 +2,11 @@
 #define FCT_TESTS_H
 
 #include "../inc/code_proj.tab.h"
+#include <stdio.h>
+#include <stdlib.h>
+extern int yylex();
+extern void yyerror();
+extern FILE *yyin;
 
 /**
  * @brief
@@ -9,7 +14,7 @@
  * @return
 */
 
-int test_nombres_s();
+int test_motsreserves_s();
 
 /**
  * @brief
@@ -17,7 +22,7 @@ int test_nombres_s();
  * @return
 */
 
-int test_nombres_m();
+int test_motsreserves_m();
 
 /**
  * @brief
@@ -25,6 +30,6 @@ int test_nombres_m();
  * @return
 */
 
-int test_nombres_d();
+int test_motsreserves_d();
 
 #endif // FCT_TESTS_H //
