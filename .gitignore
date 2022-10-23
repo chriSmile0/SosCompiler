@@ -1,8 +1,11 @@
+.DS_Store
 .vscode
-/bin
-inc/*.tab.*
-/objs
+bin
+code/test
+code/code_proj
 code/*voc.c
+docs/*_proj.pdf
+inc/*.tab.*
+objs/
 *.dot
 *.output
-docs/*_proj.pdf
