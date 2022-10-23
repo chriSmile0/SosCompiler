@@ -13,6 +13,9 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Compiling the code..."
     - make 
     - echo "Compile complete."
+  only:
+    - merge_requests
+  
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -26,6 +29,8 @@ unit-test-job:   # This job runs in the test stage.
     - make test ARGS=2
     - make test ARGS=3
     - echo "Tests are passed"
+  only:
+    - merge_requets
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -33,3 +38,5 @@ deploy-job:      # This job runs in the deploy stage.
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
+  only:
+    - merge_requests
