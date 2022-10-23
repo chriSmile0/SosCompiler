@@ -30,7 +30,7 @@ unit-test-job:   # This job runs in the test stage.
     - make test ARGS=3
     - echo "Tests are passed"
   only:
-    - merge_requets
+    - merge_requests
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
