@@ -9,25 +9,33 @@ extern void yyerror();
 extern FILE *yyin;
 
 /**
- * @brief
+ * @brief	Test sur un cas très simple 
+ * 			
  * @param[:]
- * @return
+ * 
+ * @return 0 si test valide sinon 1
 */
 
 int test_motsreserves_s();
 
 /**
- * @brief
+ * @brief	Test sur le fichier exemple1.sh 
+ * 
+ * 
  * @param[:]
- * @return
+ * @return 0 si test valide sinon 1
 */
 
 int test_motsreserves_m();
 
 /**
- * @brief
+ * @brief	Test sur certains cas d'erreur possibles 
+ * 			et de confusion qui pourrait tromper notre 
+ * 			analyseur lexical
+ * 
+ * 
  * @param[:]
- * @return
+ * @return 0 si test valide sinon 1
 */
 
 int test_motsreserves_d();

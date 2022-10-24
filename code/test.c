@@ -5,11 +5,13 @@
 
 
 /**
- * @brief Suite de fonctions de type_*_s()
- * 		
+ * @brief	Suite de fonctions de type_*_s()
+ * 			Chaque fonction ouvre le fichier *_s.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver 
  * 
  * @param[:]
- * @return un entier qui est l'incrément de toutes les fonctions tests
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 int test_simple() {
@@ -28,9 +30,13 @@ int test_simple() {
 }
 
 /**
- * @brief
+ * @brief 	Suite de fonctions de type_*_m()
+ * 			Chaque fonction ouvre le fichier exemple1.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver  
+ * 
  * @param[:]
- * @return 
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 
@@ -43,9 +49,13 @@ int test_median() {
 
 
 /**
- * @brief 
+ * @brief Suite de fonctions de type_*_d()
+ * 			Chaque fonction ouvre un fichier *_d.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver 
+ * 
  * @param[:]
- * @return 
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 int test_difficile() {
