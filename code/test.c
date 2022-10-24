@@ -55,7 +55,7 @@ int test_difficile() {
 		Insertion du code du test difficile
 		Exemple test_nombres_d();
 	*/
-	return 0;
+	return test_motsreserves_d();
 }
 
 int main(int argc, char *argv[]) {

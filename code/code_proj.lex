@@ -28,13 +28,13 @@ endline [\n]
 ^{espace}*exit{espace}+				return MR;
 ^{espace}*local{espace}+ 			return MR;
 ^{espace}*elif{espace}+ 			return MR;
-^{espace}*else({espace}+|{endline}) return MR;
+^{espace}*else{endline} 			return MR;
 ^{espace}*fi{espace};{endline}		return MR;
 ^{espace}*declare{espace}+			return MR;
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
 
-. {;}//fprintf(stderr, "Caractère (%c) ignoré (pour le moment)\n", yytext[0]);
+
 %%
 
 void yyerror(char * msg)

@@ -1,0 +1,27 @@
+# non autorisé 
+final;
+exit;
+done;
+iffi;
+iffi ;
+else echolo 
+	low
+
+fiif ;
+read;
+test 
+expr 
+return;
+
+###combinaison d'autorisation et de non autorisé
+##ici le ee en bout de ligne 
+if toto then else
+##ici le iN doit pas être en début de ligne 
+for mot 
+in 
+## mais la suite fonctionne (mais cela importe peu car yacc réglera cela
+for mot
+	in 
+
+##Attention aux mots reservés mis dans les commentaires comme par exemple 
+## in ou do ou expr ou test 
