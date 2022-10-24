@@ -9,8 +9,11 @@
 
 espace [ \t]
 endline [\n]
+com [#]
 
 %%
+
+
 
 ^{espace}*if{espace}+				return MR;
 {espace}+then({espace}+|{endline}) 	return MR;
@@ -34,6 +37,8 @@ endline [\n]
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
 
+{com}+.+{endline} 					; //bouchon pour passer test difficile
+. 									;
 
 %%
 

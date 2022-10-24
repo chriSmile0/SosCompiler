@@ -51,7 +51,6 @@ int test_motsreserves_d() {
 	int nb_mots_res_detectables = 5;
 	nb_mots_res_detectables *= MR;
 	while(t != 0) {
-		printf("t : %d, \n",t);
 		result_t += t;
 		t = yylex();
 	}

@@ -24,4 +24,8 @@ for mot
 	in 
 
 ##Attention aux mots reservés mis dans les commentaires comme par exemple 
-## in ou do ou expr ou test 
+## in ou do ou expr ou test qui sont les seuls possibles qui ferait échoué le test.
+
+#si commentaires est bien implémenté cela passe le test d'intégration 
+
+ 
