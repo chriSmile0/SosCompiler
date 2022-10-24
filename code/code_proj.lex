@@ -34,11 +34,11 @@ endline [\n]
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
 
-. fprintf(stderr, "Caractère (%c) ignoré (pour le moment)\n", yytext[0]);
+. {;}//fprintf(stderr, "Caractère (%c) ignoré (pour le moment)\n", yytext[0]);
 %%
 
 void yyerror(char * msg)
 {
 	fprintf(stderr," %s\n",msg);
-	exit(MR);
+	exit(1);
 }

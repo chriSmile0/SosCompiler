@@ -11,9 +11,4 @@ int main() {
 		printf("t : %d\n",t);
 		t = yylex();
 	}
-
-	/*int r;
-	r = yyparse();
-	printf("r : %d\n",r);*/
-	//yyerror("err");
 }

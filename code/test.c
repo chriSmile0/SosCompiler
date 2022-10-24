@@ -39,7 +39,7 @@ int test_median() {
 		Insertion du code du test median
 		Exemple test_nombres_m();
 	*/
-	return 0;
+	return test_motsreserves_m();
 }
 
 
