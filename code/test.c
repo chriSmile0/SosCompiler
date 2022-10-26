@@ -2,19 +2,22 @@
 #include "../inc/fct_tests.h"
 #include <stdio.h>
 #include <stdlib.h>
-extern int yylex();
-extern void yyerror();
+
 
 /**
- * @brief Suite de fonctions de type_*_s()
- * 		
+ * @brief	Suite de fonctions de type_*_s()
+ * 			Chaque fonction ouvre le fichier *_s.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver 
  * 
  * @param[:]
- * @return un entier qui est l'incrément de toutes les fonctions tests
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 int test_simple() {
 	printf("test simple\n");
+	int tests = 0;
+	tests += test_motsreserves_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction : 
@@ -23,40 +26,43 @@ int test_simple() {
 			incr+=test_chaines_s();
 		return incr;
 	*/
-	return 0;
+	return tests;
 }
 
 /**
- * @brief
+ * @brief 	Suite de fonctions de type_*_m()
+ * 			Chaque fonction ouvre le fichier exemple1.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver  
+ * 
  * @param[:]
- * @return 
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 
 int test_median() {
 	printf("test median \n");
-
-	/*
-		Insertion du code du test median
-		Exemple test_nombres_m();
-	*/
-	return 0;
+	int tests = 0;
+	tests += test_motsreserves_m();
+	return tests;
 }
 
 
 /**
- * @brief 
+ * @brief Suite de fonctions de type_*_d()
+ * 			Chaque fonction ouvre un fichier *_d.sh
+ * 			et check le type de tokens que l'on veut reconnaitre
+ * 			dans notre test ainsi que le bon nombre qui est censé s'y trouver 
+ * 
  * @param[:]
- * @return 
+ * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 
 int test_difficile() {
 	printf("test difficile \n");
-	/*
-		Insertion du code du test difficile
-		Exemple test_nombres_d();
-	*/
-	return 0;
+	int tests = 0;
+	tests += test_motsreserves_d();
+	return tests;
 }
 
 int main(int argc, char *argv[]) {

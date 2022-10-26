@@ -2,29 +2,42 @@
 #define FCT_TESTS_H
 
 #include "../inc/code_proj.tab.h"
+#include <stdio.h>
+#include <stdlib.h>
+extern int yylex();
+extern void yyerror();
+extern FILE *yyin;
 
 /**
- * @brief
+ * @brief	Test sur un cas très simple 
+ * 			
  * @param[:]
- * @return
+ * 
+ * @return 0 si test valide sinon 1
 */
 
-int test_nombres_s();
+int test_motsreserves_s();
 
 /**
- * @brief
+ * @brief	Test sur le fichier exemple1.sh 
+ * 
+ * 
  * @param[:]
- * @return
+ * @return 0 si test valide sinon 1
 */
 
-int test_nombres_m();
+int test_motsreserves_m();
 
 /**
- * @brief
+ * @brief	Test sur certains cas d'erreur possibles 
+ * 			et de confusion qui pourrait tromper notre 
+ * 			analyseur lexical
+ * 
+ * 
  * @param[:]
- * @return
+ * @return 0 si test valide sinon 1
 */
 
-int test_nombres_d();
+int test_motsreserves_d();
 
 #endif // FCT_TESTS_H //

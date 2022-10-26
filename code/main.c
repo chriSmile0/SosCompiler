@@ -4,8 +4,11 @@ extern int yylex();
 
 int main() {
 	printf("main\n");
-	int r;
-	r = yyparse();
-	printf("r : %d\n",r);
-	//yyerror("err");
+
+	int t;
+	t = yylex();
+	while(t != 0) {
+		printf("t : %d\n",t);
+		t = yylex();
+	}
 }
