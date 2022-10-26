@@ -2,7 +2,7 @@
 #include "tokens.h"
 
 int test_motsreserves_s() {
-	char *filename = "../fichiers_tests/motsreserves_s";
+	char *filename = "fichiers_tests/motsreserves_s";
 	yyin=fopen(filename,"r"); 
 	if(yyin==NULL)
 		perror(filename);
@@ -21,7 +21,7 @@ int test_motsreserves_s() {
 }
 
 int test_motsreserves_m() {
-	char *filename = "../exemple_sos/exemple1";
+	char *filename = "exemple_sos/exemple1";
 	yyin=fopen(filename,"r");
 	if(yyin==NULL)
 		perror(filename);
@@ -40,7 +40,7 @@ int test_motsreserves_m() {
 }
 
 int test_motsreserves_d() {
-	char *filename = "../fichiers_tests/motsreserves_d";
+	char *filename = "fichiers_tests/motsreserves_d";
 	yyin=fopen(filename,"r");
 	if(yyin==NULL)
 		perror(filename);
