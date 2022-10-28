@@ -1,0 +1,4 @@
+"une chaine" "deux chaines\n" #"commentaire"
+"test des backslash\"\""
+"\"\"\"\""
+"" #chaine vide

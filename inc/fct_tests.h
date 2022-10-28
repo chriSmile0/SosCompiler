@@ -40,4 +40,33 @@ int test_motsreserves_m();
 
 int test_motsreserves_d();
 
+/**
+ * @brief	Test sur un cas simple de chaine de caractères
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+*/
+int test_chainescarac_s();
+
+/**
+ * @brief	Test sur un cas plus compliqué de chaine de caractères
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+
+*/
+int test_chainescarac_m();
+
+/**
+ * @brief	Test sur certains cas d'erreur possibles 
+ * 			et de confusion qui pourrait tromper notre 
+ * 			analyseur lexical
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+*/
+int test_chainescarac_d();
 #endif // FCT_TESTS_H //

@@ -6,7 +6,7 @@
 %}
 
 %token MR
-
+%token CC
 %start liste
 
 
