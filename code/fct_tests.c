@@ -71,7 +71,7 @@ int test_chainescarac_s() {
 	while ((t = yylex()) != 0){
 		result_t += (t == CC ? 1 : 0);
 	}
-	fprintf(stderr, "nombre de string detectés (s): %i (attendu : %i)\n", result_t, res_att);
+	fprintf(stderr, "nombre de string detectés(s): %i (attendu : %i)\n", result_t, res_att);
 	fclose(yyin);
 	return (result_t == res_att ? 0 : 1);
 
@@ -79,23 +79,6 @@ int test_chainescarac_s() {
 
 
 int test_chainescarac_m() {
-	char *filename = "fichiers_tests/chainescarac_m";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int result_t = 0;
-	//5 chaines dans le fichier chainescarac_m
-	int res_att = 5;
-	while ((t = yylex()) != 0){
-		result_t += (t == CC ? 1 : 0);
-	}
-	fprintf(stderr, "nombre de string detectés (m): %i (attendu : %i)\n", result_t, res_att);
-	fclose(yyin);
-	return (result_t == res_att ? 0 : 1);
-}
-
-int test_chainescarac_d() {
 	char *filename = "exemple_sos/exemple1";
 	yyin = fopen(filename, "r");
 	if (yyin == NULL)
@@ -107,7 +90,24 @@ int test_chainescarac_d() {
 	while ((t = yylex()) != 0){
 		result_t += (t == CC ? 1 : 0);
 	}
-	fprintf(stderr, "nombre de string detectés (d) : %i (attendu : %i)\n", result_t, res_att);
+	fprintf(stderr, "nombre de string detectés(m): %i (attendu : %i)\n", result_t, res_att);
+	fclose(yyin);
+	return (result_t == res_att ? 0 : 1);
+}
+
+int test_chainescarac_d() {
+	char *filename = "fichiers_tests/chainescarac_d";
+	yyin = fopen(filename, "r");
+	if (yyin == NULL)
+		perror(filename);
+	int t;
+	int result_t = 0;
+	//8 chaines dans le fichier chainescarac_d
+	int res_att = 8;
+	while ((t = yylex()) != 0){
+		result_t += (t == CC ? 1 : 0);
+	}
+	fprintf(stderr, "nombre de string detectés(d) : %i (attendu : %i)\n", result_t, res_att);
 	fclose(yyin);
 	return (result_t == res_att ? 0 : 1);
 }

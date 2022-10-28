@@ -1,0 +1,7 @@
+"une chaine" "deux chaines\n"			#2 chaines
+"test des backslash\"\""			#1 chaine
+"\"\"\"\""					#1 chaine
+"" 						#1 chaine
+''						#1 chaine
+'""'						#1 chaine
+'\'\'"\'"' 					#1 chaine
