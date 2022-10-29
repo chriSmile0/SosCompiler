@@ -13,8 +13,6 @@ com [#]
 
 %%
 
-
-
 ^{espace}*if{espace}+				return MR;
 {espace}+then({espace}+|{endline}) 	return MR;
 ^{espace}*for{espace}+				return MR;

@@ -13,14 +13,13 @@
  * @param[:]
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
-
-int test_simple() {
+int test_simple(){
 	printf("test simple\n");
 	int tests = 0;
-	tests += test_motsreserves_s();
+	tests += test_commentaires_s();
 	/*
 		Insertion du code du test simple
-		Exemple de la structure de la fonction : 
+		Exemple de la structure de la fonction :
 		int incr = 0;
 			incr+=test_nombres_s();
 			incr+=test_chaines_s();
@@ -38,12 +37,14 @@ int test_simple() {
  * @param[:]
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
-
-
-int test_median() {
+int test_median(){
 	printf("test median \n");
 	int tests = 0;
-	tests += test_motsreserves_m();
+	tests += test_commentaires_m();
+	/*
+		Insertion du code du test median
+		Exemple test_nombres_m();
+	*/
 	return tests;
 }
 
@@ -57,11 +58,14 @@ int test_median() {
  * @param[:]
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
-
-int test_difficile() {
+int test_difficile(){
 	printf("test difficile \n");
 	int tests = 0;
-	tests += test_motsreserves_d();
+	tests += test_commentaires_d();
+	/*
+		Insertion du code du test difficile
+		Exemple test_nombres_d();
+	*/
 	return tests;
 }
 
@@ -72,7 +76,7 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr,"format : %s {1,2,3}\n",argv[0]);
 		return 1;
 	}
-	int (*test_F[3])() = {test_simple,test_median,test_difficile};
+	int (*test_F[3])() = {test_simple, test_median, test_difficile};
 
 	int niveau_test = atoi(argv[1]);
 	printf("Test de niveau de rang : %d\n",niveau_test);

@@ -17,7 +17,7 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 LEX = flex
 BIS = bison
-LXFLAGS = # -d for debug for example // flexflags
+LXFLAGS = # -d for debug for example # flex flags
 BFLAGS = -t -d # bison flags
 
 # exige 3 fichiers:
@@ -32,32 +32,33 @@ BFLAGS = -t -d # bison flags
 
 all: dir lex_bis
 
-lex_bis: 
+lex_bis:
 	$(BIS) $(BFLAGS) $(path_code).y -o $(path_inc).tab.c
 	$(CC) -c -o $(dir_objs)$(prefixe_code).tab.o $(path_inc).tab.c
-	$(LEX) $(LXFLAGS) -o $(dir_code)voc.c $(path_code).lex 
+	$(LEX) $(LXFLAGS) -o $(dir_code)voc.c $(path_code).lex
 	$(CC) -c -o $(dir_objs)voc.o $(dir_code)voc.c
 	$(CC) -c -o $(dir_objs)main.o $(dir_code)main.c
-	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)main.o -o $(dir_bin)main 
+	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)main.o -o \
+		$(dir_bin)main
 	$(CC) -c -o $(dir_objs)test.o $(dir_code)test.c
 	$(CC) -c -o $(dir_objs)fct_tests.o $(dir_code)fct_tests.c
-	$(CC) $(dir_objs)fct_tests.o $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)test.o -o $(dir_bin)test
+	$(CC) $(dir_objs)fct_tests.o $(dir_objs)*.tab.o $(dir_objs)voc.o \
+		$(dir_objs)test.o -o $(dir_bin)test
 
 dir: # -commande pour ignorer les erreurs de la commande
 	-mkdir $(dir_objs) 2> /dev/null
 	-mkdir $(dir_bin) 2> /dev/null
 
-	
 doc_m:
 	bison --report=all --report-file=$(prefixe_code).output \
 		--graph=$(prefixe_code).dot --output=/dev/null \
-		$(path_code).y 
+		$(path_code).y
 	dot -Tpdf < $(prefixe_code).dot > $(prefixe_code).pdf
-	mv *.pdf docs 
+	mv *.pdf docs
 	-rm -f *.dot *.output
 
 test:
-	./bin/test $(ARGS) 
+	./bin/test $(ARGS)
 
 clean:
 	-rm -r $(dir_objs) bin
