@@ -5,7 +5,7 @@
 	extern FILE *yyin;
 %}
 
-%token MR
+%token MR COM
 
 %start liste
 

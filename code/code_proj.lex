@@ -35,7 +35,7 @@ com [#]
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
 
-{com}+.+{endline} 					; //bouchon pour passer test difficile
+{com}+.+{endline} 					return COM; //bouchon pour passer test difficile
 . 									;
 
 %%

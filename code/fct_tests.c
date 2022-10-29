@@ -60,10 +60,9 @@ int test_motsreserves_d() {
 
 int test_commentaires(char* chemin_fichier_test, int attendu){
 	char* filename = chemin_fichier_test;
-	yyin = fopen(filename,"r"); 
+	yyin = fopen(filename,"r");
 	if (yyin == NULL){
 		perror(filename);
-		
 	}
 
 	int t;
@@ -71,7 +70,7 @@ int test_commentaires(char* chemin_fichier_test, int attendu){
 	int nbr_comm = 0;
 
 	while (t != 0){
-		nbr_comm += t;
+		nbr_comm += (t == COM ? 1 : 0);
 		t = yylex();
 	}
 
