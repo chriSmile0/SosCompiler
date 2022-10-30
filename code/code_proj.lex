@@ -42,7 +42,7 @@ com [#]
 \'(\\.|[^\\\'])*\'				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {com}+.*{endline}					;
-. 									;
+. 						return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
 
@@ -55,5 +55,21 @@ int yyerror(char * msg)
 
 bool checkAscii(char * str, bool com)
 {
+	if (com)	// Si on est dans une chaine de caractère
+		str[strlen(str)-2] = '\0';	// On enlève le dernier guillemet
+	while(*str != '\0')
+	{
+		if(*str < 32 || *str > 126)
+			return false;
+		if(*str == '\"' || *str == '\'')
+			return false;
+		if(*str == '\\')
+		{
+			str++;
+			if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+				return false;
+		}
+		str++;
+	}
 	return true;
 }
