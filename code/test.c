@@ -18,6 +18,7 @@ int test_simple() {
 	printf("test simple\n");
 	int tests = 0;
 	tests += test_chainescarac_s();
+	tests += test_ascii_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction : 
@@ -44,6 +45,7 @@ int test_median() {
 	printf("test median \n");
 	int tests = 0;
 	tests += test_chainescarac_m();
+	tests += test_ascii_m();
 	return tests;
 }
 
@@ -62,6 +64,7 @@ int test_difficile() {
 	printf("test difficile \n");
 	int tests = 0;
 	tests += test_chainescarac_d();
+	tests += test_ascii_d();
 	return tests;
 }
 

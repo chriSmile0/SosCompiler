@@ -7,6 +7,7 @@
 	#include <stdbool.h>
 	int yyerror(char * msg);
 	bool checkAscii(char * str, bool com);
+	bool testAscii;
 %}
 
 espace [ \t]
@@ -50,12 +51,18 @@ com [#]
 int yyerror(char * msg)
 {
 	fprintf(stderr," %s\n",msg);
-	exit(1);
 	return 1;
 }
 
 bool checkAscii(char * str, bool com)
 {
+	bool b = testAscii;
+	testAscii = false;
+	if (b && !com)
+		if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+			return false;
+	if (b && com)
+			return false;
 	if (com)	// Si on est dans une chaine de caractère
 		str[strlen(str)-1] = '\0';	// On enlève le dernier guillemet
 	while(*str != '\0')
@@ -66,9 +73,14 @@ bool checkAscii(char * str, bool com)
 			return false;
 		if(*str == '\\')
 		{
-			str++;
-			if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
-				return false;
+			if (com)
+			{
+				str++;
+				if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+					return false;
+			}
+			else
+				testAscii = true;
 		}
 		str++;
 	}

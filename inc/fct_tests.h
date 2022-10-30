@@ -69,4 +69,32 @@ int test_chainescarac_m();
  * @return 0 si test valide sinon 1
 */
 int test_chainescarac_d();
+
+/**
+ * @brief	Test sur des characteres ascii valide
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+*/
+int test_ascii_s();
+
+/**
+ * @brief	Test sur un fichier SOS
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+*/
+int test_ascii_m();
+
+
+/**
+ * @brief	Test sur des characteres ascii invalide
+ * 
+ * 
+ * @param[:]
+ * @return 0 si test valide sinon 1
+*/
+int test_ascii_d();
 #endif // FCT_TESTS_H //
