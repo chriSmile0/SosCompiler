@@ -4,7 +4,9 @@
 	#include "../inc/code_proj.tab.h"
 	#include "tokens.h"
 	#include <stdlib.h>
-	void yyerror(char * msg);
+	#include <stdbool.h>
+	int yyerror(char * msg);
+	bool checkAscii(char * str, bool com);
 %}
 
 espace [ \t]
@@ -36,16 +38,22 @@ com [#]
 ^{espace}*declare{espace}+			return MR;
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
-\"(\\.|[^\\\"])*\"				return CC;
-\'(\\.|[^\\\'])*\'				return CC;
+\"(\\.|[^\\\"])*\"				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\'(\\.|[^\\\'])*\'				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {com}+.*{endline}					;
 . 									;
 
 %%
 
-void yyerror(char * msg)
+int yyerror(char * msg)
 {
 	fprintf(stderr," %s\n",msg);
 	exit(1);
+	return 1;
+}
+
+bool checkAscii(char * str, bool com)
+{
+	return true;
 }
