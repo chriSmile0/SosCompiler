@@ -3,5 +3,5 @@
 "\"\"\"\""					#1 chaine
 "" 						#1 chaine
 ''						#1 chaine
-'""'						#1 chaine
-'\'\'"\'"' 					#1 chaine
+'\"\"'						#1 chaine
+'\'\'\"\'\"'					#1 chaine
