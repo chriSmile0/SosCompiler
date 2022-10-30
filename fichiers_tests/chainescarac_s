@@ -1,0 +1,3 @@
+echo "cas simple de chaine";
+i = "";
+new phrase = "bonjour\t\n";

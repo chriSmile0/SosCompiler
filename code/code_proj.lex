@@ -32,12 +32,14 @@ com [#]
 ^{espace}*local{espace}+ 			return MR;
 ^{espace}*elif{espace}+ 			return MR;
 ^{espace}*else{endline} 			return MR;
-^{espace}*fi{espace};{endline}		return MR;
+^{espace}*fi{espace};{endline}			return MR;
 ^{espace}*declare{espace}+			return MR;
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
+\"(\\.|[^\\\"])*\"				return CC;
+\'(\\.|[^\\\'])*\'				return CC;
 
-{com}+.+{endline} 					; //bouchon pour passer test difficile
+{com}+.*{endline}					;
 . 									;
 
 %%
