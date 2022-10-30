@@ -111,3 +111,45 @@ int test_chainescarac_d() {
 	fclose(yyin);
 	return (result_t == res_att ? 0 : 1);
 }
+
+int test_ascii_s() {
+	char *filename = "fichiers_tests/ascii_s";
+	yyin = fopen(filename, "r");
+	if (yyin == NULL)
+		perror(filename);
+	int t;
+	while ((t = yylex()) != 0){
+		if (t != CC && t != CHAR)
+			return 1;
+	}
+	fclose(yyin);
+	return 0;
+}
+
+int test_ascii_m() {
+	char *filename = "exemple_sos/exemple1";
+	yyin = fopen(filename, "r");
+	if (yyin == NULL)
+		perror(filename);
+	int t;
+	while ((t = yylex()) != 0){
+		if (t == -1)
+			return 1;
+	}
+	fclose(yyin);
+	return 0;
+}
+
+int test_ascii_d() {
+	char *filename = "fichiers_tests/ascii_d";
+	yyin = fopen(filename, "r");
+	if (yyin == NULL)
+		perror(filename);
+	int t;
+	while ((t = yylex()) != 0){
+		if (t == 1)
+			return 0;
+	}
+	fclose(yyin);
+	return 1;
+}

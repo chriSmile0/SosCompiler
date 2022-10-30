@@ -4,7 +4,10 @@
 	#include "../inc/code_proj.tab.h"
 	#include "tokens.h"
 	#include <stdlib.h>
-	void yyerror(char * msg);
+	#include <stdbool.h>
+	int yyerror(char * msg);
+	bool checkAscii(char * str, bool com);
+	bool testAscii;
 %}
 
 espace [ \t]
@@ -36,16 +39,50 @@ com [#]
 ^{espace}*declare{espace}+			return MR;
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
-\"(\\.|[^\\\"])*\"				return CC;
-\'(\\.|[^\\\'])*\'				return CC;
+\"(\\.|[^\\\"])*\"				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\'(\\.|[^\\\'])*\'				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {com}+.*{endline}					;
-. 									;
+({espace}|{endline})*				;
+. 						return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
 
-void yyerror(char * msg)
+int yyerror(char * msg)
 {
 	fprintf(stderr," %s\n",msg);
-	exit(1);
+	return 1;
+}
+
+bool checkAscii(char * str, bool com)
+{
+	bool b = testAscii;
+	testAscii = false;
+	if (b && !com)
+		if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+			return false;
+	if (b && com)
+			return false;
+	if (com)	// Si on est dans une chaine de caractère
+		str[strlen(str)-1] = '\0';	// On enlève le dernier guillemet
+	while(*str != '\0')
+	{
+		if(*str < 32 || *str > 126)
+			return false;
+		if(*str == '\"' || *str == '\'')
+			return false;
+		if(*str == '\\')
+		{
+			if (com)
+			{
+				str++;
+				if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+					return false;
+			}
+			else
+				testAscii = true;
+		}
+		str++;
+	}
+	return true;
 }

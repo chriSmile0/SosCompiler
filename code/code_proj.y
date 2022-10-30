@@ -7,6 +7,7 @@
 
 %token MR
 %token CC
+%token CHAR
 %start liste
 
 
