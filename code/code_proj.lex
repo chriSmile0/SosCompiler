@@ -33,17 +33,16 @@ com [#]
 ^{espace}*local{espace}+ 			return MR;
 ^{espace}*elif{espace}+ 			return MR;
 ^{espace}*else{endline} 			return MR;
-^{espace}*fi{espace};{endline}			return MR;
+^{espace}*fi{espace};{endline}		return MR;
 ^{espace}*declare{espace}+			return MR;
 {espace}+test{espace}+				return MR;
 {espace}+expr{espace}+				return MR;
-\"(\\.|[^\\\"])*\"				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {com}+.*{endline}					return COM;
 ({espace}|{endline})*				;
-. 						return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
-
+. 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
 
@@ -58,28 +57,28 @@ bool checkAscii(char * str, bool com)
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
-		if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+		if(!(*str == '\"' || *str == '\'' || *str == '\\' 
+			|| *str == 't' || *str == 'n'))
 			return false;
 	if (b && com)
 			return false;
 	if (com)	// Si on est dans une chaine de caractère
 		str[strlen(str)-1] = '\0';	// On enlève le dernier guillemet
-	while(*str != '\0')
-	{
-		if(*str < 32 || *str > 126)
+	while (*str != '\0') {
+		if (*str < 32 || *str > 126)
 			return false;
-		if(*str == '\"' || *str == '\'')
+		if (*str == '\"' || *str == '\'')
 			return false;
-		if(*str == '\\')
-		{
-			if (com)
-			{
+		if (*str == '\\') {
+			if (com) {
 				str++;
-				if(!(*str == '\"' || *str == '\'' || *str == '\\' || *str == 't' || *str == 'n'))
+				if (!(*str == '\"' || *str == '\'' || *str == '\\' 
+					|| *str == 't' || *str == 'n'))
 					return false;
 			}
-			else
+			else {
 				testAscii = true;
+			}
 		}
 		str++;
 	}

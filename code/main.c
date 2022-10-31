@@ -4,11 +4,7 @@ extern int yylex();
 
 int main() {
 	printf("main\n");
-
 	int t;
-	t = yylex();
-	while(t != 0) {
+	while ((t = yylex()) != 0) 
 		printf("t : %d\n",t);
-		t = yylex();
-	}
 }

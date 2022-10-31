@@ -16,7 +16,7 @@ extern FILE *yyin;
  * @return 0 si test valide sinon 1
 */
 
-int test_motsreserves_s();
+int test_motsreserves_s(void);
 
 /**
  * @brief	Test sur le fichier exemple1.sh 
@@ -26,7 +26,7 @@ int test_motsreserves_s();
  * @return 0 si test valide sinon 1
 */
 
-int test_motsreserves_m();
+int test_motsreserves_m(void);
 
 /**
  * @brief	Test sur certains cas d'erreur possibles 
@@ -37,7 +37,7 @@ int test_motsreserves_m();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_motsreserves_d();
+int test_motsreserves_d(void);
 
 /**
  * @brief	Test sur un cas simple de chaine de caractères
@@ -46,7 +46,7 @@ int test_motsreserves_d();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_chainescarac_s();
+int test_chainescarac_s(void);
 
 /**
  * @brief	Test sur un cas plus compliqué de chaine de caractères
@@ -56,7 +56,7 @@ int test_chainescarac_s();
  * @return 0 si test valide sinon 1
 
 */
-int test_chainescarac_m();
+int test_chainescarac_m(void);
 
 /**
  * @brief	Test sur certains cas d'erreur possibles 
@@ -67,7 +67,7 @@ int test_chainescarac_m();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_chainescarac_d();
+int test_chainescarac_d(void);
 
 /**
  * @brief	Test sur des characteres ascii valide
@@ -76,7 +76,7 @@ int test_chainescarac_d();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_ascii_s();
+int test_ascii_s(void);
 
 /**
  * @brief	Test sur un fichier SOS
@@ -85,7 +85,7 @@ int test_ascii_s();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_ascii_m();
+int test_ascii_m(void);
 
 
 /**
@@ -95,7 +95,7 @@ int test_ascii_m();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_ascii_d();
+int test_ascii_d(void);
 
 /**
  * @brief	Fonction de test générale
