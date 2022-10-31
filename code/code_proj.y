@@ -8,6 +8,8 @@
 %token MR
 %token CC
 %token CHAR
+%token COM
+
 %start liste
 
 

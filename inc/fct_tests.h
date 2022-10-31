@@ -37,7 +37,6 @@ int test_motsreserves_m();
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-
 int test_motsreserves_d();
 
 /**
@@ -97,4 +96,37 @@ int test_ascii_m();
  * @return 0 si test valide sinon 1
 */
 int test_ascii_d();
+
+/**
+ * @brief	Fonction de test générale
+ * 
+ * @param chemin_fichier_test chemin vers le fichier "sh" de test
+ * @param attendu nombre d'occurences de commentaire à trouver
+ * 
+ * @return 0 si test valide sinon 1
+*/
+int test_commentaires(char* chemin_fichier_test, int attendu);
+
+/**
+ * @brief	Test sur un cas simple (que des lettres)
+ * 
+ * @return 0 si test valide sinon 1
+*/
+int test_commentaires_s(void);
+
+/**
+ * @brief	Test sur un cas avec des accents
+ * 
+ * @return 0 si test valide sinon 1
+*/
+int test_commentaires_m(void);
+
+/**
+ * @brief	Test sur un cas avec des accents et des espaces directement après le
+ * 			symbole de commentaire
+ * 
+ * @return 0 si test valide sinon 1
+*/
+int test_commentaires_d(void);
+
 #endif // FCT_TESTS_H //

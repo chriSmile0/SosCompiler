@@ -16,8 +16,6 @@ com [#]
 
 %%
 
-
-
 ^{espace}*if{espace}+				return MR;
 {espace}+then({espace}+|{endline}) 	return MR;
 ^{espace}*for{espace}+				return MR;
@@ -42,9 +40,10 @@ com [#]
 \"(\\.|[^\\\"])*\"				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'				return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
-{com}+.*{endline}					;
+{com}+.*{endline}					return COM;
 ({espace}|{endline})*				;
 . 						return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
+
 
 %%
 

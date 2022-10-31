@@ -153,3 +153,35 @@ int test_ascii_d() {
 	fclose(yyin);
 	return 1;
 }
+
+int test_commentaires(char* chemin_fichier_test, int attendu){
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL){
+		perror(filename);
+	}
+
+	int t;
+	t = yylex();
+	int nbr_comm = 0;
+
+	while (t != 0){
+		nbr_comm += (t == COM ? 1 : 0);
+		t = yylex();
+	}
+
+	fclose(yyin);
+	return (nbr_comm == attendu) ? 0 : 1;
+}
+
+int test_commentaires_s(){
+	return test_commentaires("fichiers_tests/facile.sh", 3);
+}
+
+int test_commentaires_m(){
+	return test_commentaires("fichiers_tests/moyen.sh", 3);
+}
+
+int test_commentaires_d(){
+	return test_commentaires("fichiers_tests/difficile.sh", 4);
+}

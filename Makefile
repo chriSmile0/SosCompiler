@@ -57,7 +57,7 @@ doc_m:
 	mv *.pdf docs
 	-rm -f *.dot *.output
 
-test: all
+test:
 	./bin/test $(ARGS)
 
 clean:
