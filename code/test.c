@@ -19,6 +19,7 @@ int test_simple() {
 	tests += test_chainescarac_s();
 	tests += test_ascii_s();
 	tests += test_commentaires_s();
+	tests += test_nombres_s();
 	//tests += test_motsreserves_s();
 	/*
 		Insertion du code du test simple
@@ -46,6 +47,7 @@ int test_median() {
 	tests += test_chainescarac_m();
 	tests += test_ascii_m();
 	tests += test_commentaires_m();
+	tests += test_nombres_m();
 	//tests += test_motsreserves_m();
 	/*
 		Insertion du code du test median
@@ -70,6 +72,7 @@ int test_difficile() {
 	tests += test_chainescarac_d();
 	tests += test_ascii_d();
 	tests += test_commentaires_d();
+	tests += test_nombres_d();
 	//tests += test_motsreserves_d();
 	/*
 		Insertion du code du test difficile

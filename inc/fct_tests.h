@@ -129,4 +129,41 @@ int test_commentaires_m(void);
 */
 int test_commentaires_d(void);
 
+/**
+ * @brief 	Fonction de test générale
+ * 
+ * @param chemin_fichier_test chemin vers le fichier de test
+ * @param attendu nombre d'occurences de nombres à trouver
+ * 
+ * @return 0 si test valide sinon 1
+*/
+
+int test_nombres(char* chemin_fichier_test, int attendu);
+
+/**
+ * @brief	Test sur un cas très basique
+ * 
+ * @return 0 si test valide sinon 1
+*/
+
+int test_nombres_s(void);
+
+/**
+ * @brief	Test sur notre fichier exemple1 
+ * 			qui contient un certain nombres de nombres
+ * 
+ * @return 0 si test valide sinon 1
+*/
+
+int test_nombres_m(void);
+
+/**
+ * @brief	Test sur un fichier qui contient des nombres
+ * 			négatifs et positifs plus ou moins grand 
+ * 
+ * @return 0 si test valide sinon 1
+*/
+
+int test_nombres_d(void);
+
 #endif // FCT_TESTS_H //
