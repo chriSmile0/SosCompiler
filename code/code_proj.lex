@@ -42,7 +42,7 @@ digit [0-9]
 \"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
--?{digit}+							return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
+{digit}+							return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
 
 {com}+.*{endline}					return COM;
 ({espace}|{endline})*				;
@@ -57,15 +57,8 @@ int yyerror(char * msg)
 }
 
 bool checkNombres(char *nombres) {
-	int true_value = 0;
-	if (*nombres=='-') {
-		nombres++;
-		true_value = -atoi(nombres);
-	}
-	else {
-		true_value = atoi(nombres);
-	}
-	return (true_value > 2147483646) || (true_value < -2147483645) ? false : true;
+	int true_value = atoi(nombres);
+	return (true_value > 2147483646 || true_value < -2147483645) ? false : true;
 }
 
 bool checkAscii(char * str, bool com) {
