@@ -11,6 +11,9 @@
 	bool checkNombres(char *nombres);
 	bool checkAscii(char * str, bool com);
 	bool testAscii;
+
+	#define MAX_NUM 2147483647
+	#define MIN_NUM -2147483648
 %}
 
 espace [ \t]
@@ -74,7 +77,7 @@ bool checkNombres(char *nombreStr) {
 		exit(EXIT_FAILURE);
 	}
 
-	return (nombre > 2147483646 || nombre < -2147483645) ? false : true;
+	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
 }
 
 bool checkAscii(char * str, bool com) {
