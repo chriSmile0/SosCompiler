@@ -5,6 +5,8 @@
 	#include "tokens.h"
 	#include <stdlib.h>
 	#include <stdbool.h>
+	#include <errno.h>
+	#include <limits.h>
 	int yyerror(char * msg);
 	bool checkNombres(char *nombres);
 	bool checkAscii(char * str, bool com);
@@ -56,9 +58,23 @@ int yyerror(char * msg)
 	return 1;
 }
 
-bool checkNombres(char *nombres) {
-	int true_value = atoi(nombres);
-	return (true_value > 2147483646 || true_value < -2147483645) ? false : true;
+bool checkNombres(char *nombreStr) {
+	char *ptrFin;
+	errno = 0;
+	long nombre = strtol(nombreStr, &ptrFin, 10); // On converti en base 10
+
+	if (
+		(errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
+		(errno != 0 && nombre == 0)
+	) {
+		if (nombre == LONG_MAX)
+			perror("Nombre trop grand");
+		else if (nombre == LONG_MIN)
+			perror("Nombre trop petit");
+		exit(EXIT_FAILURE);
+	}
+
+	return (nombre > 2147483646 || nombre < -2147483645) ? false : true;
 }
 
 bool checkAscii(char * str, bool com) {
