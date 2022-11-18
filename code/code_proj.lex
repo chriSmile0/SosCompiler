@@ -41,7 +41,6 @@ com [#]
 \'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {com}+.*{endline}					return COM;
-({espace}|{endline})*				;
 . 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
@@ -54,6 +53,8 @@ int yyerror(char * msg)
 
 bool checkAscii(char * str, bool com)
 {
+	if (strcmp(str, "\t") == 0)
+		return true;
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
