@@ -80,7 +80,8 @@ bool checkNombres(char *nombreStr) {
 	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
 }
 
-bool checkAscii(char * str, bool com) {
+bool checkAscii(char * str, bool com) 
+{
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
