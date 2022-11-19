@@ -14,12 +14,16 @@
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_simple() {
-	printf("test simple\n");
+	printf("--- TEST SIMPLE\n");
 	int tests = 0;
+	printf("- test_chainescarac_s\n");
 	tests += test_chainescarac_s();
+	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
+	printf("- test_commentaires_s\n");
 	tests += test_commentaires_s();
-	//tests += test_motsreserves_s();
+	printf("- test_motsreserves_s\n");
+	tests += test_motsreserves_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -41,12 +45,19 @@ int test_simple() {
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_median() {
-	printf("test median \n");
+
+	printf("--- TEST MEDIAN\n");
 	int tests = 0;
+	printf("- test_chainescarac_m\n");
 	tests += test_chainescarac_m();
+	printf("- test_ascii_m\n");
 	tests += test_ascii_m();
+	printf("- test_commentaires_m\n");
 	tests += test_commentaires_m();
-	//tests += test_motsreserves_m();
+	printf("- test_motsreserves_m\n");
+	tests += test_motsreserves_m();
+
+
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -65,12 +76,20 @@ int test_median() {
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_difficile() {
-	printf("test difficile \n");
+
+	printf("--- TEST DIFFICILE\n");
 	int tests = 0;
+	printf("- test_chainescarac_d\n");
 	tests += test_chainescarac_d();
+	printf("- test_ascii_d\n");
 	tests += test_ascii_d();
+	printf("- test_commentaires_d\n");
 	tests += test_commentaires_d();
-	//tests += test_motsreserves_d();
+	printf("- test_motsreserves_d\n");
+	tests += test_motsreserves_d();
+
+
+
 	/*
 		Insertion du code du test difficile
 		Exemple test_nombres_d();
