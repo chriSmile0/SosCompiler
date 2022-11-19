@@ -116,9 +116,12 @@ int test_ascii_s() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
-	while ((t = yylex()) != 0) 
-		if (t != CC && t != CHAR)
+	while ((t = yylex()) != 0) {
+		if (t != CC && t != CHAR) {
+			fclose(yyin);
 			return 1;
+		}
+	}
 	fclose(yyin);
 	return 0;
 }
@@ -129,9 +132,12 @@ int test_ascii_m() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
-	while ((t = yylex()) != 0) 
-		if (t == -1)
+	while ((t = yylex()) != 0) {
+		if (t == -1) {
+			fclose(yyin);
 			return 1;
+		}
+	}
 	fclose(yyin);
 	return 0;
 }
@@ -142,9 +148,12 @@ int test_ascii_d() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
-	while ((t = yylex()) != 0) 
-		if (t == 1)
+	while ((t = yylex()) != 0) {
+		if (t == 1) {
+			fclose(yyin);
 			return 0;
+		}
+	}
 	fclose(yyin);
 	return 1;
 }
