@@ -116,14 +116,14 @@ int test_ascii_s() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
+	int rtn = 0;
 	while ((t = yylex()) != 0) {
 		if (t != CC && t != CHAR) {
-			fclose(yyin);
-			return 1;
+			rtn = 1;
 		}
 	}
 	fclose(yyin);
-	return 0;
+	return rtn;
 }
 
 int test_ascii_m() {
@@ -132,14 +132,14 @@ int test_ascii_m() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
+	int rtn = 0;
 	while ((t = yylex()) != 0) {
 		if (t == -1) {
-			fclose(yyin);
-			return 1;
+			rtn = 1;
 		}
 	}
 	fclose(yyin);
-	return 0;
+	return rtn;
 }
 
 int test_ascii_d() {
@@ -148,14 +148,14 @@ int test_ascii_d() {
 	if (yyin == NULL)
 		perror(filename);
 	int t;
+	int rtn;
 	while ((t = yylex()) != 0) {
 		if (t == 1) {
-			fclose(yyin);
-			return 0;
+			rtn = 0;
 		}
 	}
 	fclose(yyin);
-	return 1;
+	return rtn;
 }
 
 int test_commentaires(char* chemin_fichier_test, int attendu) {
