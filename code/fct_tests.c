@@ -186,3 +186,32 @@ int test_commentaires_m() {
 int test_commentaires_d() {
 	return test_commentaires("fichiers_tests/difficile.sh", 4);
 }
+
+int test_nombres(char* chemin_fichier_test, int attendu) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+	int t;
+	t = yylex();
+	int nbr_nb = 0;
+
+	while (t != 0) {
+		nbr_nb += (t == NB ? 1 : 0);
+		t = yylex();
+	}
+	fclose(yyin);
+	return (nbr_nb == attendu) ? 0 : 1;
+}
+
+int test_nombres_s() {
+	return test_nombres("fichiers_tests/facile_nb",1);
+}
+
+int test_nombres_m() {
+	return test_nombres("exemple_sos/exemple1",15);
+}
+
+int test_nombres_d() {
+	return test_nombres("fichiers_tests/difficile_nb",2);
+}

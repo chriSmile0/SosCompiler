@@ -5,14 +5,22 @@
 	#include "tokens.h"
 	#include <stdlib.h>
 	#include <stdbool.h>
+	#include <errno.h>
+	#include <limits.h>
 	int yyerror(char * msg);
+	bool checkNombres(char *nombres);
 	bool checkAscii(char * str, bool com);
 	bool testAscii;
+
+	#define MAX_NUM 2147483647
+	#define MIN_NUM -2147483648
 %}
 
 espace [ \t]
 endline [\n]
 com [#]
+digit [0-9]
+signe [+-]
 
 %%
 
@@ -40,6 +48,8 @@ com [#]
 \"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
+{signe}?{digit}+				return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
+
 {com}+.*{endline}					return COM;
 . 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
@@ -51,7 +61,26 @@ int yyerror(char * msg)
 	return 1;
 }
 
-bool checkAscii(char * str, bool com)
+bool checkNombres(char *nombreStr) {
+	char *ptrFin;
+	errno = 0;
+	long nombre = strtol(nombreStr, &ptrFin, 10); // On converti en base 10
+
+	if (
+		(errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
+		(errno != 0 && nombre == 0)
+	) {
+		if (nombre == LONG_MAX)
+			perror("Nombre trop grand");
+		else if (nombre == LONG_MIN)
+			perror("Nombre trop petit");
+		exit(EXIT_FAILURE);
+	}
+
+	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
+}
+
+bool checkAscii(char * str, bool com) 
 {
 	if (strcmp(str, "\t") == 0)
 		return true;
