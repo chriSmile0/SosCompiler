@@ -20,6 +20,7 @@ espace [ \t]
 endline [\n]
 com [#]
 digit [0-9]
+signe [+-]
 
 %%
 
@@ -47,10 +48,9 @@ digit [0-9]
 \"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
-{digit}+							return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
+{signe}?{digit}+				return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
 
 {com}+.*{endline}					return COM;
-({espace}|{endline})*				;
 . 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
