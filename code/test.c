@@ -14,10 +14,13 @@
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_simple() {
-	printf("test simple\n");
+	printf("--- TEST SIMPLE\n");
 	int tests = 0;
+	printf("- test_chainescarac_s\n");
 	tests += test_chainescarac_s();
+	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
+	printf("- test_commentaires_s\n");
 	tests += test_commentaires_s();
 	tests += test_nombres_s();
 	//tests += test_motsreserves_s();
@@ -42,10 +45,14 @@ int test_simple() {
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_median() {
-	printf("test median \n");
+
+	printf("--- TEST MEDIAN\n");
 	int tests = 0;
+	printf("- test_chainescarac_m\n");
 	tests += test_chainescarac_m();
+	printf("- test_ascii_m\n");
 	tests += test_ascii_m();
+	printf("- test_commentaires_m\n");
 	tests += test_commentaires_m();
 	tests += test_nombres_m();
 	//tests += test_motsreserves_m();
@@ -67,10 +74,14 @@ int test_median() {
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_difficile() {
-	printf("test difficile \n");
+
+	printf("--- TEST DIFFICILE\n");
 	int tests = 0;
+	printf("- test_chainescarac_d\n");
 	tests += test_chainescarac_d();
+	printf("- test_ascii_d\n");
 	tests += test_ascii_d();
+	printf("- test_commentaires_d\n");
 	tests += test_commentaires_d();
 	tests += test_nombres_d();
 	//tests += test_motsreserves_d();

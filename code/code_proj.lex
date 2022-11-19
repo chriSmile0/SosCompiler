@@ -82,6 +82,8 @@ bool checkNombres(char *nombreStr) {
 
 bool checkAscii(char * str, bool com) 
 {
+	if (strcmp(str, "\t") == 0)
+		return true;
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
