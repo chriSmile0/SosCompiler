@@ -54,6 +54,8 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"
 {signe}?{digit}+				return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
 
 {com}+.*{endline}					return COM;
+{char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
+{char}+									{return ID;} //printf("id=|%s|\n",yytext);
 
 . 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 

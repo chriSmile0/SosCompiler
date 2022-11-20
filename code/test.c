@@ -27,7 +27,7 @@ int test_simple() {
 	printf("- test_motsreserves_s\n");
 	tests += test_motsreserves_s();
 	printf("- test_id_s\n");
-	//tests += test_id_s();
+	tests += test_id_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -63,7 +63,7 @@ int test_median() {
 	printf("- test_motsreserves_m\n");
 	tests += test_motsreserves_m();
 	printf("- test_id_m\n");
-	//tests += test_id_m();
+	tests += test_id_m();
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -96,7 +96,7 @@ int test_difficile() {
 	printf("- test_motsreserves_d\n");
 	tests += test_motsreserves_d();
 	printf("- test_id_d\n");
-	//tests += test_id_d();
+	tests += test_id_d();
 	/*
 		Insertion du code du test difficile
 		Exemple test_nombres_d();

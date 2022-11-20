@@ -49,7 +49,7 @@ int test_motsreserves_d() {
 	int t;
 	t = yylex();
 	int result_t = 0;
-	int nb_mots_res_detectables = 5;
+	int nb_mots_res_detectables = 4;
 	while (t != 0) {
 		result_t += (t == MR ? 1 : 0);
 		t = yylex();
@@ -247,13 +247,13 @@ int test_id(char *chemin_fichier_test, int attendu) {
  
 
 int test_id_s() {
-	return test_id("fichiers_tests/id_s",0); // 1
+	return test_id("fichiers_tests/id_s",1); // 1
 }
 
 int test_id_m() {
-	return test_id("exemple_sos/exemple1",0); // 32
+	return test_id("exemple_sos/exemple1",32); // 32
 }
 
 int test_id_d() {
-	return test_id("fichiers_tests/id_d",0); //4 //enigme sur celui là (que faire en cas de non ascii au milieu)
+	return test_id("fichiers_tests/id_d",4); //4 //evite les id non ascii
 }
