@@ -14,7 +14,7 @@
  * @return 0 si tout les tests passe sinon >0 (check potentiel du test défaillant)
 */
 int test_simple() {
-	printf("--- TEST SIMPLE\n");
+	printf("\n--- TEST SIMPLE\n");
 	int tests = 0;
 	printf("- test_chainescarac_s\n");
 	tests += test_chainescarac_s_v2();
@@ -50,7 +50,7 @@ int test_simple() {
 */
 int test_median() {
 
-	printf("--- TEST MEDIAN\n");
+	printf("\n--- TEST MEDIAN\n");
 	int tests = 0;
 	printf("- test_chainescarac_m\n");
 	tests += test_chainescarac_m_v2();
@@ -83,7 +83,7 @@ int test_median() {
 */
 int test_difficile() {
 
-	printf("--- TEST DIFFICILE\n");
+	printf("\n--- TEST DIFFICILE\n");
 	int tests = 0;
 	printf("- test_chainescarac_d\n");
 	tests += test_chainescarac_d_v2();

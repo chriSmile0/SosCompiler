@@ -29,20 +29,23 @@ int test_ascii_s() {
 		perror(filename);
 	int t;
 	int rtn = 0;
+	int attendu = 0;
 	while ((t = yylex()) != 0) 
 		if (t != CC && t != CHAR && t != ID) 
 			rtn = 1;
 	
 	fclose(yyin);
+	fprintf(stderr, "  nombre de carac non ascii detectés(d) : min %i (attendu : %i)\n", 
+			rtn,attendu);
 	return rtn;
 }
 
 int test_ascii_m_v2() {
-	return test_type("exemple_sos/exemple1",0,-1,"ascii");
+	return test_type("exemple_sos/exemple1",0,-1,"carac non ascii");
 }
 
 int test_ascii_d_v2() {
-	return test_type("fichiers_tests/ascii_d",2,1,"ascii");
+	return test_type("fichiers_tests/ascii_d",2,1,"carac non ascii");
 }
 
 
