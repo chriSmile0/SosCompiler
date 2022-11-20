@@ -17,17 +17,17 @@ int test_simple() {
 	printf("--- TEST SIMPLE\n");
 	int tests = 0;
 	printf("- test_chainescarac_s\n");
-	tests += test_chainescarac_s();
+	tests += test_chainescarac_s_v2();
 	printf("- test_ascii_s\n");
 	//tests += test_ascii_s();
 	printf("- test_commentaires_s\n");
-	tests += test_commentaires_s();
+	tests += test_commentaires_s_v2();
 	printf("- test_nombres_s\n");
-	tests += test_nombres_s();
+	tests += test_nombres_s_v2();
 	printf("- test_motsreserves_s\n");
-	tests += test_motsreserves_s();
+	tests += test_motsreserves_s_v2();
 	printf("- test_id_s\n");
-	tests += test_id_s();
+	tests += test_id_s_v2();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -53,17 +53,19 @@ int test_median() {
 	printf("--- TEST MEDIAN\n");
 	int tests = 0;
 	printf("- test_chainescarac_m\n");
-	tests += test_chainescarac_m();
+	tests += test_chainescarac_m_v2();
 	printf("- test_ascii_m\n");
 	tests += test_ascii_m();
 	printf("- test_commentaires_m\n");
-	tests += test_commentaires_m();
+	tests += test_commentaires_m_v2();
 	printf("- test_nombres_m\n");
-	tests += test_nombres_m();
+	tests += test_nombres_m_v2();
 	printf("- test_motsreserves_m\n");
-	tests += test_motsreserves_m();
+	tests += test_motsreserves_m_v2();
 	printf("- test_id_m\n");
-	tests += test_id_m();
+	tests += test_id_m_v2();
+	/*printf("- test_id_m_v2\n");
+	tests += test_id_m_v2();*/
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -86,17 +88,20 @@ int test_difficile() {
 	printf("--- TEST DIFFICILE\n");
 	int tests = 0;
 	printf("- test_chainescarac_d\n");
-	tests += test_chainescarac_d();
+	tests += test_chainescarac_d_v2();
 	printf("- test_ascii_d\n");
 	tests += test_ascii_d();
 	printf("- test_commentaires_d\n");
-	tests += test_commentaires_d();
+	tests += test_commentaires_d_v2();
 	printf("- test_nombres_d\n");
-	tests += test_nombres_d();
+	tests += test_nombres_d_v2();
 	printf("- test_motsreserves_d\n");
-	tests += test_motsreserves_d();
+	tests += test_motsreserves_d_v2();
 	printf("- test_id_d\n");
-	tests += test_id_d();
+	tests += test_id_d_v2();
+	printf("- test_id_d_v2\n");
+	tests += test_id_d_v2();
+	
 	/*
 		Insertion du code du test difficile
 		Exemple test_nombres_d();

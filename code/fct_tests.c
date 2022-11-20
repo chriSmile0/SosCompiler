@@ -1,120 +1,26 @@
 #include "../inc/fct_tests.h"
 #include "tokens.h"
 
-int test_motsreserves_s() {
-	char *filename = "fichiers_tests/motsreserves_s";
-	yyin=fopen(filename,"r"); 
-	if (yyin==NULL)
+// level = s ou m ou d
+int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
 		perror(filename);
 	int t;
 	t = yylex();
-	int result_t = 0;
-	int nb_mots_res_detectables = 5;
+	int nbr_t = 0;
+
 	while (t != 0) {
-		result_t += (t == MR ? 1 : 0);
+		nbr_t += (t == token ? 1 : 0);
 		t = yylex();
 	}
-	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
-			result_t, nb_mots_res_detectables);
-
-    fclose(yyin); //fermeture de l'entrée*/
-	return (result_t == nb_mots_res_detectables) ? 0 : 1;
-}
-
-int test_motsreserves_m() {
-	char *filename = "exemple_sos/exemple1";
-	yyin=fopen(filename,"r");
-	if (yyin==NULL)
-		perror(filename);
-	int t;
-	t = yylex();
-	int result_t = 0;
-	int nb_mots_res_detectables = 39;
-	while (t != 0) {
-		result_t += (t == MR ? 1 : 0);
-		t = yylex();
-	}
-	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
-			result_t, nb_mots_res_detectables);
-
-    fclose(yyin); //fermeture de l'entrée*/
-	return (result_t == nb_mots_res_detectables) ? 0 : 1;
-}
-
-int test_motsreserves_d() {
-	char *filename = "fichiers_tests/motsreserves_d";
-	yyin=fopen(filename,"r");
-	if (yyin==NULL)
-		perror(filename);
-	int t;
-	t = yylex();
-	int result_t = 0;
-	int nb_mots_res_detectables = 4;
-	while (t != 0) {
-		result_t += (t == MR ? 1 : 0);
-		t = yylex();
-	}
-	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
-			result_t, nb_mots_res_detectables);
-
-    fclose(yyin); //fermeture de l'entrée*/
-	return (result_t == nb_mots_res_detectables) ? 0 : 1;
-}
-
-
-int test_chainescarac_s() {
-	char *filename = "fichiers_tests/chainescarac_s";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int result_t = 0;
-	//3 chaines dans le fichier chainescarac_s
-	int res_att = 3;
-	while ((t = yylex()) != 0) 
-		result_t += (t == CC ? 1 : 0);
-	
-	fprintf(stderr, "nombre de string detectés(s): %i (attendu : %i)\n", 
-			result_t, res_att);
 	fclose(yyin);
-	return (result_t == res_att ? 0 : 1);
-
+	fprintf(stderr, "nombre de %s detectés(d) : %i (attendu : %i)\n", 
+			def_tok,nbr_t, attendu);
+	return (nbr_t == attendu) ? 0 : 1;
 }
 
-
-int test_chainescarac_m() {
-	char *filename = "exemple_sos/exemple1";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int result_t = 0;
-	//9 chaines dans le fichier exemple1
-	int res_att = 9;
-	while ((t = yylex()) != 0) 
-		result_t += (t == CC ? 1 : 0);
-	fprintf(stderr, "nombre de string detectés(m): %i (attendu : %i)\n", 
-			result_t, res_att);
-	fclose(yyin);
-	return (result_t == res_att ? 0 : 1);
-}
-
-int test_chainescarac_d() {
-	char *filename = "fichiers_tests/chainescarac_d";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int result_t = 0;
-	//8 chaines dans le fichier chainescarac_d
-	int res_att = 8;
-	while ((t = yylex()) != 0) 
-		result_t += (t == CC ? 1 : 0);
-	fprintf(stderr, "nombre de string detectés(d) : %i (attendu : %i)\n", 
-			result_t, res_att);
-	fclose(yyin);
-	return (result_t == res_att ? 0 : 1);
-}
 
 int test_ascii_s() {
 	char *filename = "fichiers_tests/ascii_s";
@@ -164,96 +70,63 @@ int test_ascii_d() {
 	return rtn;
 }
 
-int test_commentaires(char* chemin_fichier_test, int attendu) {
-	char* filename = chemin_fichier_test;
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-	int t;
-	t = yylex();
-	int nbr_comm = 0;
 
-	while (t != 0) {
-		nbr_comm += (t == COM ? 1 : 0);
-		t = yylex();
-	}
-	fclose(yyin);
-	fprintf(stderr, "nombre de com detectés(d) : %i (attendu : %i)\n", 
-			nbr_comm, attendu);
-	return (nbr_comm == attendu) ? 0 : 1;
+int test_motsreserves_s_v2() {
+	return test_type("fichiers_tests/motsreserves_s",5,MR,"mots reserves");
 }
 
-int test_commentaires_s() {
-	return test_commentaires("fichiers_tests/facile.sh", 3);
+int test_motsreserves_m_v2() {
+	return test_type("exemple_sos/exemple1",39,MR,"mots reserves");
 }
 
-int test_commentaires_m() {
-	return test_commentaires("fichiers_tests/moyen.sh", 3);
+int test_motsreserves_d_v2() {
+	return test_type("fichiers_tests/motsreserves_d",4,MR,"mots reserves");
 }
 
-int test_commentaires_d() {
-	return test_commentaires("fichiers_tests/difficile.sh", 4);
+int test_chainescarac_s_v2() {
+	return test_type("fichiers_tests/chainescarac_s",3,CC,"string");
 }
 
-int test_nombres(char* chemin_fichier_test, int attendu) {
-	char* filename = chemin_fichier_test;
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-	int t;
-	t = yylex();
-	int nbr_nb = 0;
-
-	while (t != 0) {
-		nbr_nb += (t == NB ? 1 : 0);
-		t = yylex();
-	}
-	fprintf(stderr, "nombre de nombres detectés(d) : %i (attendu : %i)\n", 
-			nbr_nb,attendu);
-	fclose(yyin);
-	return (nbr_nb == attendu) ? 0 : 1;
+int test_chainescarac_m_v2() {
+	return test_type("exemple_sos/exemple1",9,CC,"string");
 }
 
-int test_nombres_s() {
-	return test_nombres("fichiers_tests/facile_nb",1);
+int test_chainescarac_d_v2() {
+	return test_type("fichiers_tests/chainescarac_d",8,CC,"string");
 }
 
-int test_nombres_m() {
-	return test_nombres("exemple_sos/exemple1",15);
+int test_commentaires_s_v2() {
+	return test_type("fichiers_tests/facile.sh",3,COM,"com");
 }
 
-int test_nombres_d() {
-	return test_nombres("fichiers_tests/difficile_nb",2);
+int test_commentaires_m_v2() {
+	return test_type("fichiers_tests/moyen.sh",3,COM,"com");
 }
 
-int test_id(char *chemin_fichier_test, int attendu) {
-	char* filename = chemin_fichier_test;
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-	int t;
-	t = yylex();
-	int nbr_id = 0;
-
-	while (t != 0) {
-		nbr_id += (t == ID ? 1 : 0);
-		t = yylex();
-	}
-	fprintf(stderr, "nombre d'id detectés(d) : %i (attendu : %i)\n", 
-			nbr_id, attendu);
-	fclose(yyin);
-	return (nbr_id == attendu) ? 0 : 1;
-}
- 
-
-int test_id_s() {
-	return test_id("fichiers_tests/id_s",1); // 1
+int test_commentaires_d_v2() {
+	return test_type("fichiers_tests/difficile.sh",4,COM,"com");
 }
 
-int test_id_m() {
-	return test_id("exemple_sos/exemple1",32); // 32
+int test_nombres_s_v2() {
+	return test_type("fichiers_tests/facile_nb",1,NB,"nombres");
 }
 
-int test_id_d() {
-	return test_id("fichiers_tests/id_d",4); //4 //evite les id non ascii
+int test_nombres_m_v2() {
+	return test_type("exemple_sos/exemple1",15,NB,"nombres");
+}
+
+int test_nombres_d_v2() {
+	return test_type("fichiers_tests/difficile_nb",2,NB,"nombres");
+}
+
+int test_id_s_v2() {
+	return test_type("fichiers_tests/id_s",1,ID,"id"); // 1
+}
+
+int test_id_m_v2() {
+	return test_type("exemple_sos/exemple1",32,ID,"id");
+}
+
+int test_id_d_v2() {
+	return test_type("fichiers_tests/id_d",4,ID,"id");
 }
