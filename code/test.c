@@ -19,7 +19,7 @@ int test_simple() {
 	printf("- test_chainescarac_s\n");
 	tests += test_chainescarac_s_v2();
 	printf("- test_ascii_s\n");
-	//tests += test_ascii_s();
+	tests += test_ascii_s();
 	printf("- test_commentaires_s\n");
 	tests += test_commentaires_s_v2();
 	printf("- test_nombres_s\n");
@@ -55,7 +55,7 @@ int test_median() {
 	printf("- test_chainescarac_m\n");
 	tests += test_chainescarac_m_v2();
 	printf("- test_ascii_m\n");
-	tests += test_ascii_m();
+	tests += test_ascii_m_v2();
 	printf("- test_commentaires_m\n");
 	tests += test_commentaires_m_v2();
 	printf("- test_nombres_m\n");
@@ -64,8 +64,6 @@ int test_median() {
 	tests += test_motsreserves_m_v2();
 	printf("- test_id_m\n");
 	tests += test_id_m_v2();
-	/*printf("- test_id_m_v2\n");
-	tests += test_id_m_v2();*/
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -90,7 +88,7 @@ int test_difficile() {
 	printf("- test_chainescarac_d\n");
 	tests += test_chainescarac_d_v2();
 	printf("- test_ascii_d\n");
-	tests += test_ascii_d();
+	tests += test_ascii_d_v2();
 	printf("- test_commentaires_d\n");
 	tests += test_commentaires_d_v2();
 	printf("- test_nombres_d\n");
@@ -99,9 +97,6 @@ int test_difficile() {
 	tests += test_motsreserves_d_v2();
 	printf("- test_id_d\n");
 	tests += test_id_d_v2();
-	printf("- test_id_d_v2\n");
-	tests += test_id_d_v2();
-	
 	/*
 		Insertion du code du test difficile
 		Exemple test_nombres_d();

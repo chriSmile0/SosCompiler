@@ -24,7 +24,7 @@ extern FILE *yyin;
 int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok);
 
 /**
- * @brief	Test sur des characteres ascii valide
+ * @brief	Test sur des caracteres ascii valide
  * 
  * 
  * @param[:]
@@ -39,7 +39,8 @@ int test_ascii_s(void);
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_ascii_m(void);
+
+int test_ascii_m_v2();
 
 /**
  * @brief	Test sur des characteres ascii invalide
@@ -48,14 +49,14 @@ int test_ascii_m(void);
  * @param[:]
  * @return 0 si test valide sinon 1
 */
-int test_ascii_d(void);
+int test_ascii_d_v2();
 
 
 /**
- * @brief	Test sur un cas très simple 
- * 			
- * @param[:]
+ * @brief	Test sur un cas très simple
  * 
+ * 
+ * @param[:]
  * @return 0 si test valide sinon 1
 */
 int test_motsreserves_s_v2(void);

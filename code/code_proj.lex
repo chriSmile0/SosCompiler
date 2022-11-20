@@ -56,7 +56,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"
 {com}+.*{endline}						return COM;
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}+									{return ID;} //printf("id=|%s|\n",yytext);
-
+{endline}								;
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%

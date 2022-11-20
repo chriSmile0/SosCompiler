@@ -16,7 +16,7 @@ int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok) 
 		t = yylex();
 	}
 	fclose(yyin);
-	fprintf(stderr, "nombre de %s detectés(d) : %i (attendu : %i)\n", 
+	fprintf(stderr, "  nombre de %s detectés(d) : %i (attendu : %i)\n", 
 			def_tok,nbr_t, attendu);
 	return (nbr_t == attendu) ? 0 : 1;
 }
@@ -29,45 +29,20 @@ int test_ascii_s() {
 		perror(filename);
 	int t;
 	int rtn = 0;
-	while ((t = yylex()) != 0) {
-		if (t != CC && t != CHAR) {
+	while ((t = yylex()) != 0) 
+		if (t != CC && t != CHAR && t != ID) 
 			rtn = 1;
-		}
-	}
+	
 	fclose(yyin);
 	return rtn;
 }
 
-int test_ascii_m() {
-	char *filename = "exemple_sos/exemple1";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int rtn = 0;
-	while ((t = yylex()) != 0) {
-		if (t == -1) {
-			rtn = 1;
-		}
-	}
-	fclose(yyin);
-	return rtn;
+int test_ascii_m_v2() {
+	return test_type("exemple_sos/exemple1",0,-1,"ascii");
 }
 
-int test_ascii_d() {
-	char *filename = "fichiers_tests/ascii_d";
-	yyin = fopen(filename, "r");
-	if (yyin == NULL)
-		perror(filename);
-	int t;
-	int rtn;
-	while ((t = yylex()) != 0) {
-		if (t == 1) {
-			rtn = 0;
-		}
-	}
-	fclose(yyin);
-	return rtn;
+int test_ascii_d_v2() {
+	return test_type("fichiers_tests/ascii_d",2,1,"ascii");
 }
 
 
