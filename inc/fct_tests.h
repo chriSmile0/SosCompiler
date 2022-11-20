@@ -166,4 +166,14 @@ int test_nombres_m(void);
 
 int test_nombres_d(void);
 
+int test_id(char *chemin_fichier_test, int attendu);
+
+int test_id_s(void);
+
+int test_id_m(void);
+
+int test_id_d(void);
+
+
+
 #endif // FCT_TESTS_H //

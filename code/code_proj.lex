@@ -10,6 +10,7 @@
 	int yyerror(char * msg);
 	bool checkNombres(char *nombres);
 	bool checkAscii(char * str, bool com);
+	bool word_test(char * str);
 	bool testAscii;
 
 	#define MAX_NUM 2147483647
@@ -20,48 +21,71 @@ espace [ \t]
 endline [\n]
 com [#]
 digit [0-9]
+char [a-zA-Z_]
 signe [+-]
 
 %%
 
-^{espace}*if{espace}+				return MR;
-{espace}+then({espace}+|{endline}) 	return MR;
-^{espace}*for{espace}+				return MR;
-{espace}do({espace}+|{endline}) 	return MR;
-^{espace}*done{espace};{endline}	return MR;
-{espace}+in{espace}+				return MR;
-^{espace}*while{espace}+			return MR;
-^{espace}*until{espace}+			return MR;
-^{espace}*case{espace}+				return MR;
-^{espace}*esac{espace}+				return MR;
-^{espace}*echo{espace}+				return MR;
-^{espace}*read{espace}+				return MR;
-^{espace}*return{espace}+			return MR;
-^{espace}*exit{espace}+				return MR;
-^{espace}*local{espace}+ 			return MR;
-^{espace}*elif{espace}+ 			return MR;
-^{espace}*else{endline} 			return MR;
-^{espace}*fi{espace};{endline}		return MR;
-^{espace}*declare{espace}+			return MR;
-{espace}+test{espace}+				return MR;
-{espace}+expr{espace}+				return MR;
+^{espace}*if{espace}					return MR;
+{espace}+then({espace}+|{endline}) 		return MR;
+^{espace}*for{espace}+					return MR;
+{espace}do({espace}+|{endline}) 		return MR;
+^{espace}*done{espace};{endline}		return MR;
+{espace}+in{espace}+					return MR;
+^{espace}*while{espace}+				return MR;
+^{espace}*until{espace}+				return MR;
+test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"));
+^{espace}*case{espace}+					return MR;
+^{espace}*esac{espace}+					return MR;
+^{espace}*echo{espace}+					return MR;
+^{espace}*read{espace}+					return MR;
+^{espace}*return{espace}+				return MR;
+^{espace}*exit{espace}*					return MR;
+({espace}+|{endline})local{espace}+ 	return MR;
+^{espace}*elif{espace}+test{espace}+ 	return MR;
+^{espace}*else{endline} 				return MR;
+^{espace}*fi{espace};{endline}			return MR;
+^declare{espace}+						return MR;
+{espace}+expr{espace}+					return MR;
+
 \"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
 {signe}?{digit}+				return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
 
 {com}+.*{endline}					return COM;
+
 . 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
 
-int yyerror(char * msg)
+int yyerror(char * msg) 
 {
 	fprintf(stderr," %s\n",msg);
 	return 1;
 }
 
-bool checkNombres(char *nombreStr) {
+bool word_test(char * str) {
+	while (*str != 't') {
+		if (*str != ' ')
+			return false;
+		str++;
+	}
+	str++;
+	if (*str == 'e')
+		str++;
+		if (*str == 's')
+			str++;
+			if (*str == 't')
+				str++;
+				if (*str == ' ') 
+					return true;
+	return false;
+}
+
+
+bool checkNombres(char *nombreStr) 
+{
 	char *ptrFin;
 	errno = 0;
 	long nombre = strtol(nombreStr, &ptrFin, 10); // On converti en base 10
@@ -80,10 +104,9 @@ bool checkNombres(char *nombreStr) {
 	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
 }
 
-bool checkAscii(char * str, bool com) 
-{
-	if (strcmp(str, "\t") == 0)
-		return true;
+bool checkAscii(char * str, bool com) {
+	/*if (strcmp(str, "\t") == 0)
+		return true;*/
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)

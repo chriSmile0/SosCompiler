@@ -1,0 +1,13 @@
+valeurs;
+
+local newvalu\\0abc\t\be = 2;
+
+if test ! ${valeurs[${i}]} -gt 0 then
+	echo "Les valeurs doivent etre strictement positives !\n"
+            return 1
+fi ;
+
+
+
+
+

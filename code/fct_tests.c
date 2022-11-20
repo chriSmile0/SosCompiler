@@ -10,11 +10,13 @@ int test_motsreserves_s() {
 	t = yylex();
 	int result_t = 0;
 	int nb_mots_res_detectables = 5;
-	nb_mots_res_detectables *= MR; // on multiplie par la valeur du token 
 	while (t != 0) {
-		result_t += (t == MR ? MR : 0);
+		result_t += (t == MR ? 1 : 0);
 		t = yylex();
 	}
+	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
+			result_t, nb_mots_res_detectables);
+
     fclose(yyin); //fermeture de l'entrée*/
 	return (result_t == nb_mots_res_detectables) ? 0 : 1;
 }
@@ -27,12 +29,14 @@ int test_motsreserves_m() {
 	int t;
 	t = yylex();
 	int result_t = 0;
-	int nb_mots_res_detectables = 33;
-	nb_mots_res_detectables *= MR;
+	int nb_mots_res_detectables = 39;
 	while (t != 0) {
-		result_t += (t == MR ? MR : 0);
+		result_t += (t == MR ? 1 : 0);
 		t = yylex();
 	}
+	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
+			result_t, nb_mots_res_detectables);
+
     fclose(yyin); //fermeture de l'entrée*/
 	return (result_t == nb_mots_res_detectables) ? 0 : 1;
 }
@@ -46,11 +50,13 @@ int test_motsreserves_d() {
 	t = yylex();
 	int result_t = 0;
 	int nb_mots_res_detectables = 5;
-	nb_mots_res_detectables *= MR;
 	while (t != 0) {
-		result_t += (t == MR ? MR : 0);
+		result_t += (t == MR ? 1 : 0);
 		t = yylex();
 	}
+	fprintf(stderr, "nombre de MR detectés(s): %i (attendu : %i)\n", 
+			result_t, nb_mots_res_detectables);
+
     fclose(yyin); //fermeture de l'entrée*/
 	return (result_t == nb_mots_res_detectables) ? 0 : 1;
 }
@@ -172,6 +178,8 @@ int test_commentaires(char* chemin_fichier_test, int attendu) {
 		t = yylex();
 	}
 	fclose(yyin);
+	fprintf(stderr, "nombre de com detectés(d) : %i (attendu : %i)\n", 
+			nbr_comm, attendu);
 	return (nbr_comm == attendu) ? 0 : 1;
 }
 
@@ -200,6 +208,8 @@ int test_nombres(char* chemin_fichier_test, int attendu) {
 		nbr_nb += (t == NB ? 1 : 0);
 		t = yylex();
 	}
+	fprintf(stderr, "nombre de nombres detectés(d) : %i (attendu : %i)\n", 
+			nbr_nb,attendu);
 	fclose(yyin);
 	return (nbr_nb == attendu) ? 0 : 1;
 }
@@ -214,4 +224,36 @@ int test_nombres_m() {
 
 int test_nombres_d() {
 	return test_nombres("fichiers_tests/difficile_nb",2);
+}
+
+int test_id(char *chemin_fichier_test, int attendu) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+	int t;
+	t = yylex();
+	int nbr_id = 0;
+
+	while (t != 0) {
+		nbr_id += (t == ID ? 1 : 0);
+		t = yylex();
+	}
+	fprintf(stderr, "nombre d'id detectés(d) : %i (attendu : %i)\n", 
+			nbr_id, attendu);
+	fclose(yyin);
+	return (nbr_id == attendu) ? 0 : 1;
+}
+ 
+
+int test_id_s() {
+	return test_id("fichiers_tests/id_s",0); // 1
+}
+
+int test_id_m() {
+	return test_id("exemple_sos/exemple1",0); // 32
+}
+
+int test_id_d() {
+	return test_id("fichiers_tests/id_d",0); //4 //enigme sur celui là (que faire en cas de non ascii au milieu)
 }
