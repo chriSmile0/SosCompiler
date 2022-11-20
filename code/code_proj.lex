@@ -48,16 +48,16 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
 
-\"(\\.|[^\\\"])*\"					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'					return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
+\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
-{signe}?{digit}+				return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
+{signe}?{digit}+						return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
 
-{com}+.*{endline}					return COM;
+{com}+.*{endline}						return COM;
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}+									{return ID;} //printf("id=|%s|\n",yytext);
 
-. 									return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
+. 										return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
 
 %%
 
@@ -107,8 +107,8 @@ bool checkNombres(char *nombreStr)
 }
 
 bool checkAscii(char * str, bool com) {
-	/*if (strcmp(str, "\t") == 0)
-		return true;*/
+	if (strcmp(str, "\t") == 0)
+		return true;
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
