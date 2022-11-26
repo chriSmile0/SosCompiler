@@ -30,6 +30,10 @@ int test_simple() {
 	tests += test_id_s_v2();
 	printf("- test_mot_s\n");
 	tests += test_mot_s_v2();
+	printf("- test_oper_s\n");
+	tests += test_oper_s_v2();
+	printf("- test_opel_s\n");
+	tests += test_opel_s_v2();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -68,6 +72,10 @@ int test_median() {
 	tests += test_id_m_v2();
 	printf("- test_mot_m\n");
 	tests += test_mot_m_v2();
+	printf("- test_oper_m\n");
+	tests += test_oper_m_v2();
+	printf("- test_opel_s\n");
+	tests += test_opel_s_v2();
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -103,6 +111,12 @@ int test_difficile() {
 	tests += test_id_d_v2();
 	printf("- test_mot_d\n");
 	tests += test_mot_d_v2();
+	printf("- test_oper_d\n");
+	tests += test_oper_d_v2();
+	printf("- test_opel_s\n");
+	tests += test_opel_s_v2();
+
+
 	/*
 		Insertion du code du test difficile
 		Exemple test_nombres_d();

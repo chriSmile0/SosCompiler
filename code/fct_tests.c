@@ -2,7 +2,8 @@
 #include "tokens.h"
 
 // level = s ou m ou d
-int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok) {
+int test_type(char *chemin_fichier_test, int attendu, int token_d, 
+			int token_l, char *def_tok) {
 	char* filename = chemin_fichier_test;
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
@@ -12,7 +13,7 @@ int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok) 
 	int nbr_t = 0;
 
 	while (t != 0) {
-		nbr_t += (t == token ? 1 : 0);
+		nbr_t += (t >= token_d && (t <= token_l) ? 1 : 0);
 		t = yylex();
 	}
 	fclose(yyin);
@@ -23,7 +24,7 @@ int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok) 
 
 
 int test_ascii_s() {
-	char *filename = "fichiers_tests/ascii_s";
+	char *filename = "f_tests/s/ascii_s";
 	yyin = fopen(filename, "r");
 	if (yyin == NULL)
 		perror(filename);
@@ -41,83 +42,106 @@ int test_ascii_s() {
 }
 
 int test_ascii_m_v2() {
-	return test_type("exemple_sos/exemple1",0,-1,"carac non ascii");
+	return test_type("f_tests/e_sos/exemple1",0,-1,-1,"carac non ascii");
 }
 
 int test_ascii_d_v2() {
-	return test_type("fichiers_tests/ascii_d",2,1,"carac non ascii");
+	return test_type("f_tests/d/ascii_d",2,1,1,"carac non ascii");
 }
 
 
 int test_motsreserves_s_v2() {
-	return test_type("fichiers_tests/motsreserves_s",5,MR,"mots reserves");
+	return test_type("f_tests/s/motsreserves_s",5,MR,MR,"mots reserves");
 }
 
 int test_motsreserves_m_v2() {
-	return test_type("exemple_sos/exemple1",39,MR,"mots reserves");
+	return test_type("f_tests/e_sos/exemple1",39,MR,MR,"mots reserves");
 }
 
 int test_motsreserves_d_v2() {
-	return test_type("fichiers_tests/motsreserves_d",4,MR,"mots reserves");
+	return test_type("f_tests/d/motsreserves_d",4,MR,MR,"mots reserves");
 }
 
 int test_chainescarac_s_v2() {
-	return test_type("fichiers_tests/chainescarac_s",3,CC,"string");
+	return test_type("f_tests/s/chainescarac_s",3,CC,CC,"string");
 }
 
 int test_chainescarac_m_v2() {
-	return test_type("exemple_sos/exemple1",9,CC,"string");
+	return test_type("f_tests/e_sos/exemple1",9,CC,CC,"string");
 }
 
 int test_chainescarac_d_v2() {
-	return test_type("fichiers_tests/chainescarac_d",8,CC,"string");
+	return test_type("f_tests/d/chainescarac_d",8,CC,CC,"string");
 }
 
 int test_commentaires_s_v2() {
-	return test_type("fichiers_tests/facile.sh",3,COM,"com");
+	return test_type("f_tests/s/com_s",3,COM,COM,"com");
 }
 
 int test_commentaires_m_v2() {
-	return test_type("fichiers_tests/moyen.sh",3,COM,"com");
+	return test_type("f_tests/moyen.sh",3,COM,COM,"com");
 }
 
 int test_commentaires_d_v2() {
-	return test_type("fichiers_tests/difficile.sh",4,COM,"com");
+	return test_type("f_tests/d/com_d",4,COM,COM,"com");
 }
 
 int test_nombres_s_v2() {
-	return test_type("fichiers_tests/facile_nb",1,NB,"nombres");
+	return test_type("f_tests/s/nb_s",1,NB,NB,"nombres");
 }
 
 int test_nombres_m_v2() {
-	return test_type("exemple_sos/exemple1",15,NB,"nombres");
+	return test_type("f_tests/e_sos/exemple1",15,NB,NB,"nombres");
 }
 
 int test_nombres_d_v2() {
-	return test_type("fichiers_tests/difficile_nb",2,NB,"nombres");
+	return test_type("f_tests/d/nb_d",2,NB,NB,"nombres");
 }
 
 int test_id_s_v2() {
-	return test_type("fichiers_tests/id_s",1,ID,"id"); // 1
+	return test_type("f_tests/s/id_s",1,ID,ID,"id"); // 1
 }
 
 int test_id_m_v2() {
-	return test_type("exemple_sos/exemple1",32,ID,"id");
+	return test_type("f_tests/e_sos/exemple1",29,ID,ID,"id");
 }
 
 int test_id_d_v2() {
-	return test_type("fichiers_tests/id_d",4,ID,"id");
+	return test_type("f_tests/d/id_d",3,ID,ID,"id");
 }
 
 int test_mot_s_v2() {
-	return test_type("fichiers_tests/mot_s",0,MOT,"mot");
+	return test_type("f_tests/s/mot_s",0,MOT,MOT,"mot");
 }
 
 int test_mot_m_v2() {
-	return test_type("exemple_sos/exemple1",0,MOT,"mot");
+	return test_type("f_tests/e_sos/exemple1",0,MOT,MOT,"mot");
 }
+
 int test_mot_d_v2() {
-	return test_type("fichiers_tests/mot_d",2,MOT,"mot");
+	return test_type("f_tests/d/mot_d",2,MOT,MOT,"mot");
 }
 
+int test_oper_s_v2() {
+	return test_type("f_tests/s/oper_s",0,GT,EQ,"Ope relationnels");
+}
 
+int test_oper_m_v2() {
+	return test_type("f_tests/e_sos/exemple1",3,GT,EQ,"Ope relationnels");
+}
+
+int test_oper_d_v2() {
+	return test_type("f_tests/d/oper_d",0,GT,EQ,"Ope relationnels");
+}
+
+int test_opel_s_v2() {
+	return test_type("f_tests/s/opel_s",0,ET,CCNV,"Ope logique");
+}
+
+int test_opel_m_v2() {
+	return test_type("f_tests/e_sos/exemple1",0,ET,CCNV,"Ope logique");
+}
+
+int test_opel_d_v2() {
+	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
+}

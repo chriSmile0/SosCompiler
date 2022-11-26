@@ -17,11 +17,13 @@ extern FILE *yyin;
 * 
 * @param[:chemin_fichier_test] le fichier à tester
 * @param[:attendu] le nombre de token reconnaissable attendu
-* @param[:token] le token que l'on cherche a reconnâitre
+* @param[:token_d] le plus petit token dans notre plage de recherche
+* @param[:token_l] le plus grand token dans notre plage de recherche
 * @param[:def_tok] la définition du token en chaine de caractères
 * @return 0 si test valide sinon 1
 */
-int test_type(char *chemin_fichier_test, int attendu, int token, char *def_tok);
+int test_type(char *chemin_fichier_test, int attendu, int token_d,
+    int token_l, char *def_tok);
 
 /**
  * @brief	Test sur des caracteres ascii valide
@@ -185,5 +187,23 @@ int test_mot_s_v2(void);
 int test_mot_m_v2(void);
 
 int test_mot_d_v2(void);
+
+int test_oper_s_v2(void);
+	
+
+int test_oper_m_v2(void); 
+	
+
+int test_oper_d_v2(void);
+	
+
+int test_opel_s_v2(void);
+	
+
+int test_opel_m_v2(void);
+
+
+int test_opel_d_v2(void);
+
 
 #endif // FCT_TESTS_H //
