@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 				printf("Loïc Diebolt\n");
 				printf("Matthieu Lefevre\n");
 				printf("Vincent Chebbli-Disdier");
-				break;
+				return EXIT_SUCCESS;
 
 			/* Table des symboles */
 			case 't':
