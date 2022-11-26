@@ -180,4 +180,10 @@ int test_id_m_v2(void);
 */
 int test_id_d_v2(void);
 
+int test_mot_s_v2(void);
+
+int test_mot_m_v2(void);
+
+int test_mot_d_v2(void);
+
 #endif // FCT_TESTS_H //

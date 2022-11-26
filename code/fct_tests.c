@@ -31,7 +31,7 @@ int test_ascii_s() {
 	int rtn = 0;
 	int attendu = 0;
 	while ((t = yylex()) != 0) 
-		if (t != CC && t != CHAR && t != ID) 
+		if (t != CC && t != CHAR && t != ID && t != MOT) 
 			rtn = 1;
 	
 	fclose(yyin);
@@ -108,3 +108,16 @@ int test_id_m_v2() {
 int test_id_d_v2() {
 	return test_type("fichiers_tests/id_d",4,ID,"id");
 }
+
+int test_mot_s_v2() {
+	return test_type("fichiers_tests/mot_s",0,MOT,"mot");
+}
+
+int test_mot_m_v2() {
+	return test_type("exemple_sos/exemple1",0,MOT,"mot");
+}
+int test_mot_d_v2() {
+	return test_type("fichiers_tests/mot_d",2,MOT,"mot");
+}
+
+

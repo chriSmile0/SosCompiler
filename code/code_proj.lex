@@ -23,13 +23,13 @@ com [#]
 digit [0-9]
 char [a-zA-Z_]
 signe [+-]
+n_in_word [;(){}=!$*+%|-] 
 
 %%
-
 ^{espace}*if{espace}					return MR;
 {espace}+then({espace}+|{endline}) 		return MR;
 ^{espace}*for{espace}+					return MR;
-{espace}do({espace}+|{endline}) 		return MR;
+{espace}do({espace}+|{endline})			return MR;
 ^{espace}*done{espace};{endline}		return MR;
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				return MR;
@@ -41,9 +41,9 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"
 ^{espace}*read{espace}+					return MR;
 ^{espace}*return{espace}+				return MR;
 ^{espace}*exit{espace}*					return MR;
-({espace}+|{endline})local{espace}+ 	return MR;
-^{espace}*elif{espace}+test{espace}+ 	return MR;
-^{espace}*else{endline} 				return MR;
+({espace}+|{endline})local{espace}+		return MR;
+^{espace}*elif{espace}+test{espace}+	return MR;
+^{espace}*else{endline}					return MR;
 ^{espace}*fi{espace};{endline}			return MR;
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
@@ -51,13 +51,16 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror("Pas de bloc test"
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror("Caractère non ASCII"));
 
-{signe}?{digit}+						return (checkNombres(yytext) ? NB : yyerror("Nombres trop grand/trop petit"));
+{signe}?{digit}+						return (checkNombres(yytext) ? NB : MOT);
 
 {com}+.*{endline}						return COM;
+
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}+									{return ID;} //printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{return ID;}//printf("id=|%s|\n",yytext);
+({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 {endline}								;
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror("Caractère non ASCII"));
+
 
 %%
 
@@ -96,11 +99,12 @@ bool checkNombres(char *nombreStr)
 		(errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
 		(errno != 0 && nombre == 0)
 	) {
-		if (nombre == LONG_MAX)
+		printf(".\n");
+		/*if (nombre == LONG_MAX)
 			perror("Nombre trop grand");
 		else if (nombre == LONG_MIN)
-			perror("Nombre trop petit");
-		exit(EXIT_FAILURE);
+			perror("Nombre trop petit");*/
+		//exit(EXIT_FAILURE);
 	}
 
 	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
