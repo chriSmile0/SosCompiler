@@ -101,17 +101,9 @@ bool checkNombres(char *nombreStr)
 	errno = 0;
 	long nombre = strtol(nombreStr, &ptrFin, 10); // On converti en base 10
 
-	if (
-		(errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
-		(errno != 0 && nombre == 0)
-	) {
-		printf(".\n");
-		/*if (nombre == LONG_MAX)
-			perror("Nombre trop grand");
-		else if (nombre == LONG_MIN)
-			perror("Nombre trop petit");*/
-		//exit(EXIT_FAILURE);
-	}
+	if ((errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
+			(errno != 0 && nombre == 0)) 
+		exit(EXIT_FAILURE);
 
 	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
 }

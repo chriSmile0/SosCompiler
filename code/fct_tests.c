@@ -79,7 +79,7 @@ int test_commentaires_s_v2() {
 }
 
 int test_commentaires_m_v2() {
-	return test_type("f_tests/moyen.sh",3,COM,COM,"com");
+	return test_type("f_tests/e_sos/exemple1",3,COM,COM,"com");
 }
 
 int test_commentaires_d_v2() {
@@ -119,7 +119,7 @@ int test_mot_m_v2() {
 }
 
 int test_mot_d_v2() {
-	return test_type("f_tests/d/mot_d",2,MOT,MOT,"mot");
+	return test_type("f_tests/d/mot_d",7,MOT,MOT,"mot");
 }
 
 int test_oper_s_v2() {
