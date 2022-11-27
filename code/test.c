@@ -16,8 +16,8 @@
 int test_simple() {
 	printf("\n--- TEST SIMPLE\n");
 	int tests = 0;
-	printf("- test_chainescarac_s\n");
-	tests += test_chainescarac_s_v2();
+	/*printf("- test_chainescarac_s\n");
+	tests += test_chainescarac_s();
 	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
 	printf("- test_commentaires_s\n");

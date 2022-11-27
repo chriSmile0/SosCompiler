@@ -6,8 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 extern int yylex();
 extern void yyerror();
+extern void mips_struct_file();
+extern void mips_exit();
+extern bool fin_prog;
 extern FILE *yyin;
 extern char data[1024];
 extern char instructions[4096];

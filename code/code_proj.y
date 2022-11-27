@@ -2,10 +2,19 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include "fct_yacc.h"
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <stdbool.h>
 	extern int yylex();
-	int yyerror(char *s);
+	extern void yyerror(const char *msg);
+	void mips_struct_file();
 	extern FILE *yyin;
-
+	extern FILE *yyout;
+	bool create_echo_proc = false;
+	bool fin_prog = false;
+	void check_create_echo_proc();
+	void remonter_in_main();
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
@@ -21,9 +30,8 @@
 	extern int elsee;
 %}
 
-%token <id> ID
-%token <entier> NB
-%token EG
+
+%token EG 
 %token PL
 %token MN
 %token FX
@@ -44,10 +52,25 @@
 %left PL MN
 %left FX DV
 
+%token MR
+%token CHAR
+%token COM
+
 %union {
 	char *id;
 	int entier;
+	char *chaine;
+	char **multi_cc;
 }
+
+%token '\n' READ N_ID ECH EXT
+%token <chaine> CC
+%token <id> ID
+%token <entier> NB 
+%type <chaine> operande 
+%type <entier> instruction
+
+
 
 %%
 programme : instruction END programme 
@@ -210,4 +233,96 @@ char* itoa(int x) {
 int yyerror(char *s) {
 	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 	return 1;
+}
+
+
+void mips_struct_file() {
+	fprintf(yyout,".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n");
+	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall\n");//fin 
+}
+
+
+void mips_read_all() {
+	//Create Lecture_*
+	fprintf(yyout,"\nLecture_Int:\n\tli $v0 5\n\tsyscall\n\tjr $ra\n");
+	fprintf(yyout,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n");
+}
+void mips_print_all() {
+	//Create Affichage_*
+	fprintf(yyout,"\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n");
+	fprintf(yyout,"\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n");
+}
+
+//a placer avant la création des procédures 
+/*void mips_exit() {
+	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall");
+}*/
+
+void check_create_echo_proc() {
+	if(!create_echo_proc) {
+		mips_print_all();
+		create_echo_proc = true;
+	}
+}
+
+
+void remonter_in_main() {
+	fseek(yyout,0,SEEK_SET);
+	int stop = 0;
+	char search[] = "Exit:";
+	int len_search = strlen(search);
+	//char *buf = malloc(sizeof(char)*(len_search+1));
+	char buf[5];
+	char *last_possible_search = malloc(sizeof(char)*(len_search+1));
+	int index = 0;
+	int possible_sub_string = 0;
+	int debut_potentiel = 0;
+	while (!stop) {
+		if(fread(buf,5,1,yyout) <= 0)
+			stop = 1;
+
+		if (strncmp(buf,search,len_search) == 0) {
+			stop = 1;
+		}
+		else if (debut_potentiel != 0) {
+			int h = 0;
+			debut_potentiel--;
+			int k = debut_potentiel;
+			for(k = debut_potentiel ; k < len_search; k++) {
+				if(buf[h] == search[k])
+					debut_potentiel++;
+				h++;
+			}
+			if(debut_potentiel == (len_search))
+				stop = 1;
+		}
+		else {
+			//search a part of search 
+			possible_sub_string = 0;
+			debut_potentiel = 0;
+			for(int j = 0 ; j < len_search ; j++) {
+				if((search[0] == buf[j]) || (debut_potentiel != 0)){
+					debut_potentiel = j;
+					for(int k = j ; k < len_search ; k++) {
+						if (buf[k] == search[k-j])
+							possible_sub_string++;
+						else if ((possible_sub_string != 0) && (search[k] != buf[j]))
+							possible_sub_string = 0;
+					}
+					if(possible_sub_string > 0) 
+						debut_potentiel = possible_sub_string;
+				}
+			}
+		}
+		if(stop)
+			index -= (len_search);
+		else 
+			index += len_search;
+	}
+	printf("index : %d\n",index);
+	fseek(yyout,index,SEEK_SET);
+	char wr[4] = "\nwr\n";
+	fwrite(wr,4,1,yyout);
+	//fprintf(yyout,",,");
+	printf("stop : %d\n",stop);
 }

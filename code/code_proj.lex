@@ -8,6 +8,7 @@
 	#include <errno.h>
 	#include <limits.h>
 	int yyerror(char * msg);
+	void mips_struct_file();
 	bool checkNombres(char *nombres);
 	int checkOperateur(char *operateurStr, int taille);
 	bool checkAscii(char * str, bool com);
@@ -44,10 +45,10 @@ operateur [+-/*]
 test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
-^{espace}*echo{espace}+					return MR;
-^{espace}*read{espace}+					return MR;
+^{espace}*echo{espace}+					return ECH;
+^{espace}*read{espace}+					return READ;
+^{espace}*exit{espace}+	    			{printf("ext \n");return EXT;}
 ^{espace}*return{espace}+				return MR;
-^{espace}*exit{espace}*					return MR;
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
@@ -79,8 +80,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [\[]							{return OB;}
 [\]]							{return CB;}
 {endline}							
-. 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
-
+. 									{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
 %%
 
