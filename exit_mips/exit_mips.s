@@ -35,4 +35,4 @@ Lecture_Str:
 Exit:
 	li $v0, 10
 	syscall
-ü
+ï¿½

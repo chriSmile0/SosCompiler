@@ -279,8 +279,14 @@ void mips_print_all() {
 	fwrite(buf2,strlen(buf2),1,yyout_proc);
 }
 
+
+//a placer avant la création des procédures 
+/*void mips_exit() {
+	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall");
+}*/
+
 void check_create_echo_proc() {
-	if (!create_echo_proc) {
+	if(!create_echo_proc) {
 		mips_print_all();
 		create_echo_proc = true;
 	}

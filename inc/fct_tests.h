@@ -14,10 +14,9 @@ extern void mips_exit();
 extern void build_final_mips();
 extern bool fin_prog;
 extern FILE *yyin;
-<<<<<<< HEAD
-=======
+extern FILE *yyout;
 
->>>>>>> premier test sur la séparation des fichiers
+
 extern char data[1024];
 extern char instructions[4096];
 extern int id_count;
