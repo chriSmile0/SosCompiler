@@ -25,7 +25,7 @@ BFLAGS = -t -d # bison flags
 # - $(prefixe).lex (fichier flex)
 # - main.c (programme principal)
 # - tests.c (programme de tests en c)
-# construit un exécutable nommé "main"
+# construit un exécutable nommé "sos"
 
 # note : le programme principal ne doit surtout pas s'appeler $(prefixe).c
 # (make l'écraserait parce qu'il a une règle "%.c: %.y")
@@ -39,7 +39,7 @@ lex_bis:
 	$(CC) -c -o $(dir_objs)voc.o $(dir_code)voc.c
 	$(CC) -c -o $(dir_objs)main.o $(dir_code)main.c
 	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)main.o -o \
-		$(dir_bin)main
+		$(dir_bin)sos
 	$(CC) -c -o $(dir_objs)test.o $(dir_code)test.c
 	$(CC) -c -o $(dir_objs)fct_tests.o $(dir_code)fct_tests.c
 	$(CC) $(dir_objs)fct_tests.o $(dir_objs)*.tab.o $(dir_objs)voc.o \
