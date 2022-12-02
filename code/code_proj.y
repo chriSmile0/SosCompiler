@@ -406,8 +406,38 @@ void echo_main(char *id) {
 		buf[i] = id[i];
 	buf[true_size] = '\0';
 	char buf_in_mips[1024];
-	char *jal_str = "\tjal AffichageStr \n";
+	char *jal_str = "\tjal Affichage_Str \n";
 	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
 	printf("buf_in_mips : %s\n",buf_in_mips);
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
+}
+
+void build_final_mips() {
+	FILE *file_tab[4] = {yyout_data,yyout_text,yyout_main,yyout_proc};
+	char *en_tetes[4] = {".data\n","\n.text","\nmain:\n",""};
+	char *file_name[4] = {"data","text","main","proc"};
+
+	char buf[1024];
+	int read_size = 0;
+	//tout ce qu'on peut lire dans data
+	//a opti dans une double boucle avec 
+	for	(int i = 0 ; i < 4 ; i++) {
+		int stop = 1;
+		char in_param[27];
+		snprintf(in_param,27,"exit_mips/exit_mips_%s.s",file_name[i]);
+		in_param[27] = '\0';
+		if(i == 2)
+			fprintf(file_tab[i],"\n\tjal Exit\n");
+		fclose(file_tab[i]);
+		file_tab[i] = fopen(in_param,"r+");
+		fprintf(yyout_final,"%s",en_tetes[i]);
+		while (stop) {
+			read_size = fread(buf,1024,1,file_tab[i]);
+			if (read_size == 0)
+				stop = 0;
+			fwrite(buf,strlen(buf),1,yyout_final);
+			buf[0] = '\0';//on vide le buffer
+		}
+		fclose(file_tab[i]);
+	}
 }
