@@ -13,6 +13,10 @@ extern void mips_struct_file();
 extern void mips_exit();
 extern bool fin_prog;
 extern FILE *yyin;
+<<<<<<< HEAD
+=======
+
+>>>>>>> premier test sur la séparation des fichiers
 extern char data[1024];
 extern char instructions[4096];
 extern int id_count;

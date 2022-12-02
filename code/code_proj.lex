@@ -14,6 +14,9 @@
 	bool checkAscii(char * str, bool com);
 	bool word_test(char * str);
 	bool testAscii;
+	FILE *yyout_proc;
+	FILE *yyout_final;
+	FILE *yyout_data;
 
 	int yaccc = 0;
 	int elsee = 0;
