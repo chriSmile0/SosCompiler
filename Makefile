@@ -4,6 +4,7 @@ dir_docs = docs/
 dir_inc = inc/
 dir_objs = objs/
 dir_test = tests/
+dir_mips = exit_mips/
 
 prefixe_code = code_proj
 prefixe_test = tests_proj
@@ -63,4 +64,5 @@ test: all
 
 clean:
 	-rm -r $(dir_objs) bin
-	-rm -f $(path_code).c $(dir_code)voc.c $(path_inc).tab.* $(path_doc).pdf
+	-rm -f $(path_code).c $(dir_code)voc.c $(path_inc).tab.* $(path_doc).pdf \
+		$(dir_mips)*.s

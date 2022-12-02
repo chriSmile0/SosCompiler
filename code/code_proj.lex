@@ -17,6 +17,8 @@
 	FILE *yyout_proc;
 	FILE *yyout_final;
 	FILE *yyout_data;
+	FILE *yyout_main;
+	
 
 	int yaccc = 0;
 	int elsee = 0;

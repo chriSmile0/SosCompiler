@@ -19,6 +19,7 @@
 	bool create_echo_proc = false;
 	void create_echo_data(char *id,char *chaine);
 	bool create_read_proc = false;
+	void echo_main(char *id);
 	bool fin_prog = false;
 	void check_create_echo_proc();
 	void check_create_read_proc();
@@ -294,14 +295,24 @@ void check_create_read_proc() {
 void create_echo_data(char *id,char *chaine) {
 	yyout_data = fopen("exit_mips/exit_mips_data.s","w");
 	char buf[1024];
-	snprintf(buf,1024,"\t%s: \"%s\"",id,chaine);
-	buf[strlen(id)+5+strlen(chaine)] = '\0';
+	char asciiz[] = ".asciiz";
+	snprintf(buf,1024,"\t%s: %s \"%s\"",id,asciiz,chaine);
+	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
 	printf("buf : %s\n",buf);
 	fwrite(buf,strlen(buf),1,yyout_data);
-	fclose(yyout_data);
 }
 
-void echo_main() {
+void echo_main(char *id) {
 	//chargement d'une chaine dans le registre 0 
 	//ouvrir le segment data y ajouter la chaine puis la printer sur le main 
+	char buf[1024];
+	int true_size = strlen(id);
+	for (int i = 0 ; i < true_size; i++) 
+		buf[i] = id[i];
+	buf[true_size] = '\0';
+	char buf_in_mips[1024];
+	char *jal_str = "\tjal AffichageStr \n";
+	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
+	printf("buf_in_mips : %s\n",buf_in_mips);
+	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
 }
