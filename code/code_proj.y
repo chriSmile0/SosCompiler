@@ -6,6 +6,7 @@
 	#include <unistd.h>
 	#include <fcntl.h>
 	#include <stdbool.h>
+	#define SIZE_LINE_MIPS 90
 	extern int yylex();
 	extern void yyerror(const char *msg);
 	void mips_struct_file();
@@ -237,8 +238,17 @@ int yyerror(char *s) {
 
 
 void mips_struct_file() {
-	fprintf(yyout,".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n");
-	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall\n");//fin 
+	char buf[SIZE_LINE_MIPS];
+	char *line = ".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n";
+	snprintf(buf,SIZE_LINE_MIPS,"%s",line);
+	buf[strlen(line)] = '\0';
+	fwrite(buf,strlen(line),1,yyout);
+	line = "\nExit:\n\tli $v0 10\n\tsyscall\n";
+	snprintf(buf,SIZE_LINE_MIPS,"%s",line);
+	buf[strlen(line)] = '\0';
+	fwrite(buf,strlen(line),1,yyout);
+	//fprintf(yyout,".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n");
+	//fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall\n");//fin 
 }
 
 
@@ -247,19 +257,16 @@ void mips_read_all() {
 	fprintf(yyout,"\nLecture_Int:\n\tli $v0 5\n\tsyscall\n\tjr $ra\n");
 	fprintf(yyout,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n");
 }
-void mips_print_all() {
+void  mips_print_all() {
 	//Create Affichage_*
 	fprintf(yyout,"\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n");
+	//index_true = index_true+42;
 	fprintf(yyout,"\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n");
 }
 
-//a placer avant la création des procédures 
-/*void mips_exit() {
-	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall");
-}*/
-
 void check_create_echo_proc() {
 	if(!create_echo_proc) {
+		fseek(yyout,0,SEEK_END);
 		mips_print_all();
 		create_echo_proc = true;
 	}
@@ -271,16 +278,14 @@ void remonter_in_main() {
 	int stop = 0;
 	char search[] = "Exit:";
 	int len_search = strlen(search);
-	//char *buf = malloc(sizeof(char)*(len_search+1));
 	char buf[5];
 	char *last_possible_search = malloc(sizeof(char)*(len_search+1));
 	int index = 0;
 	int possible_sub_string = 0;
 	int debut_potentiel = 0;
 	while (!stop) {
-		if(fread(buf,5,1,yyout) <= 0)
+		if (fread(buf,len_search,1,yyout) <= 0)
 			stop = 1;
-
 		if (strncmp(buf,search,len_search) == 0) {
 			stop = 1;
 		}
@@ -296,11 +301,10 @@ void remonter_in_main() {
 			if(debut_potentiel == (len_search))
 				stop = 1;
 		}
-		else {
-			//search a part of search 
+		else {//
 			possible_sub_string = 0;
 			debut_potentiel = 0;
-			for(int j = 0 ; j < len_search ; j++) {
+			for (int j = 0 ; j < len_search ; j++) {
 				if((search[0] == buf[j]) || (debut_potentiel != 0)){
 					debut_potentiel = j;
 					for(int k = j ; k < len_search ; k++) {
@@ -314,15 +318,33 @@ void remonter_in_main() {
 				}
 			}
 		}
-		if(stop)
+		if (stop)
 			index -= (len_search);
 		else 
 			index += len_search;
 	}
-	printf("index : %d\n",index);
+	//on sauve la suite 
+	char buf_save[1024];
 	fseek(yyout,index,SEEK_SET);
-	char wr[4] = "\nwr\n";
-	fwrite(wr,4,1,yyout);
-	//fprintf(yyout,",,");
-	printf("stop : %d\n",stop);
+	index_true = index;
+}
+
+int insert_bloc_at_end_of_main(char *bloc) {
+	if ((bloc != NULL) && (index_true >= 0)) {
+		int true_size = strnlen(bloc,1020);
+		char buf_save[1024];
+		int stop = 1;
+		while (stop) {
+			stop = fread(buf_save,1024,1,yyout);
+			fseek(yyout,index_true+true_size-1,SEEK_SET);
+			fwrite(buf_save,strlen(buf_save),1,yyout);
+		}
+
+		fseek(yyout,index_true,SEEK_SET);
+		char bloc_buf[1024];
+		snprintf(bloc_buf,strlen(bloc),"%s",bloc);
+		fwrite(bloc_buf,strlen(bloc_buf),1,yyout);
+		return 0;
+	}
+	return -1;
 }
