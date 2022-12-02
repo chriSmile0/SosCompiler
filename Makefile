@@ -37,8 +37,8 @@ lex_bis:
 	$(CC) -c -o $(dir_objs)$(prefixe_code).tab.o $(path_inc).tab.c
 	$(LEX) $(LXFLAGS) -o $(dir_code)voc.c $(path_code).lex
 	$(CC) -c -o $(dir_objs)voc.o $(dir_code)voc.c
-	$(CC) -c -o $(dir_objs)main.o $(dir_code)main.c
-	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)main.o -o \
+	$(CC) -c -o $(dir_objs)sos.o $(dir_code)sos.c
+	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)sos.o -o \
 		$(dir_bin)sos
 	$(CC) -c -o $(dir_objs)test.o $(dir_code)test.c
 	$(CC) -c -o $(dir_objs)fct_tests.o $(dir_code)fct_tests.c
