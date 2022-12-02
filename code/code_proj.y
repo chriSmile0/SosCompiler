@@ -269,7 +269,7 @@ void mips_read_all() {
 	fwrite(buf,strlen(buf),1,yyout_proc);
 	fwrite(buf2,strlen(buf2),1,yyout_proc);
 }
-void  mips_print_all() {
+void mips_print_all() {
 	//Create Affichage_*
 	char buf[1024] = "\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n";
 	char buf2[1024] = "\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n";
@@ -286,8 +286,8 @@ void  mips_print_all() {
 }*/
 
 void check_create_echo_proc() {
-	if(!create_echo_proc) {
-		fseek(yyout,0,SEEK_END);
+	if (!create_echo_proc) {
+		//fseek(yyout_proc,0,SEEK_END);
 		mips_print_all();
 		create_echo_proc = true;
 	}
@@ -387,22 +387,17 @@ void build_final_mips() {
 	}
 }
 
-int insert_bloc_at_end_of_main(char *bloc) {
-	if ((bloc != NULL) && (index_true >= 0)) {
-		int true_size = strnlen(bloc,1020);
-		char buf_save[1024];
-		int stop = 1;
-		while (stop) {
-			stop = fread(buf_save,1024,1,yyout);
-			fseek(yyout,index_true+true_size-1,SEEK_SET);
-			fwrite(buf_save,strlen(buf_save),1,yyout);
-		}
+void create_echo_data(char *id,char *chaine) {
+	yyout_data = fopen("exit_mips/exit_mips_data.s","w");
+	char buf[1024];
+	snprintf(buf,1024,"\t%s: \"%s\"",id,chaine);
+	buf[strlen(id)+5+strlen(chaine)] = '\0';
+	printf("buf : %s\n",buf);
+	fwrite(buf,strlen(buf),1,yyout_data);
+	fclose(yyout_data);
+}
 
-		fseek(yyout,index_true,SEEK_SET);
-		char bloc_buf[1024];
-		snprintf(bloc_buf,strlen(bloc),"%s",bloc);
-		fwrite(bloc_buf,strlen(bloc_buf),1,yyout);
-		return 0;
-	}
-	return -1;
+void echo_main() {
+	//chargement d'une chaine dans le registre 0 
+	//ouvrir le segment data y ajouter la chaine puis la printer sur le main 
 }

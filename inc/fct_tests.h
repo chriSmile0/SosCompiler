@@ -14,7 +14,11 @@ extern void mips_exit();
 extern void build_final_mips();
 extern bool fin_prog;
 extern FILE *yyin;
-extern FILE *yyout;
+extern FILE *yyout_text;
+extern FILE *yyout_data;
+extern FILE *yyout_main;
+extern FILE *yyout_proc;
+extern FILE *yyout_final;
 
 
 extern char data[1024];
