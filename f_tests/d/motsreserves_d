@@ -20,12 +20,11 @@ if toto then else
 for mot 
 in 
 ## mais la suite fonctionne (mais cela importe peu car yacc réglera cela
-for mot
-	in 
+
+#for mot 
+#	in  (censé fonctionner mais ce n'est plus le cas)
 
 ##Attention aux mots reservés mis dans les commentaires comme par exemple 
 ## in ou do ou expr ou test qui sont les seuls possibles qui ferait échoué le test.
-
-#si commentaires est bien implémenté cela passe le test d'intégration 
 
  
