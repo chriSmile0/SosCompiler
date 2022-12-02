@@ -14,10 +14,11 @@
 	bool checkAscii(char * str, bool com);
 	bool word_test(char * str);
 	bool testAscii;
+	FILE *yyout_data;
+	FILE *yyout_text;
+	FILE *yyout_main;
 	FILE *yyout_proc;
 	FILE *yyout_final;
-	FILE *yyout_data;
-	FILE *yyout_main;
 	
 
 	int yaccc = 0;

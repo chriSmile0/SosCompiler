@@ -21,14 +21,16 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   before_script:
     - apt-get update
-    - apt-get install  --yes xutils-dev gcc make flex bison graphviz  
+    - apt-get install  --yes xutils-dev gcc make flex bison graphviz spim
   script:
     - make # peut-être inutile
     - echo "Running unit tests... This will take about 60 seconds."
     - make test ARGS=1
     - make test ARGS=2
     - make test ARGS=3
-    - echo "Tests are passed"
+    - echo "Tests lex are passed"
+    - spim -file exit_mips/exit_mips.s
+    - echo "Test build are passed"
   only:
     - merge_requests
 
