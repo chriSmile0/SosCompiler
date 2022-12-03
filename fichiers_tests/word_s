@@ -1,3 +1,2 @@
-echo "huhu" 
+read nb
 exit 
-;
