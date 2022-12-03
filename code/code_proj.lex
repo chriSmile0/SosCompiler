@@ -61,9 +61,20 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*fi{espace}					{if (yaccc) return FI; return MR;}
 ^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
-
-\"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = ++yytext; 
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
+\'(\\.|[^\\\'])*\'					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = ++yytext; 
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
 
 {digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
