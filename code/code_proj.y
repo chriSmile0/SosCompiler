@@ -196,6 +196,9 @@ unique : ID
 		reg_count++;
 	}
 ;
+id_ : ID;
+
+
 
 
 %%
@@ -391,7 +394,6 @@ void create_echo_data(char *id,char *chaine) {
 	char asciiz[] = ".asciiz";
 	snprintf(buf,1024,"\t%s: %s \"%s\"",id,asciiz,chaine);
 	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
-	printf("buf : %s\n",buf);
 	fwrite(buf,strlen(buf),1,yyout_data);
 }
 
