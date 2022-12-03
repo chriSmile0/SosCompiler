@@ -1,2 +1,3 @@
-read nb
+echo "hihi"
+read lolo
 exit 
