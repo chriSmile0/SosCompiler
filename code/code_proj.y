@@ -262,13 +262,13 @@ void mips_struct_file() {
 
 void mips_read_all() {
 	//Create Lecture_*
-	fprintf(yyout_proc,"\nLecture_Int:\n\tli $v0 5\n\tsyscall\n");
-	fprintf(yyout_proc,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n");
+	fprintf(yyout_proc,"\nLecture_Int:\n\tli $v0 5\n\tsyscall\n\tjr $ra\n");
+	fprintf(yyout_proc,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n");
 }
 void mips_print_all() {
 	//Create Affichage_*
-	fprintf(yyout_proc,"\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n");
-	fprintf(yyout_proc,"\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n");
+	fprintf(yyout_proc,"\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n");
+	fprintf(yyout_proc,"\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n");
 }
 
 void check_create_echo_proc() {
