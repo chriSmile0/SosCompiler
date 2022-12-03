@@ -62,7 +62,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
 \"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
-											yylval.chaine = ++yytext; 
+											yylval.chaine = ++yytext;
 											return CC;
 										}
 										else 

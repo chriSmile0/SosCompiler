@@ -51,15 +51,15 @@ int test_ascii_d_v2() {
 
 
 int test_motsreserves_s_v2() {
-	return test_type("f_tests/s/motsreserves_s",5,MR,MR,"mots reserves");
+	return test_type("f_tests/s/motsreserves_s",5,EXT,MR,"mots reserves");
 }
 
 int test_motsreserves_m_v2() {
-	return test_type("f_tests/e_sos/exemple1",39,MR,MR,"mots reserves");
+	return test_type("f_tests/e_sos/exemple1",39,EXT,MR,"mots reserves");
 }
 
 int test_motsreserves_d_v2() {
-	return test_type("f_tests/d/motsreserves_d",4,MR,MR,"mots reserves");
+	return test_type("f_tests/d/motsreserves_d",4,EXT,MR,"mots reserves");
 }
 
 int test_chainescarac_s_v2() {
@@ -146,6 +146,10 @@ int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
 }
 
+int test_echo_read_s() {
+	return test_word("f_tests/s/word_s", 3);
+}
+
 int test_operations_s() {
 	// Redirection de l'entrée standard (comme test_type)
 	char* filename = "f_tests/s/operations_s";
@@ -192,7 +196,6 @@ int test_operations_m() {
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
 		perror(filename);
-
 	// gencode
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
