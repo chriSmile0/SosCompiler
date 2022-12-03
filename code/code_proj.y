@@ -430,9 +430,12 @@ void build_final_mips() {
 			read_size = fread(buf,1024,1,file_tab[i]);
 			if (read_size == 0)
 				stop = 0;
+			buf[strlen(buf)] = '\0';
+			printf("buf : |%s|\n",buf);
 			fwrite(buf,strlen(buf),1,yyout_final);
 			buf[0] = '\0';//on vide le buffer
 		}
 		fclose(file_tab[i]);
+
 	}
 }
