@@ -1,5 +1,8 @@
 echo "huhu" 
 exit "ahah" 
+read 
+ 
+
 
 
 

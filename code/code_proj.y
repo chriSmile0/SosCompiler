@@ -260,26 +260,19 @@ void mips_struct_file() {
 	//fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall\n");//fin 
 }
 
-
 void mips_read_all() {
 	//Create Lecture_*
-	char buf[SIZE_LINE_MIPS];
-	char *line = "\nLecture_Int:\n\tli $v0 5\n\tsyscall\n";
-	snprintf(buf,SIZE_LINE_MIPS,"%s",line);
-	buf[strlen(line)] = '\0';
-	fwrite(buf,strlen(line),1,yyout_proc);
-	//fprintf(yyout_proc,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n");
+	fprintf(yyout_proc,"\nLecture_Int:\n\tli $v0 5\n\tsyscall\n");
+	fprintf(yyout_proc,"\nLecture_Str:\n\tli $v0 8\n\tsyscall\n");
 }
 void mips_print_all() {
 	//Create Affichage_*
 	fprintf(yyout_proc,"\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n");
-	//index_true = index_true+42;
 	fprintf(yyout_proc,"\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n");
 }
 
 void check_create_echo_proc() {
 	if (!create_echo_proc) {
-		//fseek(yyout_proc,0,SEEK_END);
 		mips_print_all();
 		create_echo_proc = true;
 	}
@@ -297,8 +290,40 @@ void check_create_read_proc() {
 	}
 }
 
+void create_read_data() {
+	char buf[1024];
+	char space[] = ".space";
+	char buffer[] = "buffer";
+	char *taille = "50";
+	snprintf(buf,1024,"\n\t%s: %s %s",buffer,space,taille);
+	buf[strlen(buffer)+5+strlen(space)+strlen(taille)] = '\0';
+	printf("buf : %s\n",buf);
+	fwrite(buf,strlen(buf),1,yyout_data);
+}
+
+void read_main() {
+	char buf[1024];
+	char buffer[] = "buffer";
+	int true_size = strlen(buffer);
+	for (int i = 0 ; i < true_size; i++) 
+		buf[i] = buffer[i];
+	buf[true_size] = '\0';
+	char buf_in_mips[1024];
+	char *jal_Lstr = "\tjal Lecture_Str \n";
+	char la[] = "\tla $a0, buffer\n";
+	char li[] = "\tli $a1, 50\n";//taille du buffer que l'on connais (a opti pour plus tard)
+	snprintf(buf_in_mips,1024,"%s%s%s",la,li,jal_Lstr);
+	fwrite(buf_in_mips,strlen(la)+strlen(li)+strlen(jal_Lstr),1,yyout_main);
+	/*
+	li $v0,8 #take in input
+    la $a0, buffer #load byte space into address
+    li $a1, 20 # allot the byte space for string
+    move $t0,$a0 #save string to t0
+    syscall
+	*/
+}
+
 void create_echo_data(char *id,char *chaine) {
-	yyout_data = fopen("exit_mips/exit_mips_data.s","w");
 	char buf[1024];
 	char asciiz[] = ".asciiz";
 	snprintf(buf,1024,"\t%s: %s \"%s\"",id,asciiz,chaine);
@@ -308,8 +333,6 @@ void create_echo_data(char *id,char *chaine) {
 }
 
 void echo_main(char *id) {
-	//chargement d'une chaine dans le registre 0 
-	//ouvrir le segment data y ajouter la chaine puis la printer sur le main 
 	char buf[1024];
 	int true_size = strlen(id);
 	for (int i = 0 ; i < true_size; i++) 
@@ -318,7 +341,6 @@ void echo_main(char *id) {
 	char buf_in_mips[1024];
 	char *jal_str = "\tjal Affichage_Str \n";
 	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
-	printf("buf_in_mips : %s\n",buf_in_mips);
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
 }
 
@@ -329,14 +351,12 @@ void build_final_mips() {
 
 	char buf[1024];
 	int read_size = 0;
-	//tout ce qu'on peut lire dans data
-	//a opti dans une double boucle avec 
 	for	(int i = 0 ; i < 4 ; i++) {
 		int stop = 1;
 		char in_param[27];
 		snprintf(in_param,27,"exit_mips/exit_mips_%s.s",file_name[i]);
 		in_param[27] = '\0';
-		if(i == 2)
+		if (i == 2)
 			fprintf(file_tab[i],"\n\tjal Exit\n");
 		fclose(file_tab[i]);
 		file_tab[i] = fopen(in_param,"r+");
