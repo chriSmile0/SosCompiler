@@ -1,2 +1,3 @@
 echo "ahah"
+read nb
 exit 
