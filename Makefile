@@ -49,6 +49,7 @@ lex_bis:
 dir: # -commande pour ignorer les erreurs de la commande
 	-mkdir $(dir_objs) 2> /dev/null
 	-mkdir $(dir_bin) 2> /dev/null
+	-mkdir $(dir_mips) 2> /dev/null
 
 doc_m:
 	bison --report=all --report-file=$(prefixe_code).output \

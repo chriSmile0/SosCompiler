@@ -9,4 +9,3 @@ inc/*.tab.*
 objs/
 *.dot
 *.output
-exit_mips
