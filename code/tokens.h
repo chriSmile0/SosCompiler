@@ -1,4 +1,9 @@
-
+#define ID 5
+#define CC 50
+#define EXT 40
+#define READ 41
+#define ECH 42
+#define MR 48
 
 #define CHAR 10
 #define COM 4
@@ -17,11 +22,3 @@
 #define CCV 28 //chaine vide
 #define CCNV 29 //chaine non vide
 #define N_OP 30
-
-
-//#define ID 5
-#define CC 50
-#define EXT 40
-#define READ 41
-#define ECH 42
-#define MR 48

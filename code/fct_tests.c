@@ -146,10 +146,6 @@ int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
 }
 
-int test_echo_read_s() {
-	return test_word("f_tests/s/word_s", 3);
-}
-
 int test_operations_s() {
 	// Redirection de l'entrée standard (comme test_type)
 	char* filename = "f_tests/s/operations_s";
@@ -424,4 +420,40 @@ int test_dec_tab_d(void){
 	instructions[0] = '\0';
 	id_count = 0;
 	return comp;
+}
+int test_echo_read(char* chemin_fichier_test, int attendu) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+	yyout_data = fopen("exit_mips/exit_mips_data.s","w+");
+	yyout_text = fopen("exit_mips/exit_mips_text.s","w+");
+	yyout_main = fopen("exit_mips/exit_mips_main.s","w+");
+	yyout_proc = fopen("exit_mips/exit_mips_proc.s","w+");
+	yyout_final = fopen("exit_mips/exit_mips.s","w+");
+	if (yyout_proc == NULL) 
+		perror("exit_mips.s doit exister");
+		
+	//mips_struct_file();
+	int r = yyparse();
+	if(fin_prog)
+		printf("Fin programme ");
+	else 
+		printf("pas de fin de programme ");
+	printf(": %d\n",r);
+	build_final_mips();
+	//fclose(yyout_data);
+	return r;
+}
+
+int test_echo_read_s() {
+	return test_echo_read("f_tests/s/word_s", 3);
+}
+
+int test_echo_read_m() {
+	return test_echo_read("f_tests/e_sos/exemple1", 100);
+}
+
+int test_echo_read_d() {
+	return test_echo_read("f_tests/d/word_d", 0);
 }

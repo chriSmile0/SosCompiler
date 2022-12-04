@@ -64,7 +64,6 @@
 
 %token MR
 %token CHAR
-%token COM
 
 %union {
 	char *id;
@@ -297,7 +296,8 @@ void check_create_echo_proc() {
 
 void check_exit_proc() {
 	char buf[1024] = "\nExit:\n\tli $v0, 10\n\tsyscall\n";
-	printf("buf : |%s|\n",buf);
+	buf[strlen(buf)] = '\0';
+	printf("buf ,: |%s|\n",buf);
 	fwrite(buf,strlen(buf),1,yyout_proc);
 }
 
@@ -338,12 +338,35 @@ void read_main(char *id) {
 }
 
 void create_echo_data(char *id,char *chaine) {
+	int true_size = strlen(id);
 	char buf[1024];
+<<<<<<< HEAD
 	char asciiz[] = ".asciiz";
 	snprintf(buf,1024,"\n\t%s: %s \"%s\"",id,asciiz,chaine);
 	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
 	printf("buf : %s\n",buf);
 	fwrite(buf,strlen(buf),1,yyout_data);
+=======
+	for (int i = 0 ; i < true_size; i++) 
+		buf[i] = id[i];
+	buf[true_size+2] = '\0';
+	char true_chaine_s = strlen(chaine);
+	char buf_c[1024];
+	for (int i = 0 ; i < true_chaine_s; i++) 
+		buf_c[i] = chaine[i];
+	buf_c[true_chaine_s] = '\0';
+	char buf_in_mips[1024];
+	buf_in_mips[0] = '\0';
+	char asciiz[11];
+	char g1[12] = "\"";
+	g1[strlen(g1)] = '\0';
+	snprintf(asciiz,11,"%s",": .asciiz ");
+	asciiz[10] = '\0';
+	snprintf(buf_in_mips,1024,"%s%s%s%s%s",buf,asciiz,g1,buf_c,g1);
+	buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))] = '\0';
+	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
+
+>>>>>>> Commenter les lignes 1 a 6 de tokens.h pour pouvoir le test du mips
 }
 
 void echo_main(char *id) {
@@ -364,6 +387,7 @@ void build_final_mips() {
 	char *file_name[4] = {"data","text","main","proc"};
 
 	char buf[1024];
+	buf[0] = '\0';
 	int read_size = 0;
 	for	(int i = 0 ; i < 4 ; i++) {
 		int stop = 1;
@@ -373,18 +397,21 @@ void build_final_mips() {
 		if (i == 2)
 			fprintf(file_tab[i],"\n\tjal Exit\n");
 		fclose(file_tab[i]);
-		file_tab[i] = fopen(in_param,"r+");
+		int desc = open(in_param,O_RDWR,0666);
 		fprintf(yyout_final,"%s",en_tetes[i]);
 		while (stop) {
-			read_size = fread(buf,1024,1,file_tab[i]);
-			if (read_size == 0)
+			buf[0] = '\0';
+			read_size = read(desc,buf,1024); //règle le bug 
+			if (read_size <= 0)
 				stop = 0;
-			buf[strlen(buf)] = '\0';
-			printf("buf : |%s|\n",buf);
-			fwrite(buf,strlen(buf),1,yyout_final);
-			buf[0] = '\0';//on vide le buffer
+			else {
+				buf[read_size] = '\0';
+				fwrite(buf,strlen(buf),1,yyout_final);
+				buf[0] = '\0';//on vide le buffer
+			}
 		}
-		fclose(file_tab[i]);
+		close(desc);
+		//fclose(file_tab[i]);
 
 	}
 }

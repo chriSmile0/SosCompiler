@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 
+
+
 /**
  * @brief	Suite de fonctions de type_*_s()
  * 			Chaque fonction ouvre le fichier *_s.sh
@@ -16,8 +18,8 @@
 int test_simple() {
 	printf("\n--- TEST SIMPLE\n");
 	int tests = 0;
-	/*printf("- test_chainescarac_s\n");
-	tests += test_chainescarac_s();
+	printf("- test_chainescarac_s\n");
+	tests += test_chainescarac_s_v2();
 	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
 	printf("- test_commentaires_s\n");
@@ -138,14 +140,47 @@ int test_difficile() {
 	return tests;
 }
 
-int main(int argc, char *argv[]) {
-	printf("test\n");
 
+void hide_tokens_h() {
+	FILE * f = fopen("code/tokens.h","r+");
+	char b_com[2] = "/*";
+	fwrite(b_com,2,1,f);
+	fseek(f,0,SEEK_END);
+	char e_com[2] = "*/";
+	fwrite(e_com,2,1,f);
+}
+
+int test_mips_simple() {
+	int tests = 0;
+	printf("- test_echo_read\n");
+	tests += test_echo_read_s();
+	return tests;
+}
+
+int test_mips_median() {
+	int tests = 0;
+	printf("- test_echo_read_m\n");
+	tests += test_echo_read_m();
+	return tests;
+}
+
+int test_mips_difficile() {
+	int tests = 0;
+	printf("- test_echo_read\n");
+	tests += test_echo_read_d();
+	return tests;
+}
+
+int main(int argc, char *argv[]) {
 	if (argc != 2) {
 		fprintf(stderr,"format : %s {1,2,3}\n",argv[0]);
 		return 1;
 	}
+	
+
 	int (*test_F[3])() = {test_simple, test_median, test_difficile};
+	int (*test_FM[3])() = {test_mips_simple, test_mips_median, 
+							test_mips_difficile};
 
 	int niveau_test = atoi(argv[1]);
 	printf("Test de niveau de rang : %d\n",niveau_test);
@@ -153,6 +188,14 @@ int main(int argc, char *argv[]) {
 	for (int i = 0 ; i < niveau_test ; i++)
 		printf("test %d/%d >>> %s\n",i+1,niveau_test,
 			(((retour = test_F[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
+				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
+
+	//hide_tokens_h();
+	printf("Test mips de niveau de rang : %d\n",niveau_test);
+	retour = 0; //que test 1 pour le moment 
+	for (int i = 0 ; i < 1 ; i++)
+		printf("test %d/%d >>> %s\n",i+1,niveau_test,
+			(((retour = test_FM[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
 				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
 
 	return retour;

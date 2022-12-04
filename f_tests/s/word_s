@@ -1,2 +1,2 @@
-read nb
+echo "ahah"
 exit 
