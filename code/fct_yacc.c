@@ -91,3 +91,106 @@ int get_nb_args(char* name) {
 void free_tds() {
     free(table.champs);
 }
+void mips_read_all() {
+	//Create Lecture_*
+	char buf[1024] = "\nLecture_Int:\n\tli $v0 5\n\tsyscall\n\tjr $ra\n";
+	char buf2[1024] = "\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n";
+	fwrite(buf,strlen(buf),1,yyout_proc);
+	fwrite(buf2,strlen(buf2),1,yyout_proc);
+}
+void mips_print_all() {
+	//Create Affichage_*
+	char buf[1024] = "\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n";
+	char buf2[1024] = "\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n";
+	fwrite(buf,strlen(buf),1,yyout_proc);
+	fwrite(buf2,strlen(buf2),1,yyout_proc);
+}
+
+void check_echo_proc() {
+	if (!create_echo_proc) {
+		mips_print_all();
+		create_echo_proc = true;
+	}
+}
+
+void check_exit_proc() {
+	char buf[1024] = "\nExit:\n\tli $v0, 10\n\tsyscall\n";
+	buf[strlen(buf)] = '\0';
+	fwrite(buf,strlen(buf),1,yyout_proc);
+}
+
+void check_read_proc() {
+	if (!create_read_proc) { 
+		mips_read_all();
+		create_read_proc = true;
+	}
+}
+
+void read_data(char *id) {
+	char buf[1024];
+	char space[] = ".space";
+	char buffer[1024];
+	snprintf(buffer,1024,"%s",id);
+	buffer[strlen(id)] = '\0';
+	char taille[] = "5000";
+	snprintf(buf,1020,"\n\t%s: %s %s\n",buffer,space,taille);
+	buf[strlen(buffer)+5+strlen(space)+strlen(taille)] = '\0';
+	fwrite(buf,strlen(buf),1,yyout_data);
+}
+
+void read_main(char *id) {
+	int true_size = strlen(id);
+	char buf[1024];
+	for (int i = 0 ; i < true_size; i++) 
+		buf[i] = id[i];
+	buf[true_size] = '\0';
+	char buf_in_mips[1024];
+	char la[] = "\tla $a0, ";
+	snprintf(buf_in_mips,1024,"%s%s\n",la,buf);
+	buf_in_mips[strlen(la)+strlen(buf)+1] = '\0';
+	char li[] = "\tli $a1, 50\n";//taille du buffer que l'on connais (a opti pour plus tard)
+	snprintf(buf_in_mips+strlen(buf_in_mips),1024,"%s",li);
+	char jal_Lstr[] = "\tjal Lecture_Str \n";
+	snprintf(buf_in_mips+strlen(buf_in_mips),1024,"%s",jal_Lstr);
+	buf_in_mips[strlen(buf_in_mips)+strlen(jal_Lstr)] = '\0';
+	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_main);
+}
+
+
+void int_in_str(int e, char tab[],int size,int index_dep) {
+    for(int i = 0 ; i < index_dep; i++) // on pad avec une lettre 
+        tab[i] = 'a';
+    sprintf(tab+index_dep,"%d",e);
+} 
+   
+
+void echo_data(int *id,char *chaine) {
+	char buf[1024];
+	
+    int_in_str(*id,buf,1024,1);
+	char true_chaine_s = strlen(chaine);
+	char buf_c[1024];
+	for (int i = 0 ; i < true_chaine_s; i++) 
+		buf_c[i] = chaine[i];
+	buf_c[true_chaine_s] = '\0';
+	char buf_in_mips[1024];
+	buf_in_mips[0] = '\0';
+	char asciiz[11];
+	char g1[12] = "\"";
+	g1[strlen(g1)] = '\0';
+	snprintf(asciiz,11,"%s",": .asciiz ");
+	asciiz[10] = '\0';
+	snprintf(buf_in_mips,1024,"%s%s%s%s%s%s",buf,asciiz,g1,buf_c,g1,"\n");
+	buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))+1] = '\0';
+	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
+}
+
+void echo_main(int *id) {
+	char buf[1024];
+    int_in_str(*id,buf,1024,1);
+	char buf_in_mips[1024];
+	char *jal_str = "\tjal Affichage_Str \n";
+	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
+	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
+    (*id)++;
+}

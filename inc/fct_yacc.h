@@ -126,3 +126,100 @@ int get_nb_args(char* name);
 void free_tds();
 
 #endif
+
+
+/**** INSTRUCTION *****/
+/*	Création des fct : 
+/*		- 	instruction_data()
+		-	instruction_proc()
+		- 	instruction_main()
+/*	Qui associe pour chaque instruction des lignes de mips à écrire
+/*	Dans le fichier en sortie 
+/**** FIN INSTRUCTION ******/
+
+int cpt = 0;
+int *cpt_id = &cpt;
+
+
+/**
+ * @brief 	Lecture_Int et Lecture_Str combiné
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void mips_read_all();
+
+/**
+ * @brief 	Affichage_Int et Affichage_Str combiné
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void mips_print_all() ;
+
+/**
+ * @brief	Check qu'une procédure echo n'existe pas déjà
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void check_echo_proc();
+
+/**
+ * @brief 	Check qu'une procédure exit n'existe pas déjà
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void check_exit_proc();
+
+/**
+ * @brief 	Check qu'une procédure read n'existe pas déjà 
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void check_read_proc();
+
+/**
+ * @brief 	Création des buffers pour read 
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void read_data(char *id);
+
+/**
+ * @brief 	Création des lignes de code en mips dans le main pour read
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void read_main(char *id);
+
+/**
+ * @brief 	Création des buffers pour echo
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void echo_data(int *id,char *chaine);
+
+/**
+ * @brief 	Creéation des lignes de code en mips dans le main pour echo
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void echo_main(int *id);
+
+#endif // FCT_YACC //

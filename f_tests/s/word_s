@@ -1,3 +1,4 @@
 echo "ahah"
+echo "ohoh"
 read nb
 exit 

@@ -6,6 +6,7 @@
 	#include <unistd.h>
 	#include <fcntl.h>
 	#include <stdbool.h>
+	#include "../inc/fct_yacc.h"
 	#define SIZE_LINE_MIPS 90
 	extern int yylex();
 	extern void yyerror(const char *msg);
@@ -17,9 +18,7 @@
 	extern FILE *yyout_proc;
 	extern FILE *yyout_final;
 	bool create_echo_proc = false;
-	void create_echo_data(char *id,char *chaine);
 	bool create_read_proc = false;
-	void echo_main(char *id);
 	bool fin_prog = false;
 	void check_create_echo_proc();
 	void check_create_read_proc();
@@ -201,8 +200,13 @@ id_ : ID;
 
 
 %%
+<<<<<<< HEAD
 // Fonction qui execute une operation entre les deux derniers registres
 // temporaires utilisés
+=======
+<<<<<<< HEAD
+// Fonction qui execute une operation entre les deux derniers registres temporaires utilisés
+>>>>>>> Répartition des fonctions + ok echo_read
 void operation(char *str) {
 	strcat(instructions, str);
 	strcat(instructions, " $t");
@@ -247,7 +251,9 @@ int yyerror(char *s) {
 	return 1;
 }
 
+#include "../code/fct_yacc.c"
 
+<<<<<<< HEAD
 void mips_struct_file() {
 	/*char buf[SIZE_LINE_MIPS];
 	char *line = ".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n";
@@ -381,6 +387,9 @@ void echo_main(char *id) {
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
 }
 
+=======
+//#### LAISSE DANS CE FICHIER ####//
+>>>>>>> Répartition des fonctions + ok echo_read
 void build_final_mips() {
 	FILE *file_tab[4] = {yyout_data,yyout_text,yyout_main,yyout_proc};
 	char *en_tetes[4] = {".data\n","\n.text","\nmain:\n",""};
@@ -411,8 +420,6 @@ void build_final_mips() {
 			}
 		}
 		close(desc);
-		//fclose(file_tab[i]);
-
 	}
 }
 
