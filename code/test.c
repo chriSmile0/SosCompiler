@@ -153,7 +153,7 @@ void hide_tokens_h() {
 int test_mips_simple() {
 	int tests = 0;
 	printf("- test_echo_read\n");
-	tests += test_echo_read_d();
+	tests += test_echo_read_s();
 	return tests;
 }
 
@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
 	//hide_tokens_h();
 	printf("Test mips de niveau de rang : %d\n",niveau_test);
 	retour = 0; //que test 1 pour le moment 
-	for (int i = 0 ; i < 1 ; i++)
+	for (int i = 0 ; i < niveau_test ; i++)
 		printf("test %d/%d >>> %s\n",i+1,niveau_test,
 			(((retour = test_FM[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
 				: "\x1B[32m" "VALIDE" "\x1B[37m" ));

@@ -159,7 +159,7 @@ void read_main(char *id) {
 }
 
 
-void int_in_str(int e, char tab[],int size,int index_dep) {
+void int_in_str(int e, char tab[],int index_dep) {
     for(int i = 0 ; i < index_dep; i++) // on pad avec une lettre 
         tab[i] = 'a';
     sprintf(tab+index_dep,"%d",e);
@@ -176,7 +176,7 @@ void echo_data(int *id,char *chaine) {
 		//il faut qu'on remplace 
 	}
 	else { // cela ne concerne pas un id 
-	 	int_in_str(*id,buf,1024,1);
+	 	int_in_str(*id,buf,1);
 		char true_chaine_s = strlen(chaine);
 		char buf_c[1024];
 		for (int i = 0 ; i < true_chaine_s; i++) 
@@ -200,15 +200,17 @@ void echo_data(int *id,char *chaine) {
 void echo_main(int *id, char *chaine) {
 	char buf[1024];
 	int cherche_res = 0;
-	if((cherche_res = cherche_id(chaine)) != -1)
+	if ((cherche_res = cherche_id(chaine)) != -1) {
 		snprintf(buf,1024,"%s",chaine);
-	else 
-    	int_in_str(*id,buf,1024,1);
+	}
+	else {
+    	int_in_str(*id,buf,1);
+		(*id)++;
+	}
 	char buf_in_mips[1024];
 	char *jal_str = "\tjal Affichage_Str \n";
 	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
-    (*id)++;
 }
 
 

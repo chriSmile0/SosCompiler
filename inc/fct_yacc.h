@@ -232,6 +232,8 @@ void echo_data(int *id,char *chaine);
 void echo_main(int *id, char *chaine);
 
 
+void int_in_str(int e, char tab[],int index_dep);
+
 int cherche_id(char *id);
 
 int ajout_chaine(char *id, char *chaine);

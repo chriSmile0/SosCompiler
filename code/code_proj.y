@@ -140,6 +140,11 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, itoa(--if_count));
 		strcat(instructions, ":\n");
 	    }
+operande : CC
+	| '$' OACO ID CACO {$$ = $3;}
+	| '$' NB {int_in_str($2,$$,0);} //check des arguments ici 
+	| MOT 
+	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
 
 bool : NB 
@@ -205,16 +210,11 @@ id_ : ID;
 
 
 %%
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Fonction qui execute une operation entre les deux derniers registres
 // temporaires utilisés
-=======
-<<<<<<< HEAD
-=======
->>>>>>> Ajout echo des ids
+
 // Fonction qui execute une operation entre les deux derniers registres temporaires utilisés
->>>>>>> Répartition des fonctions + ok echo_read
+
 void operation(char *str) {
 	strcat(instructions, str);
 	strcat(instructions, " $t");
@@ -355,13 +355,11 @@ void read_main(char *id) {
 void create_echo_data(char *id,char *chaine) {
 	int true_size = strlen(id);
 	char buf[1024];
-<<<<<<< HEAD
 	char asciiz[] = ".asciiz";
 	snprintf(buf,1024,"\n\t%s: %s \"%s\"",id,asciiz,chaine);
 	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
 	printf("buf : %s\n",buf);
 	fwrite(buf,strlen(buf),1,yyout_data);
-=======
 	for (int i = 0 ; i < true_size; i++) 
 		buf[i] = id[i];
 	buf[true_size+2] = '\0';
@@ -380,8 +378,6 @@ void create_echo_data(char *id,char *chaine) {
 	snprintf(buf_in_mips,1024,"%s%s%s%s%s",buf,asciiz,g1,buf_c,g1);
 	buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))] = '\0';
 	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
-
->>>>>>> Commenter les lignes 1 a 6 de tokens.h pour pouvoir le test du mips
 }
 
 void echo_main(char *id) {
@@ -396,12 +392,8 @@ void echo_main(char *id) {
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
 }
 
-=======
-=======
-
->>>>>>> Ajout echo des ids
 //#### LAISSE DANS CE FICHIER ####//
->>>>>>> Répartition des fonctions + ok echo_read
+
 void build_final_mips() {
 	FILE *file_tab[4] = {yyout_data,yyout_text,yyout_main,yyout_proc};
 	char *en_tetes[4] = {".data\n","\n.text","\nmain:\n",""};

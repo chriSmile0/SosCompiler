@@ -3,11 +3,12 @@
 #define EXT 40
 #define READ 41
 #define ECH 42
+#define NB 2
+#define MOT 6
 #define MR 48*/
 
 #define CHAR 10
 #define COM 4
-#define MOT 6
 #define N_ID 11
 #define N_MOT 12
 
