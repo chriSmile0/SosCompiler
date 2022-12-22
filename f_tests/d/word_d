@@ -1,0 +1,4 @@
+read nb
+echo "hihi"
+echo ${nb}
+exit 

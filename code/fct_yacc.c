@@ -136,6 +136,8 @@ void read_data(char *id) {
 	snprintf(buf,1020,"\n\t%s: %s %s\n",buffer,space,taille);
 	buf[strlen(buffer)+5+strlen(space)+strlen(taille)] = '\0';
 	fwrite(buf,strlen(buf),1,yyout_data);
+	//add id in table_of_symbol
+	ajout_chaine(id,"");
 }
 
 void read_main(char *id) {
@@ -166,31 +168,77 @@ void int_in_str(int e, char tab[],int size,int index_dep) {
 
 void echo_data(int *id,char *chaine) {
 	char buf[1024];
+	//search in table des symboles
+	int cherche_res = 0;
+	if((cherche_res = cherche_id(chaine)) != -1) {
+		//on a trouver un id
+		printf("id associé : %s\n",table.champs[cherche_res].id);
+		//il faut qu'on remplace 
+	}
+	else { // cela ne concerne pas un id 
+	 	int_in_str(*id,buf,1024,1);
+		char true_chaine_s = strlen(chaine);
+		char buf_c[1024];
+		for (int i = 0 ; i < true_chaine_s; i++) 
+			buf_c[i] = chaine[i];
+		buf_c[true_chaine_s] = '\0';
+		char buf_in_mips[1024];
+		buf_in_mips[0] = '\0';
+		char asciiz[11];
+		char g1[12] = "\"";
+		g1[strlen(g1)] = '\0';
+		snprintf(asciiz,11,"%s",": .asciiz ");
+		asciiz[10] = '\0';
+		snprintf(buf_in_mips,1024,"%s%s%s%s%s%s%s","\n\t",buf,asciiz,g1,buf_c,g1,"\n");
+		buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))+3] = '\0';
+		fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
+	}
 	
-    int_in_str(*id,buf,1024,1);
-	char true_chaine_s = strlen(chaine);
-	char buf_c[1024];
-	for (int i = 0 ; i < true_chaine_s; i++) 
-		buf_c[i] = chaine[i];
-	buf_c[true_chaine_s] = '\0';
-	char buf_in_mips[1024];
-	buf_in_mips[0] = '\0';
-	char asciiz[11];
-	char g1[12] = "\"";
-	g1[strlen(g1)] = '\0';
-	snprintf(asciiz,11,"%s",": .asciiz ");
-	asciiz[10] = '\0';
-	snprintf(buf_in_mips,1024,"%s%s%s%s%s%s",buf,asciiz,g1,buf_c,g1,"\n");
-	buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))+1] = '\0';
-	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
+   
 }
 
-void echo_main(int *id) {
+void echo_main(int *id, char *chaine) {
 	char buf[1024];
-    int_in_str(*id,buf,1024,1);
+	int cherche_res = 0;
+	if((cherche_res = cherche_id(chaine)) != -1)
+		snprintf(buf,1024,"%s",chaine);
+	else 
+    	int_in_str(*id,buf,1024,1);
 	char buf_in_mips[1024];
 	char *jal_str = "\tjal Affichage_Str \n";
 	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
 	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
     (*id)++;
+}
+
+
+int cherche_id(char *id)
+{
+	int i = 0;
+	int size_table = table.taille;
+	while((strcmp(table.champs[i].id,id)!=0) 
+		&& (i < size_table))
+		i++;
+	if(i==size_table)
+		return -1;
+	return i;
+}
+
+int ajout_chaine(char *id, char *chaine)
+{
+	int result_cherche = 0;
+	if((result_cherche = cherche_id(id))!=-1)
+		return result_cherche;
+	snprintf(table.champs[table.taille].id,50,"%s",id);
+	table.champs[table.taille].id[strlen(id)] = '\0';
+	snprintf(table.champs[table.taille].valeur,50,"%s",chaine);
+	table.champs[table.taille].valeur[strlen(chaine)] = '\0';
+	table.taille++;
+	return (table.taille-1);
+}
+
+void print_table_symboles() {
+	int taille_table = table.taille;
+	for(int i = 0 ; i < taille_table; i++)
+		printf("id: %s, valeur : %s\n",table.champs[i].id,table.champs[i].valeur); 
 }

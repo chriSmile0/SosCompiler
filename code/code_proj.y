@@ -68,10 +68,15 @@
 	char *id;
 	int entier;
 	char *chaine;
+	char *mot;
 	char **multi_cc;
 }
 
-%token '\n' READ N_ID ECH EXT
+
+%token '\n' READ N_ID ECH EXT PVG SPA OACO CACO '$'
+%token <id> ID
+%token <entier> NB
+%token <chaine> MOT 
 %token <chaine> CC
 %token <id> ID
 %token <entier> NB 
@@ -201,10 +206,13 @@ id_ : ID;
 
 %%
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Fonction qui execute une operation entre les deux derniers registres
 // temporaires utilisés
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> Ajout echo des ids
 // Fonction qui execute une operation entre les deux derniers registres temporaires utilisés
 >>>>>>> Répartition des fonctions + ok echo_read
 void operation(char *str) {
@@ -253,6 +261,7 @@ int yyerror(char *s) {
 
 #include "../code/fct_yacc.c"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 void mips_struct_file() {
 	/*char buf[SIZE_LINE_MIPS];
@@ -388,6 +397,9 @@ void echo_main(char *id) {
 }
 
 =======
+=======
+
+>>>>>>> Ajout echo des ids
 //#### LAISSE DANS CE FICHIER ####//
 >>>>>>> Répartition des fonctions + ok echo_read
 void build_final_mips() {

@@ -137,8 +137,17 @@ void free_tds();
 /*	Dans le fichier en sortie 
 /**** FIN INSTRUCTION ******/
 
-int cpt = 0;
-int *cpt_id = &cpt;
+typedef struct {
+	int index_in_t;
+	char *id;
+	char *valeur;
+} champ;
+
+struct table_symbole {
+	int cur_index;
+	int taille;
+	champ *champs;
+} table;
 
 
 /**
@@ -220,6 +229,14 @@ void echo_data(int *id,char *chaine);
  * 
  * @return //
 */
-void echo_main(int *id);
+void echo_main(int *id, char *chaine);
+
+
+int cherche_id(char *id);
+
+int ajout_chaine(char *id, char *chaine);
+
+void print_table_symboles();
+
 
 #endif // FCT_YACC //

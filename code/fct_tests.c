@@ -431,6 +431,22 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 	yyout_main = fopen("exit_mips/exit_mips_main.s","w+");
 	yyout_proc = fopen("exit_mips/exit_mips_proc.s","w+");
 	yyout_final = fopen("exit_mips/exit_mips.s","w+");
+
+	//init table des symboles
+
+	table.cur_index = -1;
+	table.taille = 0;
+	table.champs = (champ*)(malloc(sizeof(champ)*1024));//1024 pour le moment 
+	if (table.champs != NULL)
+		for (int i = 0 ; i < 1024 ; i++) {
+			table.champs[i].id = malloc(50); //49 carac par id max 
+			table.champs[i].id[0] = '\0';
+			table.champs[i].index_in_t = i;
+			table.champs[i].valeur = malloc(sizeof(50));
+			table.champs[i].valeur[0] = '\0';
+		}
+	printf("table : %d\n",table.cur_index);
+
 	if (yyout_proc == NULL) 
 		perror("exit_mips.s doit exister");
 		
@@ -443,6 +459,7 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 	printf(": %d\n",r);
 	build_final_mips();
 	//fclose(yyout_data);
+	free(table.champs);
 	return r;
 }
 

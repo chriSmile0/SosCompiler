@@ -62,14 +62,14 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
 \"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
-											yylval.chaine = ++yytext;
+											yylval.chaine = strdup(++yytext);
 											return CC;
 										}
 										else 
 											yyerror("Caractère non ASCII");
 									}
 \'(\\.|[^\\\'])*\'					{if(checkAscii(&yytext[1], true)==true) { 
-											yylval.chaine = ++yytext; 
+											yylval.chaine = strdup(++yytext); 
 											return CC;
 										}
 										else 
