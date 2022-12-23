@@ -145,3 +145,32 @@ int test_opel_m_v2() {
 int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
 }
+
+int test_concat(char* chemin_fichier_test, int attendu) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+	yyout = fopen("exit_mips/exit_mips.s","w+");
+
+	if (yyout == NULL) 
+		perror("exit_mips.s doit exister");
+		
+	int r = yyparse();
+	printf("r : %d\n",r);
+	return r;
+}
+
+int test_concat_s() {
+	return test_concat("f_tests/s/concat_s", 0);
+}
+
+int test_concat_m() {
+	return test_concat("f_tests/e_sos/exemple1", 0);
+}
+
+int test_concat_d() {
+	return test_concat("f_tests/d/concat_d", 1); //nb de concat a faire
+}
+
+

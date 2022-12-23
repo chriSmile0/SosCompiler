@@ -51,8 +51,22 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
 
-\"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = strdup(++yytext);
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
+\'(\\.|[^\\\'])*\'					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = strdup(++yytext); 
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
+
+
 
 {signe}?{digit}+						return (checkNombres(yytext) ? NB : MOT);
 
@@ -64,7 +78,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}({char}|{digit})*					{return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 
-{endline}								;
+{endline}								{return '\n';}
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
 
 
