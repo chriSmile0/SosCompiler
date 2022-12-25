@@ -46,6 +46,7 @@ instruction : concatenation {
 concatenation : concatenation operande  {
 					concat_data($1,$2);
 					$$ = $1;
+					printf("$$ : %s\n",$$);
 				}
 	| operande 
 ;
