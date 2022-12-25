@@ -51,10 +51,33 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
 
-\"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = strdup(++yytext);
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
+\'(\\.|[^\\\'])*\'					{if(checkAscii(&yytext[1], true)==true) { 
+											yylval.chaine = strdup(++yytext); 
+											return CC;
+										}
+										else 
+											yyerror("Caractère non ASCII");
+									}
 
-{signe}?{digit}+						return (checkNombres(yytext) ? NB : MOT);
+
+{signe}?{digit}+					{if(checkNombres(yytext)) {
+										yylval.nb = strdup(yytext);
+										return NB;
+									}
+									else {
+										if(yytext[0]=='+' || (yytext[0] == '-'))
+											yylval.mot = strdup(++yytext);
+										else 
+											yylval.mot = strdup(yytext);
+										return MOT;
+									}}
 
 {com}+.*{endline}						return COM;
 
@@ -62,9 +85,10 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}({char}|{digit})*					{return ID;}//printf("id=|%s|\n",yytext);
-({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
+({char}|{digit})+						{yylval.chaine = strdup(yytext);return MOT;}//printf("mot : |%s|\n",yytext);
 
-{endline}								;
+"$"({digit}+|[?|*])						{yylval.chaine = strdup(++yytext);return ARGS;}
+{endline}								{return '\n';}
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
 
 

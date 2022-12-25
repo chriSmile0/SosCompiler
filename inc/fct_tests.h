@@ -7,6 +7,7 @@
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
+extern FILE *yyout;
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter
@@ -205,5 +206,13 @@ int test_opel_m_v2(void);
 
 int test_opel_d_v2(void);
 
+
+int test_operande(char* chemin_fichier_test, int attendu);
+
+int test_operande_s(void);
+
+int test_operande_m(void);
+
+int test_operande_d(void);
 
 #endif // FCT_TESTS_H //
