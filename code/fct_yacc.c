@@ -52,10 +52,10 @@ char * rtn_arg(int index_arg, char * list_arguments) {
 
 char * traiter_arg(char *ligne_arg, char *list_argumens) {
     if (ligne_arg[0] == '?') {//$?
-        return "Statut Fonction";
+        return "??";
     }
     else if (ligne_arg[0] == '*') {//$*
-        return "Ligne Arg";
+        return "**";
     }
     else {//$entier
         return rtn_arg((atoi(ligne_arg)),list_argumens);
@@ -68,3 +68,46 @@ void int_in_str(int e, char tab[],int index_dep) {
         tab[i] = 'a';
     sprintf(tab+index_dep,"%d",e);
 } 
+
+
+int cherche_id(char *id)
+{
+	int i = 0;
+	int size_table = table.taille;
+	while((strcmp(table.champs[i].id,id)!=0) 
+		&& (i < size_table))
+		i++;
+    printf("i : %d\n",i);
+	if(i==size_table)
+		return -1;
+	return i;
+}
+
+int ajout_chaine(char *id, char *chaine)
+{
+	int result_cherche = 0;
+	if((result_cherche = cherche_id(id))!=-1)
+		return result_cherche;
+	snprintf(table.champs[table.taille].id,50,"%s",id);
+	table.champs[table.taille].id[strlen(id)] = '\0';
+	snprintf(table.champs[table.taille].valeur,50,"%s",chaine);
+	table.champs[table.taille].valeur[strlen(chaine)] = '\0';
+	table.taille++;
+	return (table.taille-1);
+}
+
+char * str_value_of_id(char *id) {
+    int result_recherche = 0;
+    if ((result_recherche = cherche_id(id))==-1) {
+        fprintf(stderr,"Erreur id introuvable dans la table\n");
+        exit(EXIT_FAILURE);
+    }
+    return table.champs[result_recherche].valeur;
+}
+
+void print_table_symboles() {
+	int taille_table = table.taille;
+	for(int i = 0 ; i < taille_table; i++)
+		printf("id: %s, valeur : %s\n",table.champs[i].id,table.champs[i].valeur); 
+}
+

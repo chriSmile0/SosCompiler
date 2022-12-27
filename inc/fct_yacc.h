@@ -3,6 +3,21 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+typedef struct {
+	int index_in_t;
+	char *id;
+	char *valeur;
+} champ;
+
+struct table_symbole {
+	int cur_index;
+	int taille;
+	champ *champs;
+} table;
+
+
+
 /**
  * @brief	Traiter un nombre en chaines de caracteres en nombres réel
  * 
@@ -44,5 +59,16 @@ char * rtn_arg(int index_arg, char * list_arguments);
 */
 
 void int_in_str(int e, char tab[],int index_dep);
+
+
+int cherche_id(char *id);
+
+int ajout_chaine(char *id, char *chaine);
+
+char * str_value_of_id(char *id);
+
+void print_table_symboles();
+
+
 
 #endif // FCT_YACC //

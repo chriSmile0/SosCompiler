@@ -153,11 +153,31 @@ int test_operande(char* chemin_fichier_test, int attendu) {
 		perror(filename);
 	yyout = fopen("exit_mips/exit_mips.s","w+");
 
+	table.cur_index = -1;
+	table.taille = 0;
+	table.champs = (champ*)(malloc(sizeof(champ)*1024));//1024 pour le moment 
+	if (table.champs != NULL)
+		for (int i = 0 ; i < 1024 ; i++) {
+			table.champs[i].id = malloc(50); //49 carac par id max 
+			table.champs[i].id[0] = '\0';
+			table.champs[i].index_in_t = i;
+			table.champs[i].valeur = malloc(sizeof(50));
+			table.champs[i].valeur[0] = '\0';
+		}
+	printf("table : %d\n",table.cur_index);
 	if (yyout == NULL) 
 		perror("exit_mips.s doit exister");
+
+	//init d'un id random pour test (avant id = value)
+	snprintf(table.champs[0].id,3,"%s","id");
+	table.champs[0].id[2] = '\0';
+	printf("table champs id : %s\n",table.champs[0].id);
+	table.champs[0].valeur = "123";
+	table.taille = 1;
 		
 	int r = yyparse();
 	printf("r : %d\n",r);
+	free(table.champs);
 	return r;
 }
 

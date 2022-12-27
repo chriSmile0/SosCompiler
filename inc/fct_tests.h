@@ -2,6 +2,7 @@
 #define FCT_TESTS_H
 
 #include "../inc/code_proj.tab.h"
+#include "../inc/fct_yacc.h"
 #include <stdio.h>
 #include <stdlib.h>
 extern int yylex();

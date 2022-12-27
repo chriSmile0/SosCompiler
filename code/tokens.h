@@ -2,9 +2,15 @@
 #define CC 50
 #define MOT 6
 #define NB 2
-#define ARGS 9*/
+#define ARGS 9
+#define ID 5*/
+
+//ICI ALL MR DEBUT A 30//
+#define EXPR 42
+
+
+
 #define CHAR 10
-#define ID 5
 #define N_ID 11
 #define N_MOT 12
 #define COM 4

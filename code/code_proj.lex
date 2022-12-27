@@ -49,7 +49,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*else{endline}					return MR;
 ^{espace}*fi{espace};{endline}			return MR;
 ^declare{espace}+						return MR;
-{espace}+expr{espace}+					return MR;
+{espace}+expr{espace}+					return EXPR;
 
 \"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
 											yylval.chaine = strdup(++yytext);
@@ -78,15 +78,22 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 											yylval.mot = strdup(yytext);
 										return MOT;
 									}}
+{signe}									{yylval.sign = yytext[0];return SIGN;}
 
 {com}+.*{endline}						return COM;
 
 {espace}-{ch_op_1}{espace}				{return checkOperateur(yytext=(yytext+2),1);}
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}({char}|{digit})*					{return ID;}//printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{yylval.chaine = strdup(yytext);return MOT;}//printf("mot : |%s|\n",yytext);
-
+"$"										{return '$';}
+"{"										{return OACO;}
+"}"										{return CACO;}
+"["										{return OCRO;}
+"]"										{return CCRO;}
+"("										{return OPAR;}
+")"										{return CPAR;}
 "$"({digit}+|[?|*])						{yylval.chaine = strdup(++yytext);return ARGS;}
 {endline}								{return '\n';}
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
