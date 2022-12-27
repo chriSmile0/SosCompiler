@@ -49,7 +49,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*else{endline}					return MR;
 ^{espace}*fi{espace};{endline}			return MR;
 ^declare{espace}+						return MR;
-{espace}+expr{espace}+					return EXPR;
+{espace}+expr{espace}+					return EXPR;//return MR;
 
 \"(\\.|[^\\\"])*\"					{if(checkAscii(&yytext[1], true)==true) { 
 											yylval.chaine = strdup(++yytext);

@@ -8,6 +8,7 @@
 %}
 
 %token MR
+%token EXPR
 %token CHAR
 
 %union {
@@ -23,7 +24,7 @@
 }
 
 
-%token '\n' READ N_ID EXPR PVG SPA OACO CACO OCRO CCRO OPAR CPAR '$'
+%token '\n' N_ID PVG SPA OACO CACO OCRO CCRO OPAR CPAR '$'
 %token <nb> NB
 %token <id> ID
 %token <chaine> MOT 
@@ -60,7 +61,7 @@ operande : CC {$$ = $1; printf("|%s|\n",rtn_arg(1,"abc def"));}
 	| MOT {$$ = $1; printf("mot \n");}
 	| ARGS {$$ = traiter_arg($1,"exemple");printf("$$ : %s\n",$$);}
 	| '$' OACO ID CACO {$$ = str_value_of_id($3); printf("$$ : %s\n",$$);}
-	| '$' EXPR OPAR somme_entiere CPAR {
+	| '$' OPAR EXPR somme_entiere CPAR {
 			char tab[10];
 			int_in_str($4,tab,0);
 			if(strcmp(traiter_arg(tab,"exemple"),"??")==0)//?
