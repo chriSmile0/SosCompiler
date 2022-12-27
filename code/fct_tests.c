@@ -91,7 +91,7 @@ int test_nombres_s_v2() {
 }
 
 int test_nombres_m_v2() {
-	return test_type("f_tests/e_sos/exemple1",15,NB,NB,"nombres");
+	return test_type("f_tests/e_sos/exemple1",11,NB,NB,"nombres");
 }
 
 int test_nombres_d_v2() {
@@ -144,4 +144,51 @@ int test_opel_m_v2() {
 
 int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
+}
+
+int test_sompro(char* chemin_fichier_test, int attendu) {
+	char* filename = chemin_fichier_test;
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+	yyout = fopen("exit_mips/exit_mips.s","w+");
+
+	table.cur_index = -1;
+	table.taille = 0;
+	table.champs = (champ*)(malloc(sizeof(champ)*1024));//1024 pour le moment 
+	if (table.champs != NULL)
+		for (int i = 0 ; i < 1024 ; i++) {
+			table.champs[i].id = malloc(50); //49 carac par id max 
+			table.champs[i].id[0] = '\0';
+			table.champs[i].index_in_t = i;
+			table.champs[i].valeur = malloc(sizeof(50));
+			table.champs[i].valeur[0] = '\0';
+		}
+	printf("table : %d\n",table.cur_index);
+	if (yyout == NULL) 
+		perror("exit_mips.s doit exister");
+
+	//init d'un id random pour test (avant id = value)
+	snprintf(table.champs[0].id,3,"%s","id");
+	table.champs[0].id[2] = '\0';
+	printf("table champs id : %s\n",table.champs[0].id);
+	table.champs[0].valeur = "123";
+	table.taille = 1;
+		
+	int r = yyparse();
+	printf("r : %d\n",r);
+	free(table.champs);
+	return r;
+}
+
+int test_sompro_s() {
+	return test_sompro("f_tests/s/som_pro_s", 0);
+}
+
+int test_sompro_m() {
+	return test_sompro("f_tests/e_sos/exemple1", 0);
+}
+
+int test_sompro_d() {
+	return test_sompro("f_tests/d/som_pro_d", 1); //nb de concat a faire
 }

@@ -124,6 +124,27 @@ int test_difficile() {
 	return tests;
 }
 
+int test_mips_simple() {
+	int tests = 0;
+	printf("- test_sompro\n");
+	tests += test_sompro_s();
+	return tests;
+}
+
+int test_mips_median() {
+	int tests = 0;
+	printf("- test_sompro_m\n");
+	//tests += test_sompro_m();
+	return tests;
+}
+
+int test_mips_difficile() {
+	int tests = 0;
+	printf("- test_sompro_d\n");
+	tests += test_sompro_d();
+	return tests;
+}
+
 int main(int argc, char *argv[]) {
 	printf("test\n");
 
@@ -132,6 +153,9 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	int (*test_F[3])() = {test_simple, test_median, test_difficile};
+	int (*test_FM[3])() = {test_mips_simple, test_mips_median, 
+							test_mips_difficile};
+
 
 	int niveau_test = atoi(argv[1]);
 	printf("Test de niveau de rang : %d\n",niveau_test);
@@ -139,6 +163,13 @@ int main(int argc, char *argv[]) {
 	for (int i = 0 ; i < niveau_test ; i++)
 		printf("test %d/%d >>> %s\n",i+1,niveau_test,
 			(((retour = test_F[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
+				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
+
+	printf("Test mips de niveau de rang : %d\n",niveau_test);
+	retour = 0; //que test 1 pour le moment 
+	for (int i = 0 ; i < niveau_test ; i++)
+		printf("test %d/%d >>> %s\n",i+1,niveau_test,
+			(((retour = test_FM[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
 				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
 
 	return retour;

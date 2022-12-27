@@ -2,11 +2,13 @@
 #define FCT_TESTS_H
 
 #include "../inc/code_proj.tab.h"
+#include "../inc/fct_yacc.h"
 #include <stdio.h>
 #include <stdlib.h>
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
+extern FILE *yyout;
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter
@@ -204,6 +206,16 @@ int test_opel_m_v2(void);
 
 
 int test_opel_d_v2(void);
+
+
+int test_sompro(char* chemin_fichier_test, int attendu);
+
+int test_sompro_s(void);
+
+int test_sompro_m(void);
+
+int test_sompro_d(void);
+
 
 
 #endif // FCT_TESTS_H //
