@@ -48,21 +48,22 @@ program: %empty
 ;
 
 instruction : test_expr {
-		$$ = 1;
+		$$ = $1;
+		printf("%s\n",$$?"true":"false");
 	}
 
-test_expr : test_expr OU test_expr2 {$$ = 1;}
+test_expr : test_expr OU test_expr2 {$$ = ($1+$3);}
 	| test_expr2 
 ;
 
-test_expr2 : test_expr2 ET test_expr3 {$$ = $1;}
+test_expr2 : test_expr2 ET test_expr3 {$$ = ($1*$3);}
 	| test_expr3 
 ;
 
 test_expr3 : OPAR test_expr CPAR {$$ = $2;}
-	| '!' OPAR test_expr CPAR  {$$ = !$3;printf("$$ : %d , $3 : %d\n",$$,$3);}
-	| test_instruction {$$ = $1; printf("$$- : %s\n",$1?"true":"false");}
-	| '!' test_instruction {$$ = !$2;printf("$$ : %s\n",$2?"false":"true");}
+	| '!' OPAR test_expr CPAR  {$$ = !$3;}
+	| test_instruction {$$ = $1;}
+	| '!' test_instruction {$$ = !$2;}
 ;
 
 test_instruction : concatenation '=' concatenation { $$ = (strcmp($1,$3)==0);}
