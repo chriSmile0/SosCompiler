@@ -81,15 +81,17 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {signe}									{yylval.sign = yytext[0];return SIGN;}
 
 {espace}{n_in_word}+{espace}			{yytext++;
-										if(yytext[0] == '!') 
+										if(yytext[0] == '!') {
+											printf("len : %ld\n",strlen(yytext));
 											if(yytext[1] == '=')
 												return '~';
 											else if(strlen(yytext) == 2)
 												return '!';
-										else 
+										}
+										else {
 											if(strlen(yytext) == 2)
 												return '=';
-										}
+										}}
 
 {com}+.*{endline}						return COM;
 

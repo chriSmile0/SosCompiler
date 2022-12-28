@@ -1,4 +1,7 @@
 "operande" != "hi" 
-"ope" = "lo"
-
+"ope" = "iope" 
+("ope" = "ope") 
+("ope" != "oper") 
+ ! "ope" = "ope" 
+ ! ("ope" = "ope") 
 
