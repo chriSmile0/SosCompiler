@@ -33,11 +33,12 @@
 %token <chaine> MOT 
 %token <chaine> ARGS 
 %token <sign> SIGN
+%token <chaine> TEST
 %token <chaine> CC
 
 %type <entier> instruction
 %type <chaine> concatenation
-%type <boolean> test_expr test_expr2 test_expr3 test_instruction
+%type <boolean> test_bloc test_expr test_expr2 test_expr3 test_instruction
 %type <chaine> operande
 %start program 
 
@@ -50,6 +51,14 @@ program: %empty
 instruction : test_expr {
 		$$ = $1;
 		printf("%s\n",$$?"true":"false");
+	}
+	| test_bloc {
+		$$ = $1;
+		printf("test bloc : %s\n",$$?"true":"false");
+	}
+
+test_bloc : TEST test_expr{
+		$$ = 1;
 	}
 
 test_expr : test_expr OU test_expr2 {$$ = ($1+$3);}

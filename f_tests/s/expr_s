@@ -5,7 +5,11 @@
  ! "ope" = "ope" 
  ! ("ope" = "ope") 
 
-
 ("ope" = "ope") -a ("hip" = "hop") 
 ("ope" = "ope") -o ("ope" = "ope") 
+
+
+
+test ("ope" = "ope") 
+test ("op" = "po") 
 

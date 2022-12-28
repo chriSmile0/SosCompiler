@@ -37,7 +37,7 @@ ch_op_1 [anoz]
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				return MR;
 ^{espace}*until{espace}+				return MR;
-test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));
+{espace}*test{espace}					{if(word_test(yytext)) {yylval.chaine = " test";return TEST;}}
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					return MR;
@@ -133,8 +133,9 @@ bool word_test(char * str) {
 			str++;
 			if (*str == 't')
 				str++;
-				if (*str == ' ') 
+				if (*str == ' ') {
 					return true;
+				}
 	return false;
 }
 

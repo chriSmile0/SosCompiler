@@ -55,7 +55,7 @@ int test_motsreserves_s_v2() {
 }
 
 int test_motsreserves_m_v2() {
-	return test_type("f_tests/e_sos/exemple1",39,MR,MR,"mots reserves");
+	return test_type("f_tests/e_sos/exemple1",35,MR,MR,"mots reserves");
 }
 
 int test_motsreserves_d_v2() {
@@ -91,7 +91,7 @@ int test_nombres_s_v2() {
 }
 
 int test_nombres_m_v2() {
-	return test_type("f_tests/e_sos/exemple1",15,NB,NB,"nombres");
+	return test_type("f_tests/e_sos/exemple1",11,NB,NB,"nombres");
 }
 
 int test_nombres_d_v2() {
