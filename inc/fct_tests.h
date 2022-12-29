@@ -8,7 +8,12 @@
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
-extern FILE *yyout;
+extern FILE *yyout_text;
+extern FILE *yyout_data;
+extern FILE *yyout_main;
+extern FILE *yyout_proc;
+extern FILE *yyout_final;
+
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter

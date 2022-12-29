@@ -16,6 +16,12 @@
 
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
+
+	FILE *yyout_data;
+	FILE *yyout_text;
+	FILE *yyout_main;
+	FILE *yyout_proc;
+	FILE *yyout_final;
 %}
 
 espace [ \t]

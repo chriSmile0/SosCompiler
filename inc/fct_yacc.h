@@ -1,5 +1,6 @@
 #ifndef FCT_YACC_H
 #define FCT_YACC_H
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +16,19 @@ struct table_symbole {
 	int taille;
 	champ *champs;
 } table;
+
+typedef struct {
+	char *type;
+	char *id;
+	int utiliser; 
+	char *valeur;
+} registre;
+
+struct table_registre {
+	int cur_index;
+	int taille;
+	registre *registres;
+} t_reg;
 
 
 
@@ -68,6 +82,21 @@ int ajout_chaine(char *id, char *chaine);
 char * str_value_of_id(char *id);
 
 void print_table_symboles();
+
+//REGISTRES 
+int cherche_registre(char *reg);
+
+int reg_libre_of_type(char type);
+
+char * ajout_value_in_reg(char *reg, char *valeur);
+
+char * str_value_of_reg(char *reg);
+
+void print_table_registre();
+
+void int_in_register(char *res, int value, FILE * dest);
+
+void ope_arith_mips(int res_dest, int res_left, int res_right, char sign);
 
 
 

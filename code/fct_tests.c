@@ -151,7 +151,13 @@ int test_sompro(char* chemin_fichier_test, int attendu) {
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
 		perror(filename);
-	yyout = fopen("exit_mips/exit_mips.s","w+");
+
+	yyout_data = fopen("exit_mips/exit_mips_data.s","w+");
+	yyout_text = fopen("exit_mips/exit_mips_text.s","w+");
+	yyout_main = fopen("exit_mips/exit_mips_main.s","w+");
+	yyout_proc = fopen("exit_mips/exit_mips_proc.s","w+");
+	yyout_final = fopen("exit_mips/exit_mips.s","w+");
+
 
 	table.cur_index = -1;
 	table.taille = 0;
@@ -161,11 +167,24 @@ int test_sompro(char* chemin_fichier_test, int attendu) {
 			table.champs[i].id = malloc(50); //49 carac par id max 
 			table.champs[i].id[0] = '\0';
 			table.champs[i].index_in_t = i;
-			table.champs[i].valeur = malloc(sizeof(50));
+			table.champs[i].valeur = malloc(50);
 			table.champs[i].valeur[0] = '\0';
 		}
+	t_reg.cur_index = -1;
+	t_reg.taille = 0;
+	t_reg.registres = (registre*)(malloc(sizeof(registre)*1024));
+	if (t_reg.registres != NULL) 
+		for (int i = 0 ; i < 1024 ; i++) {
+			t_reg.registres[i].id = malloc(4);
+			t_reg.registres[i].id[0] = '\0';
+			t_reg.registres[i].utiliser = 0;
+			t_reg.registres[i].type = malloc(20);
+			t_reg.registres[i].type[0] = '\0';
+			t_reg.registres[i].valeur = malloc(100);
+			t_reg.registres[i].valeur[0] = '\0';
+		}
 	printf("table : %d\n",table.cur_index);
-	if (yyout == NULL) 
+	if (yyout_final == NULL) 
 		perror("exit_mips.s doit exister");
 
 	//init d'un id random pour test (avant id = value)

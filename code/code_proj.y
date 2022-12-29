@@ -4,7 +4,12 @@
 	extern void yyerror(const char *msg);
 	#include "../inc/fct_yacc.h"
 	extern FILE *yyin;
-	extern FILE *yyout;
+	extern FILE *yyout_text;
+	extern FILE *yyout_data;
+	extern FILE *yyout_main;
+	extern FILE *yyout_proc;
+	extern FILE *yyout_final;
+
 %}
 
 %token MR
@@ -71,7 +76,7 @@ operande_entier : '$' OACO ID CACO {$$ = traiter_nombre(str_value_of_id($3));pri
 	| plus_ou_moins '$' OACO ID CACO {
 			$$ = ($1 == '-') ? -(traiter_nombre(str_value_of_id($4))) : traiter_nombre(str_value_of_id($4));
 		}
-	| NB {$$ = traiter_nombre($1);}
+	| NB {$$ = traiter_nombre($1);int_in_register("$t0",$$,yyout_main);}
 	| plus_ou_moins NB {$$ = ($1 == '-') ? (-traiter_nombre($2)) : traiter_nombre($2); }
 	| OPAR somme_entiere CPAR {$$ = $2; printf("(somme entière) : %d\n",$$);}
 ;
@@ -82,6 +87,8 @@ plus_ou_moins : SIGN_S
 somme_entiere : somme_entiere plus_ou_moins produit_entier {
 				$$ = ($2 == '-') ? $1-$3 : $1 + $3;
 				printf("result somme : %d\n",$$); 
+				print_table_registre();
+				ope_arith_mips($1,$1,$3,$2);
 			}
 	| produit_entier
 ;
@@ -91,6 +98,7 @@ produit_entier : produit_entier fois_div_moins operande_entier {
 				else 
 					$$ = ($2 == '*') ? $1*$3 : $1%$3;
 				printf("result produit : %d\n",$$);
+				ope_arith_mips($1,$1,$3,$2);
 			}
 	| operande_entier
 ;
