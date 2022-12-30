@@ -43,14 +43,3 @@ void findStr (char *str, char strs[512][64]) {
 	strcat(data, ":\t.word\t0\n");
 	id_count++;
 }
-
-int main(int argc, char **argv)
-{
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	int t;
-	while ((t = yylex()) != 0);
-	printf("--- data:\n%s\n", data);
-	printf("---instructions:\n%s\n", instructions);
-	return 0;
-}
