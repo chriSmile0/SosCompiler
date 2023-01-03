@@ -54,7 +54,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 
-{signe}?{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
+{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
@@ -64,6 +64,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 =								{return EG;}
+[+]								{return PL;}
 {endline}								;
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
 
@@ -146,6 +147,7 @@ int checkOperateur(char *operateurStr, int taille)
 }
 
 bool checkAscii(char * str, bool com) {
+	printf("checkAscii : %s\n", str);
 	if (strcmp(str, "\t") == 0)
 		return true;
 	bool b = testAscii;
