@@ -2,7 +2,7 @@
 	#include <stdio.h>
 	#include <string.h>
 	extern int yylex();
-	extern void yyerror(const char *msg);
+	int yyerror(char *s);
 	extern FILE *yyin;
 	void findStr(char *str, char strs[512][64]);
 	char data[1024];
@@ -13,22 +13,17 @@
 
 %token <id> ID
 %token <entier> NB 
+%token EG 
 
 %union {
 	char *id;
 	int entier;
 }
 
-%start program
-
-
 %%
 
-program : %empty
-	| program instruction '\n' {printf("OKAYYYYY \n");}
-;
+instruction : ID EG NB {findStr($1,ids); strcat(instructions,"li $t0, "); char buff[50]; snprintf( buff, 50, "%d", $3 ); strcat(instructions,buff); strcat(instructions,"\nsw $t0, "); strcat(instructions,$1); strcat(instructions,"\n");}
 
-instruction : ID '=' NB  {printf("VALUE : %s\n", $1);findStr($1,ids); strcat(instructions,"li $t0, "); char buff[50]; snprintf( buff, 50, "%d", $3 ); strcat(instructions,buff); strcat(instructions,"\nsw $t0, "); strcat(instructions,$1); strcat(instructions,"\n");}
 ;
 
 %%
@@ -42,4 +37,9 @@ void findStr (char *str, char strs[512][64]) {
 	strcat(data, str);
 	strcat(data, ":\t.word\t0\n");
 	id_count++;
+}
+
+int yyerror(char *s) {
+  fprintf(stderr, "Erreur de syntaxe : %s\n", s);
+  return 1;
 }

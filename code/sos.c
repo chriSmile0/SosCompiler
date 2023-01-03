@@ -12,8 +12,7 @@ int main(int argc, char **argv)
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
 	int t;
-	while ((t = yylex()) != 0);
-	printf("--- data:\n%s\n", data);
-	printf("---instructions:\n%s\n", instructions);
+	yyparse();
+	printf("%s%s\n", data, instructions);
 	return 0;
 }
