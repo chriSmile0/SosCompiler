@@ -4,7 +4,8 @@
 #include <string.h>
 #include <getopt.h>
 extern int yylex();
-
+extern char data[1024];
+extern char instructions[4096];
 
 int main(int argc, char **argv)
 {

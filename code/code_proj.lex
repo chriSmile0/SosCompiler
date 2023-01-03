@@ -54,14 +54,14 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 
-{signe}?{digit}+						{ yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
+{signe}?{digit}+						{ printf("NBBBB"); yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
 {espace}-{ch_op_1}{espace}				{return checkOperateur(yytext=(yytext+2),1);}
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}({char}|{digit})*					{return ID; yylval.id = strdup(yytext);}//printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{ printf("IDDDDDD\n");yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 
 {endline}								;

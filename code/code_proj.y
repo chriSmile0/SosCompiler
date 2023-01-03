@@ -25,10 +25,10 @@
 %%
 
 program : %empty
-	| program instruction '\n'
+	| program instruction '\n' {printf("OKAYYYYY \n");}
 ;
 
-instruction : ID '=' NB  {findStr($1,ids); strcat(instructions,"li $t0, "); char buff[50]; snprintf( buff, 50, "%d", $3 ); strcat(instructions,buff); strcat(instructions,"\nsw $t0, "); strcat(instructions,$1); strcat(instructions,"\n");}
+instruction : ID '=' NB  {printf("VALUE : %s\n", $1);findStr($1,ids); strcat(instructions,"li $t0, "); char buff[50]; snprintf( buff, 50, "%d", $3 ); strcat(instructions,buff); strcat(instructions,"\nsw $t0, "); strcat(instructions,$1); strcat(instructions,"\n");}
 ;
 
 %%
