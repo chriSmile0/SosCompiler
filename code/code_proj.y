@@ -20,9 +20,10 @@
 %token PL
 %token MN
 %token FX
+%token DV
 
 %left PL MN
-%left FX '/'
+%left FX DV
 
 %union {
 	char *id;
@@ -63,6 +64,19 @@ expr : unique
      | expr FX expr
      {
 	     strcat(instructions, "mul $t");
+	     if (li_count <= 2) strcat(instructions,"0");
+	     else strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	     strcat(instructions, "\n");
+	     reg_count--;
+	     if (li_count <= 2) reg_count--;
+	     li_count--;
+	     if (reg_count <= 0) reg_count = 1;
+     }
+     | expr DV expr
+     {
+	     strcat(instructions, "div $t");
 	     if (li_count <= 2) strcat(instructions,"0");
 	     else strcat(instructions, itoa(reg_count-2));
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));

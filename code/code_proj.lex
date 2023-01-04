@@ -67,6 +67,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [+]								{return PL;}
 [-]								{return MN;}
 [*]								{return FX;}
+[/]								{return DV;}
 {endline}								;
 . 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
