@@ -64,7 +64,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
-{operateur}{operateur}+
+{operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =								{return EG;}
 [+]								{return PL;}
 [-]								{return MN;}
