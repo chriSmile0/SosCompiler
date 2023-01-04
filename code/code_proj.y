@@ -43,6 +43,19 @@ expr : unique
      | expr FX expr {operation("mul");}
      | expr DV expr {operation("div");}
      | OP expr CP 
+     | MN expr %prec MN
+     {
+	strcat(instructions, "li $t");
+	strcat(instructions, itoa(reg_count));
+	strcat(instructions, ", -1\n");
+     	strcat(instructions, "mul $t");
+	strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count));
+	strcat(instructions, "\n");
+     }
 ;
 
 unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}

@@ -27,6 +27,7 @@ signe [+-]
 n_in_word [;(){}=!$*+%|-]
 ch_op_r [aeglnqt] 
 ch_op_1 [anoz]
+operateur [+-/*]
 
 %%
 ^{espace}*if{espace}					return MR;
@@ -63,6 +64,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
+{operateur}{operateur}+
 =								{return EG;}
 [+]								{return PL;}
 [-]								{return MN;}
