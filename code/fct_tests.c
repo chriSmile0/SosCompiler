@@ -145,3 +145,35 @@ int test_opel_m_v2() {
 int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
 }
+
+int test_tds_s(void) {
+	int ret = 0;
+	init_tds();
+	//var locale
+	add_tds("id1", CH, 0, NULL, -1, 0, "fonction_xy");
+	//var globale
+	add_tds("id2", CH, 0, NULL, -1, 1, "");
+	//tableau 3*3
+	add_tds("id3", TAB, 0, "3,3", -1, 1, "");
+	//fonction à 4 arguments
+	add_tds("id4", FCT, 0, NULL, 4, 1, "");
+	int ind;
+	if ((ind = find_entry("id2"))!= -1){
+		update_entry(ind, MOT);
+	} else {
+		ret = 1;
+	}
+	if (get_type("id2") != MOT)
+		ret = 1;
+	if (strcmp(get_func("id1"), "fonction_xy") != 0)
+		ret = 1;
+	if (strcmp(get_func("id2"), "") != 0)
+		ret = 1;
+	if (strcmp(get_dim("id3"), "3,3") != 0)
+		ret = 1; 
+	if (get_nb_args("id4") != 4)
+		ret = 1;	
+	print_tds();
+	free_tds();
+	return ret;
+}
