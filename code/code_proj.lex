@@ -65,6 +65,8 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 =								{return EG;}
 [+]								{return PL;}
+[-]								{return MN;}
+[*]								{return FX;}
 {endline}								;
 . 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
 
