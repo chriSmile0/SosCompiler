@@ -42,7 +42,10 @@ expr : unique
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
 	     strcat(instructions, "\n");
-	     reg_count--; li_count-=2;
+	     reg_count--;
+	     if (li_count <= 2) reg_count--;
+	     li_count--;
+	     if (reg_count <= 0) reg_count = 1;
      }
      | expr MN expr 
      {
@@ -52,7 +55,10 @@ expr : unique
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
 	     strcat(instructions, "\n");
-	     reg_count--; li_count-=2;
+	     reg_count--;
+	     if (li_count <= 2) reg_count--;
+	     li_count--;
+	     if (reg_count <= 0) reg_count = 1;
      }
      | expr FX expr
      {
@@ -62,7 +68,10 @@ expr : unique
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
 	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
 	     strcat(instructions, "\n");
-	     reg_count--; li_count-=2;
+	     reg_count--;
+	     if (li_count <= 2) reg_count--;
+	     li_count--;
+	     if (reg_count <= 0) reg_count = 1;
      }
 ;
 
