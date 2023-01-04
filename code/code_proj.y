@@ -11,6 +11,7 @@
 	char ids[512][64];
 	int id_count = 0;
 	int reg_count = 1;
+	int li_count = 0;
 %}
 
 %token <id> ID
@@ -33,13 +34,40 @@
 instruction : ID EG expr {findStr($1,ids); strcat(instructions, "sw $t0, "); strcat(instructions, $1); strcat(instructions, "\n");}
 
 expr : unique
-     | expr PL expr {strcat(instructions, "add $t0, $t"); strcat(instructions, itoa(reg_count-2)); strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1)); strcat(instructions, "\n"); reg_count--;}
-     | expr MN expr {strcat(instructions, "sub $t0, $t"); strcat(instructions, itoa(reg_count-2)); strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1)); strcat(instructions, "\n"); reg_count--;}
-     | expr FX expr {strcat(instructions, "mul $t0, $t"); strcat(instructions, itoa(reg_count-2)); strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1)); strcat(instructions, "\n"); reg_count--;}
+     | expr PL expr
+     {
+	     strcat(instructions, "add $t");
+	     if (li_count <= 2) strcat(instructions,"0");
+	     else strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	     strcat(instructions, "\n");
+	     reg_count--; li_count-=2;
+     }
+     | expr MN expr 
+     {
+	     strcat(instructions, "sub $t");
+	     if (li_count <= 2) strcat(instructions,"0");
+	     else strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	     strcat(instructions, "\n");
+	     reg_count--; li_count-=2;
+     }
+     | expr FX expr
+     {
+	     strcat(instructions, "mul $t");
+	     if (li_count <= 2) strcat(instructions,"0");
+	     else strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
+	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	     strcat(instructions, "\n");
+	     reg_count--; li_count-=2;
+     }
 ;
 
-unique : ID {findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
-       | NB {strcat(instructions,"li $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,itoa($1));strcat(instructions,"\n");reg_count++;}
+unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
+       | NB {li_count++;strcat(instructions,"li $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,itoa($1));strcat(instructions,"\n");reg_count++;}
 ;
 
 %%
