@@ -119,6 +119,8 @@ int test_difficile() {
 	tests += test_oper_d_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
+	printf("- test_operations_d\n");
+	tests += test_operations_d();
 
 
 	/*
