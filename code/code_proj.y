@@ -4,6 +4,7 @@
 	extern int yylex();
 	int yyerror(char *s);
 	extern FILE *yyin;
+	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
 	char data[1024];
@@ -35,58 +36,10 @@
 instruction : ID EG expr {findStr($1,ids); strcat(instructions, "sw $t0, "); strcat(instructions, $1); strcat(instructions, "\n");}
 
 expr : unique
-     | expr PL expr
-     {
-	     strcat(instructions, "add $t");
-	     if (li_count <= 2) strcat(instructions,"0");
-	     else strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
-	     strcat(instructions, "\n");
-	     reg_count--;
-	     if (li_count <= 2) reg_count--;
-	     li_count--;
-	     if (reg_count <= 0) reg_count = 1;
-     }
-     | expr MN expr 
-     {
-	     strcat(instructions, "sub $t");
-	     if (li_count <= 2) strcat(instructions,"0");
-	     else strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
-	     strcat(instructions, "\n");
-	     reg_count--;
-	     if (li_count <= 2) reg_count--;
-	     li_count--;
-	     if (reg_count <= 0) reg_count = 1;
-     }
-     | expr FX expr
-     {
-	     strcat(instructions, "mul $t");
-	     if (li_count <= 2) strcat(instructions,"0");
-	     else strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
-	     strcat(instructions, "\n");
-	     reg_count--;
-	     if (li_count <= 2) reg_count--;
-	     li_count--;
-	     if (reg_count <= 0) reg_count = 1;
-     }
-     | expr DV expr
-     {
-	     strcat(instructions, "div $t");
-	     if (li_count <= 2) strcat(instructions,"0");
-	     else strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
-	     strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
-	     strcat(instructions, "\n");
-	     reg_count--;
-	     if (li_count <= 2) reg_count--;
-	     li_count--;
-	     if (reg_count <= 0) reg_count = 1;
-     }
+     | expr PL expr {operation("add");}
+     | expr MN expr {operation("sub");}
+     | expr FX expr {operation("mul");}
+     | expr DV expr {operation("div");}
 ;
 
 unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
@@ -94,6 +47,20 @@ unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(inst
 ;
 
 %%
+void operation(char *str) {
+	strcat(instructions, str);
+	strcat(instructions, " $t");
+	if (li_count <= 2) strcat(instructions,"0");
+	else strcat(instructions, itoa(reg_count-2));
+	strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
+	strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, "\n");
+	reg_count--;
+	if (li_count <= 2) reg_count--;
+	li_count--;
+	if (reg_count <= 0) reg_count = 1;
+}
+
 void findStr (char *str, char strs[512][64]) {
 	for (int i = 0; i < id_count; i++) {
 		if (strcmp(str, strs[i]) == 0) {
