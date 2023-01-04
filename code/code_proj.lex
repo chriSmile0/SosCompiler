@@ -155,7 +155,6 @@ int checkOperateur(char *operateurStr, int taille)
 }
 
 bool checkAscii(char * str, bool com) {
-	printf("checkAscii : %s\n", str);
 	if (strcmp(str, "\t") == 0)
 		return true;
 	bool b = testAscii;
