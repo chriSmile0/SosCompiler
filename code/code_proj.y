@@ -7,12 +7,12 @@
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
-	char data[1024];
-	char instructions[4096];
-	char ids[512][64];
-	int id_count = 0;
-	int reg_count = 1;
-	int li_count = 0;
+	char data[1024];		// Partie declaration des variables
+	char instructions[4096];	// Partie instructions
+	char ids[512][64];		// Tableau des identificateurs
+	int id_count = 0;		// Nombre d'identificateurs
+	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
+	int li_count = 0;		// Nombre d'affectations executées
 %}
 
 %token <id> ID
@@ -26,6 +26,7 @@
 %token CP
 %token END
 
+// Regles de grammaire
 %left PL MN
 %left FX DV
 
@@ -39,7 +40,7 @@ programme : instruction END programme
 	  | instruction END
 ;
 
-instruction : ID EG expr 
+instruction : ID EG expr 	// Affectation
 	    {
 	    	findStr($1,ids);
 		strcat(instructions, "sw $t");
@@ -78,6 +79,7 @@ unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(inst
 ;
 
 %%
+// Fonction qui execute une operation entre les deux derniers registres temporaires utilisés
 void operation(char *str) {
 	strcat(instructions, str);
 	strcat(instructions, " $t");
@@ -92,6 +94,7 @@ void operation(char *str) {
 	if (reg_count <= 0) reg_count = 1;
 }
 
+// Fonction qui cherche si un ID est déjà déclaré, sinon il le fait
 void findStr (char *str, char strs[512][64]) {
 	for (int i = 0; i < id_count; i++) {
 		if (strcmp(str, strs[i]) == 0) {
