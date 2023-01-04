@@ -78,6 +78,8 @@ int test_median() {
 	tests += test_oper_m_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
+	printf("- test_operations_m\n");
+	tests += test_operations_m();
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();

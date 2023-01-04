@@ -176,5 +176,46 @@ int test_operations_s() {
 	// comparaison
 	int comp = strcmp(code,corr);
 	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
+
+	// remise a zero du gencode
+	data[0] = '\0';
+	instructions[0] = '\0';
+	return comp;
+}
+
+int test_operations_m() {
+	// Redirection de l'entrée standard (comme test_type)
+	char* filename = "f_tests/m/operations_m";
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+
+	// gencode
+	strcat(data, "\t.data\n");
+	strcat(instructions, "\t.text\n__start:\n");
+	yyparse();
+	fclose(yyin);
+	char code[BUFSIZ];
+	sprintf(code,"%s%s",data,instructions);
+
+	// overture et copie dans un buffer du fichier de correction
+	FILE *correction = fopen("f_tests/m/operations_m_corr", "r");
+	if (correction == NULL)
+		perror("f_tests/m/operations_m_corr");
+	fseek(correction, 0, SEEK_END);
+	long size = ftell(correction);
+	rewind(correction);
+	char *corr = malloc(size + 1);
+	fread(corr, 1, size, correction);
+	fclose(correction);
+	corr[size] = '\0';
+
+	// comparaison
+	int comp = strcmp(code,corr);
+	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
+
+	// remise a zero du gencode
+	data[0] = '\0';
+	instructions[0] = '\0';
 	return comp;
 }

@@ -209,6 +209,8 @@ int test_opel_m_v2(void);
 int test_opel_d_v2(void);
 
 int test_operations_s(void);
+int test_operations_m(void);
+int test_operations_d(void);
 
 
 #endif // FCT_TESTS_H //
