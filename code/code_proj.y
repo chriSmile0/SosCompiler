@@ -22,6 +22,8 @@
 %token MN
 %token FX
 %token DV
+%token OP
+%token CP
 
 %left PL MN
 %left FX DV
@@ -40,6 +42,7 @@ expr : unique
      | expr MN expr {operation("sub");}
      | expr FX expr {operation("mul");}
      | expr DV expr {operation("div");}
+     | OP expr CP 
 ;
 
 unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
