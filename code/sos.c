@@ -11,7 +11,6 @@ int main(int argc, char **argv)
 {
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
-	int t;
 	yyparse();
 	printf("%s%s\n", data, instructions);
 	return 0;

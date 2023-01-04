@@ -4,9 +4,12 @@
 #include "../inc/code_proj.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
+extern char data[1024];
+extern char instructions[4096];
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter
@@ -204,6 +207,8 @@ int test_opel_m_v2(void);
 
 
 int test_opel_d_v2(void);
+
+int test_operations_s(void);
 
 
 #endif // FCT_TESTS_H //
