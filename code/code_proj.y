@@ -24,6 +24,7 @@
 %token DV
 %token OP
 %token CP
+%token END
 
 %left PL MN
 %left FX DV
@@ -34,8 +35,22 @@
 }
 
 %%
+programme : instruction END programme 
+	  | instruction END
+;
 
-instruction : ID EG expr {findStr($1,ids); strcat(instructions, "sw $t0, "); strcat(instructions, $1); strcat(instructions, "\n");}
+instruction : ID EG expr 
+	    {
+	    	findStr($1,ids);
+		strcat(instructions, "sw $t");
+		strcat(instructions, itoa(reg_count-1));
+		strcat(instructions, ", ");
+		strcat(instructions, $1);
+		strcat(instructions, "\n");
+		reg_count = 1;
+		li_count = 0;
+	    }
+;
 
 expr : unique
      | expr PL expr {operation("add");}
