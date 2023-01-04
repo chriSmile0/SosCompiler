@@ -1,4 +1,5 @@
 #include "../inc/code_proj.tab.h"
+#include "../inc/fct_yacc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -11,8 +12,10 @@ int main(int argc, char *argv[]) {
 		{"o", required_argument, NULL, 'o'},
 		{NULL, 0, NULL, 0}
 	};
+	
+	//init_tds();
 
-	int opt, index = 0;
+	int opt, index, flagTds = 0;
 	while ((opt = getopt_long(argc, argv, "v:t:o:", options, &index)) != -1) {
 		switch (opt) {
 			/* Version */
@@ -26,8 +29,8 @@ int main(int argc, char *argv[]) {
 
 			/* Table des symboles */
 			case 't':
-				printf("*** Table des symboles ***\n");
-				break;
+                flagTds = 1;
+                break;
 
 			/* Fichier de sortie */
 			case 'o':
@@ -46,5 +49,10 @@ int main(int argc, char *argv[]) {
 	while ((t = yylex()) != 0) 
 		printf("t : %d\n",t);
 
+	if (flagTds == 1){
+        printf("*** Table des symboles ***\n");
+        print_tds();
+    }
+	free_tds();
 	return EXIT_SUCCESS;
 }
