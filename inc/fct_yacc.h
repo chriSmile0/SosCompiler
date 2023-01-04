@@ -21,7 +21,6 @@ enum types{
 typedef struct {
 	/*@{*/
 	char* name; 	/**< nom de l'id */
-	char* val;	/**< valeur de l'id, null si pas init */
 	int type;	/**< type de l'id, def dans l'enum types */
 	int init;	/**< 0 si l'id est pas init, 1 sinon */
 	char* dim;	/**< dims pour un tableau, de la forme N,M ou N */
