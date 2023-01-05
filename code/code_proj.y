@@ -1,6 +1,7 @@
 %{
 	#include <stdio.h>
 	#include <string.h>
+	#include "fct_yacc.h"
 	extern int yylex();
 	int yyerror(char *s);
 	extern FILE *yyin;
@@ -74,7 +75,7 @@ expr : unique
      }
 ;
 
-unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
+unique : ID {li_count++;find_entry($1);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
        | NB {li_count++;strcat(instructions,"li $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,itoa($1));strcat(instructions,"\n");reg_count++;}
 ;
 
@@ -115,5 +116,6 @@ char* itoa(int x) {
 
 int yyerror(char *s) {
   fprintf(stderr, "Erreur de syntaxe : %s\n", s);
+  exit(1);
   return 1;
 }
