@@ -214,6 +214,13 @@ void echo_main(int *id, char *chaine) {
 }
 
 
+void kill_all_global_use() {
+	create_read_proc = false;
+	create_echo_proc = false;
+	fin_prog = false;
+	cpt = 0;
+}
+
 int cherche_id(char *id)
 {
 	int i = 0;

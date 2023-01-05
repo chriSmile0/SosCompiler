@@ -218,6 +218,8 @@ void echo_data(int *id,char *chaine);
 */
 void echo_main(int *id, char *chaine);
 
+void kill_all_global_use();
+
 
 void int_in_str(int e, char tab[],int index_dep);
 

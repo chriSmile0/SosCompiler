@@ -53,7 +53,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					return ECH;
 ^{espace}*read{espace}+					return READ;
-^{espace}*exit{espace}+	    			{printf("ext \n");return EXT;}
+^{espace}*exit{espace}+	    			return EXT;
 ^{espace}*return{espace}+				return MR;
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
@@ -84,7 +84,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
-({char}|{digit})+						{return MOTS;}//printf("mot : |%s|\n",yytext);
+({char}|{digit})+						{ yylval.chaine = strdup(yytext);return MOTS;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =								{return EG;}
 [+]								{return PL;}

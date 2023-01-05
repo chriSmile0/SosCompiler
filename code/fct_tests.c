@@ -177,6 +177,8 @@ int test_operations_s() {
 
 	// comparaison
 	int comp = strcmp(code,corr);
+	printf("code : |%s|\n",code);
+	printf("corr : |%s|\n",corr);
 	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
 
 	// remise a zero du gencode
@@ -456,13 +458,14 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 		printf("pas de fin de programme ");
 	printf(": %d\n",r);
 	build_final_mips();
-	//fclose(yyout_data);
+	kill_all_global_use();
+	fclose(yyout_final);
 	free(table.champs);
 	return r;
 }
 
 int test_echo_read_s() {
-	return test_echo_read("f_tests/s/word_s", 3);
+	return test_echo_read("f_tests/s/word_s", 4);
 }
 
 int test_echo_read_m() {
@@ -470,5 +473,5 @@ int test_echo_read_m() {
 }
 
 int test_echo_read_d() {
-	return test_echo_read("f_tests/d/word_d", 0);
+	return test_echo_read("f_tests/d/word_d", 6);
 }

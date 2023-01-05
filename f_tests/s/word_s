@@ -1,4 +1,4 @@
-echo "ahah"
-echo "ohoh"
-read nb
-exit 
+echo "ahah" ;
+echo "ohoh" ;
+read id ; 
+exit ;

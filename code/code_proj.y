@@ -23,7 +23,6 @@
 	void check_create_echo_proc();
 	void check_create_read_proc();
 	void check_exit_proc();
-	void remonter_in_main();
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
@@ -73,7 +72,7 @@
 }
 
 
-%token '\n' READ N_ID ECH EXT PVG SPA OACO CACO '$'
+%token '\n' READ N_ID ECH EXT PVG SPA OA CA '$'
 %token <id> ID
 %token <entier> NB
 %token <chaine> MOTS 
@@ -139,9 +138,9 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, ":\n");
 	    }
 operande : CC
-	| '$' OACO ID CACO {$$ = $3;}
+	| '$' OA ID CA {$$ = $3;}
 	| '$' NB {int_in_str($2,$$,0);} //check des arguments ici 
-	| MOTS 
+	| MOTS {$$ = $1; printf("mot \n");}
 	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
 
