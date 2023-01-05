@@ -2,6 +2,7 @@
 #define FCT_TESTS_H
 
 #include "../inc/code_proj.tab.h"
+#include "../inc/fct_yacc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -212,6 +213,8 @@ int test_opel_d_v2(void);
 int test_operations_s(void);
 int test_operations_m(void);
 int test_operations_d(void);
+
+int test_tds_s(void);
 
 
 #endif // FCT_TESTS_H //

@@ -38,12 +38,13 @@ lex_bis:
 	$(LEX) $(LXFLAGS) -o $(dir_code)voc.c $(path_code).lex
 	$(CC) -c -o $(dir_objs)voc.o $(dir_code)voc.c
 	$(CC) -c -o $(dir_objs)sos.o $(dir_code)sos.c
-	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)sos.o -o \
-		$(dir_bin)sos
+	$(CC) -c -o $(dir_objs)fct_yacc.o $(dir_code)fct_yacc.c
+	$(CC) $(dir_objs)*.tab.o $(dir_objs)voc.o $(dir_objs)sos.o \
+		$(dir_objs)fct_yacc.o -o $(dir_bin)sos
 	$(CC) -c -o $(dir_objs)test.o $(dir_code)test.c
 	$(CC) -c -o $(dir_objs)fct_tests.o $(dir_code)fct_tests.c
 	$(CC) $(dir_objs)fct_tests.o $(dir_objs)*.tab.o $(dir_objs)voc.o \
-		$(dir_objs)test.o -o $(dir_bin)test
+		$(dir_objs)fct_yacc.o $(dir_objs)test.o -o $(dir_bin)test
 
 dir: # -commande pour ignorer les erreurs de la commande
 	-mkdir $(dir_objs) 2> /dev/null
