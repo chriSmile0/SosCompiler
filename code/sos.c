@@ -13,12 +13,13 @@ int main(int argc, char *argv[]) {
 		{"version", no_argument, NULL, 'v'},
 		{"tos", no_argument, NULL, 't'},
 		{"o", required_argument, NULL, 'o'},
+		{"g", no_argument, NULL, 'g'},
 		{NULL, 0, NULL, 0}
 	};
 	
-	//init_tds();
+	init_tds();
 
-	int opt, index, flagTds = 0;
+	int opt, index, flagTds, flagGen = 0;
 	while ((opt = getopt_long(argc, argv, "v:t:o:", options, &index)) != -1) {
 		switch (opt) {
 			/* Version */
@@ -40,6 +41,9 @@ int main(int argc, char *argv[]) {
 				printf("*** Fichier de sortie ***\n");
 				printf("Fichier d'enregistrement : %s\n", optarg);
 				break;
+			case 'g':
+				flagGen = 1;
+				break;
 
 			/* Inconnu */
 			default:
@@ -48,10 +52,17 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("*** Main ***\n");
-	int t;
-	while ((t = yylex()) != 0) 
-		printf("t : %d\n",t);
-
+	if (flagGen) {
+		strcat(data,"\t.data\n");
+		strcat(instructions,"\t.text\n__start:\n");
+		yyparse();
+		printf("*** CODE MIPS ***\n%s%s", data, instructions);
+	}
+	else {
+		int t;
+		while ((t = yylex()) != 0) 
+			printf("t : %d\n",t);
+	}
 	if (flagTds == 1){
         printf("*** Table des symboles ***\n");
         print_tds();

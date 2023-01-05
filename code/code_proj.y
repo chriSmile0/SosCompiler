@@ -1,6 +1,7 @@
 %{
 	#include <stdio.h>
 	#include <string.h>
+	#include "fct_yacc.h"
 	extern int yylex();
 	int yyerror(char *s);
 	extern FILE *yyin;
@@ -42,6 +43,8 @@ programme : instruction END programme
 
 instruction : ID EG expr 	// Affectation
 	    {
+		if (find_entry($1) == -1)
+			add_tds($1, ENT, 1, 0, 0, 1, "");
 	    	findStr($1,ids);
 		strcat(instructions, "sw $t");
 		strcat(instructions, itoa(reg_count-1));
@@ -74,8 +77,28 @@ expr : unique
      }
 ;
 
-unique : ID {li_count++;findStr($1,ids);strcat(instructions,"lw $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,$1);strcat(instructions,"\n");reg_count++;}
-       | NB {li_count++;strcat(instructions,"li $t");strcat(instructions,itoa(reg_count));strcat(instructions,", ");strcat(instructions,itoa($1));strcat(instructions,"\n");reg_count++;}
+unique : ID
+       {
+       	li_count++;
+       	if (find_entry($1) == -1)
+		yyerror("ID pas dans la table des symoles");
+	strcat(instructions,"lw $t");
+	strcat(instructions,itoa(reg_count));
+	strcat(instructions,", ");
+	strcat(instructions,$1);
+	strcat(instructions,"\n");
+	reg_count++;
+	}
+       | NB
+       {
+       	li_count++;
+	strcat(instructions,"li $t");
+	strcat(instructions,itoa(reg_count));
+	strcat(instructions,", ");
+	strcat(instructions,itoa($1));
+	strcat(instructions,"\n");
+	reg_count++;
+	}
 ;
 
 %%
@@ -85,8 +108,10 @@ void operation(char *str) {
 	strcat(instructions, " $t");
 	if (li_count <= 2) strcat(instructions,"0");
 	else strcat(instructions, itoa(reg_count-2));
-	strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-2));
-	strcat(instructions, ", $t"); strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count-2));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count-1));
 	strcat(instructions, "\n");
 	reg_count--;
 	if (li_count <= 2) reg_count--;
