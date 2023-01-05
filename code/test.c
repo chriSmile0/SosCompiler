@@ -37,13 +37,11 @@ int test_simple() {
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();*/
 	printf("- test_operations_s\n");
-	/*tests += test_operations_s();
+	tests += test_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
 	printf("- test_dec_tab_s\n");
 	tests += test_dec_tab_s();
-	printf("- test_mips\n");
-	tests += test_echo_read_s();*/
 	printf("- test mips v2 \n");
 	tests += test_echo_read_v2();
 	/*

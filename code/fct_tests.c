@@ -486,7 +486,9 @@ int test_echo_read_v2() {
 	// gencode
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
+	init_tds();
 	yyparse();
+	free_tds();
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);

@@ -117,7 +117,6 @@ instruction : ID EG oper	// Affectation
 			char rdm_str[16];
 			snprintf(rdm_str,17,"%s%s","_",itoa(id_count));
 			rdm_str[1+strlen(itoa(id_count))] = '\0';
-			printf("rdm str : |%s|\n",rdm_str);
 			strcpy(ids[id_count], rdm_str);
 			strcat(data,rdm_str);
 			strcat(data,":\t.asciiz \"");
@@ -221,20 +220,18 @@ oper : unique
      }
 ;
 
-unique : ID
-	{
+unique : ID {
 		li_count++;
 		if (find_entry($1) == -1)
-			yyerror("ID pas dans la table des symoles");
+			yyerror("ID pas dans la table des symboles");
 		strcat(instructions,"lw $t");
 		strcat(instructions,itoa(reg_count));
 		strcat(instructions,", ");
 		strcat(instructions,$1);
 		strcat(instructions,"\n");
 		reg_count++;
-	}
-	| NB
-	{
+		}
+    | NB {
 		li_count++;
 		strcat(instructions,"li $t");
 		strcat(instructions,itoa(reg_count));
@@ -242,7 +239,7 @@ unique : ID
 		strcat(instructions,itoa($1));
 		strcat(instructions,"\n");
 		reg_count++;
-	}
+		}
 ;
 
 %%
