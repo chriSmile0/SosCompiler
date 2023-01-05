@@ -1,0 +1,12 @@
+	.data
+exemple:	.word	0
+	.text
+__start:
+li $t1, 1
+li $t2, 2
+li $t3, 3
+li $t4, -1
+mul $t3, $t3, $t4
+add $t2, $t2, $t3
+mul $t0, $t1, $t2
+sw $t0, exemple

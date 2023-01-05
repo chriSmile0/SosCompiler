@@ -27,6 +27,7 @@ signe [+-]
 n_in_word [;(){}=!$*+%|-]
 ch_op_r [aeglnqt] 
 ch_op_1 [anoz]
+operateur [+-/*]
 
 %%
 ^{espace}*if{espace}					return MR;
@@ -54,27 +55,29 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 
-{signe}?{digit}+						return (checkNombres(yytext) ? NB : MOT);
+{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
 {espace}-{ch_op_1}{espace}				{return checkOperateur(yytext=(yytext+2),1);}
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}({char}|{digit})*					{return ID;}//printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
-
-{endline}								;
-. 										return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));
+{operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
+=								{return EG;}
+[+]								{return PL;}
+[-]								{return MN;}
+[*]								{return FX;}
+[/]								{return DV;}
+[(]								{return OP;}
+[)]								{return CP;}
+[;]								{return END;}
+{endline}							
+. 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
 
 %%
-
-int yyerror(char * msg) 
-{
-	fprintf(stderr," %s\n",msg);
-	return 1;
-}
 
 bool word_test(char * str) {
 	while (*str != 't') {

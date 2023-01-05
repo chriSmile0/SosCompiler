@@ -34,6 +34,8 @@ int test_simple() {
 	tests += test_oper_s_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
+	printf("- test_operations_s\n");
+	tests += test_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
 	/*
@@ -78,6 +80,8 @@ int test_median() {
 	tests += test_oper_m_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
+	printf("- test_operations_m\n");
+	tests += test_operations_m();
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -117,6 +121,8 @@ int test_difficile() {
 	tests += test_oper_d_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
+	printf("- test_operations_d\n");
+	tests += test_operations_d();
 
 
 	/*
