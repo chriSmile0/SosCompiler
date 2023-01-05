@@ -24,7 +24,7 @@
 	void check_create_read_proc();
 	void check_exit_proc();
 	void operation(char *str);
-	void findStr(char *str, char strs[512][64]);
+	int findStr(char *str, char strs[512][64], int crea);
 	char* itoa(int x);
 
 	char data[1024];			// Partie declaration des variables
@@ -102,7 +102,7 @@ instruction : ID EG oper	// Affectation
 	    {
 		if (find_entry($1) == -1)
 			add_tds($1, ENT, 1, 0, 0, 1, "");
-	    	findStr($1,ids);
+	    findStr($1,ids,1);
 		strcat(instructions, "sw $t");
 		strcat(instructions, itoa(reg_count-1));
 		strcat(instructions, ", ");
@@ -110,8 +110,52 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, "\n");
 		reg_count = 1;
 		li_count = 0;
-	    }
-		| DEC ID OB NB CB { // Déclaration de tableau
+		}
+	| ECH operande { // Print
+		//check_echo_proc();
+		//pas de création demandé
+		int crea = findStr($2,ids,0);
+		if (!crea) { 
+			strcat(data,"_");
+			strcat(data,itoa(id_count));
+			strcat(data,":\t.asciiz \"");
+			strcat(data,$2);
+			strcat(data,"\"\n");
+			strcat(instructions,"li $a0, _");
+			strcat(instructions,itoa(id_count));
+			strcat(instructions,"\n");
+			id_count++;
+		}
+		else { // c'est un id ou une chaine déjà déjà déclaré 
+
+		}
+		/*echo_data(cpt_id,$2);
+		echo_main(cpt_id,$2);*/
+		strcat(instructions,"li $v0 4\nsyscall\n");
+
+		$$ = 0;
+		}			
+	| EXT { // Exit 
+			//check_exit_proc();
+			strcat(instructions, "li $v0 10\nsyscall\n");
+			fin_prog = true;
+			$$ = 0;
+			//print_table_symboles();
+		}
+	| READ id_	{ // Affect bis 
+			check_read_proc();
+			/*read_data($2);
+			read_main($2);*/
+			findStr($2,ids,1);
+			strcat(instructions, "la $a0");
+			strcat(instructions, ", ");
+			strcat(instructions, $2);
+			strcat(instructions, "\n");
+			strcat(instructions, "li $v0 8\nsyscall\n");
+			$$ = 0;
+		}
+;
+	| DEC ID OB NB CB { // Déclaration de tableau
 			if (find_entry($2) == -1)
 				add_tds($2, TAB, 1, $4, -1, 1, "");
 
@@ -229,16 +273,20 @@ void operation(char *str) {
 }
 
 // Fonction qui cherche si un ID est déjà déclaré, sinon il le fait
-void findStr (char *str, char strs[512][64]) {
+int findStr (char *str, char strs[512][64], int crea) {
 	for (int i = 0; i < id_count; i++) {
 		if (strcmp(str, strs[i]) == 0) {
-			return;
+			return 1;
 		}
 	}
-	strcpy(strs[id_count], str);
-	strcat(data, str);
-	strcat(data, ":\t.word\t0\n");
-	id_count++;
+	if (crea) {
+		strcpy(strs[id_count], str);
+		strcat(data, str);
+		strcat(data, ":\t.word\t0\n");
+		id_count++;
+		return 1;
+	}
+	return 0;
 }
 
 char* itoa(int x) {

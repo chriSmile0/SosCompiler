@@ -491,6 +491,7 @@ int test_echo_read_v2() {
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
 	
+	
 
 	// overture et copie dans un buffer du fichier de correction
 	FILE *correction = fopen("f_tests/s/word_s_corr", "r");
@@ -506,6 +507,12 @@ int test_echo_read_v2() {
 
 	// comparaison
 	int comp = strcmp(code,corr);
+	printf("code : |%s|\n",code);
+	printf("corr : |%s|\n",corr);
+	int i = 0;
+	while(code[i] == corr[i])
+		i++;
+	printf("i : %d |%c| vs |%c| : len code -> %ld, len corr -> %ld\n",i,code[i],corr[i],strlen(code),strlen(corr));
 	
 	printf("comparaison : %s\n",comp==0?"OK":"FAUX");
 

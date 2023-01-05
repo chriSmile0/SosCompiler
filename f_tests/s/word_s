@@ -1,2 +1,3 @@
 read ido ;
+echo "coco" ;
 exit ;
