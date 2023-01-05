@@ -156,7 +156,9 @@ int test_operations_s() {
 	// gencode
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
+	init_tds();
 	yyparse();
+	free_tds();
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
@@ -194,7 +196,9 @@ int test_operations_m() {
 	// gencode
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
+	init_tds();
 	yyparse();
+	free_tds();
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
@@ -232,7 +236,9 @@ int test_operations_d() {
 	// gencode
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
+	init_tds();
 	yyparse();
+	free_tds();
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
