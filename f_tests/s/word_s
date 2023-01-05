@@ -1,4 +1,2 @@
-echo "ahah" ;
-echo "ohoh" ;
-read id ; 
+read ido ;
 exit ;

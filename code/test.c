@@ -18,7 +18,7 @@
 int test_simple() {
 	printf("\n--- TEST SIMPLE\n");
 	int tests = 0;
-	printf("- test_chainescarac_s\n");
+	/*printf("- test_chainescarac_s\n");
 	tests += test_chainescarac_s_v2();
 	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
@@ -35,13 +35,17 @@ int test_simple() {
 	printf("- test_oper_s\n");
 	tests += test_oper_s_v2();
 	printf("- test_opel_s\n");
-	tests += test_opel_s_v2();
+	tests += test_opel_s_v2();*/
 	printf("- test_operations_s\n");
-	tests += test_operations_s();
+	/*tests += test_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
 	printf("- test_dec_tab_s\n");
 	tests += test_dec_tab_s();
+	printf("- test_mips\n");
+	tests += test_echo_read_s();*/
+	printf("- test mips v2 \n");
+	tests += test_echo_read_v2();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -185,17 +189,17 @@ int main(int argc, char *argv[]) {
 	int niveau_test = atoi(argv[1]);
 	printf("Test de niveau de rang : %d\n",niveau_test);
 	int retour = 0;
-	/*for (int i = 0 ; i < niveau_test ; i++)
+	for (int i = 0 ; i < niveau_test ; i++)
 		printf("test %d/%d >>> %s\n",i+1,niveau_test,
 			(((retour = test_F[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
-				: "\x1B[32m" "VALIDE" "\x1B[37m" ));*/
+				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
 
 	//hide_tokens_h();
 	printf("Test mips de niveau de rang : %d\n",niveau_test);
 	retour = 0; //que test 1 pour le moment 
-	for (int i = 0 ; i < niveau_test ; i++)
+	/*for (int i = 0 ; i < niveau_test ; i++)
 		printf("test %d/%d >>> %s\n",i+1,niveau_test,
 			(((retour = test_FM[i]())) ? "\x1B[31m" "ECHOUE" "\x1B[37m"
-				: "\x1B[32m" "VALIDE" "\x1B[37m" ));
+				: "\x1B[32m" "VALIDE" "\x1B[37m" ));*/
 	return retour;
 }

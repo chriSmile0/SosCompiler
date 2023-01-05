@@ -232,4 +232,10 @@ int test_tds_s(void);
 int test_dec_tab_s(void);
 int test_dec_tab_m(void);
 int test_dec_tab_d(void);
+
+
+
+
+int test_echo_read_v2(void);
+
 #endif // FCT_TESTS_H //

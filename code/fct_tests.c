@@ -475,3 +475,43 @@ int test_echo_read_m() {
 int test_echo_read_d() {
 	return test_echo_read("f_tests/d/word_d", 6);
 }
+
+
+int test_echo_read_v2() {
+	char* filename = "f_tests/s/word_s";
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+
+	// gencode
+	strcat(data, "\t.data\n");
+	strcat(instructions, "\t.text\n__start:\n");
+	yyparse();
+	fclose(yyin);
+	char code[BUFSIZ];
+	sprintf(code,"%s%s",data,instructions);
+	
+
+	// overture et copie dans un buffer du fichier de correction
+	FILE *correction = fopen("f_tests/s/word_s_corr", "r");
+	if (correction == NULL)
+		perror("f_tests/s/word_s_corr");
+	fseek(correction, 0, SEEK_END);
+	long size = ftell(correction);
+	rewind(correction);
+	char *corr = malloc(size + 1);
+	fread(corr, 1, size, correction);
+	fclose(correction);
+	corr[size] = '\0';
+
+	// comparaison
+	int comp = strcmp(code,corr);
+	
+	printf("comparaison : %s\n",comp==0?"OK":"FAUX");
+
+	// remise a zero du gencode
+	data[0] = '\0';
+	instructions[0] = '\0';
+	id_count = 0;
+	return comp;
+}

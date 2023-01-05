@@ -1,0 +1,9 @@
+	.data
+ido:	.word	0
+	.text
+__start:
+la $a0, ido
+li $v0 8
+syscall
+li $v0 10
+syscall

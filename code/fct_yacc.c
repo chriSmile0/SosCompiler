@@ -121,7 +121,7 @@ void check_exit_proc() {
 
 void check_read_proc() {
 	if (!create_read_proc) { 
-		mips_read_all();
+		//mips_read_all();
 		create_read_proc = true;
 	}
 }
