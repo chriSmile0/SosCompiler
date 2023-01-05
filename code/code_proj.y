@@ -43,6 +43,8 @@ programme : instruction END programme
 
 instruction : ID EG expr 	// Affectation
 	    {
+		if (find_entry($1) == -1)
+			add_tds($1, ENT, 1, 0, 0, 1, "");
 	    	findStr($1,ids);
 		strcat(instructions, "sw $t");
 		strcat(instructions, itoa(reg_count-1));
