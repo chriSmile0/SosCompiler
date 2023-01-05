@@ -44,7 +44,7 @@ lex_bis:
 	$(CC) -c -o $(dir_objs)test.o $(dir_code)test.c
 	$(CC) -c -o $(dir_objs)fct_tests.o $(dir_code)fct_tests.c
 	$(CC) $(dir_objs)fct_tests.o $(dir_objs)*.tab.o $(dir_objs)voc.o \
-		$(dir_objs)fct_yacc.o $(dir_objs)test.o -o $(dir_bin)test
+		$(dir_objs)test.o -o $(dir_bin)test
 
 dir: # -commande pour ignorer les erreurs de la commande
 	-mkdir $(dir_objs) 2> /dev/null

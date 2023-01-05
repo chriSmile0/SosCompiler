@@ -76,7 +76,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 											yyerror("Caractère non ASCII");
 									}
 
-{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
+{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOTS);}
 
 {com}+.*{endline}						return COM;
 
@@ -84,7 +84,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
-({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
+({char}|{digit})+						{return MOTS;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =								{return EG;}
 [+]								{return PL;}

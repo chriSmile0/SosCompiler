@@ -9,7 +9,7 @@
 	#include "../inc/fct_yacc.h"
 	#define SIZE_LINE_MIPS 90
 	extern int yylex();
-	extern void yyerror(const char *msg);
+	int yyerror(char *s);
 	void mips_struct_file();
 	extern FILE *yyin;
 	extern FILE *yyout_text;
@@ -76,10 +76,8 @@
 %token '\n' READ N_ID ECH EXT PVG SPA OACO CACO '$'
 %token <id> ID
 %token <entier> NB
-%token <chaine> MOT 
+%token <chaine> MOTS 
 %token <chaine> CC
-%token <id> ID
-%token <entier> NB 
 %type <chaine> operande 
 %type <entier> instruction
 
@@ -143,7 +141,7 @@ instruction : ID EG oper	// Affectation
 operande : CC
 	| '$' OACO ID CACO {$$ = $3;}
 	| '$' NB {int_in_str($2,$$,0);} //check des arguments ici 
-	| MOT 
+	| MOTS 
 	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
 
@@ -204,10 +202,6 @@ unique : ID
 		reg_count++;
 	}
 ;
-id_ : ID;
-
-
-
 
 %%
 // Fonction qui execute une operation entre les deux derniers registres
@@ -424,56 +418,5 @@ void build_final_mips() {
 			}
 		}
 		close(desc);
-	}
-}
-
-void create_echo_data(char *id,char *chaine) {
-	char buf[1024];
-	char asciiz[] = ".asciiz";
-	snprintf(buf,1024,"\t%s: %s \"%s\"",id,asciiz,chaine);
-	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
-	fwrite(buf,strlen(buf),1,yyout_data);
-}
-
-void echo_main(char *id) {
-	char buf[1024];
-	int true_size = strlen(id);
-	for (int i = 0 ; i < true_size; i++) 
-		buf[i] = id[i];
-	buf[true_size] = '\0';
-	char buf_in_mips[1024];
-	char *jal_str = "\tjal Affichage_Str \n";
-	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
-	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
-}
-
-void build_final_mips() {
-	FILE *file_tab[4] = {yyout_data,yyout_text,yyout_main,yyout_proc};
-	char *en_tetes[4] = {".data\n","\n.text","\nmain:\n",""};
-	char *file_name[4] = {"data","text","main","proc"};
-
-	char buf[1024];
-	int read_size = 0;
-	for	(int i = 0 ; i < 4 ; i++) {
-		int stop = 1;
-		char in_param[27];
-		snprintf(in_param,27,"exit_mips/exit_mips_%s.s",file_name[i]);
-		in_param[27] = '\0';
-		if (i == 2)
-			fprintf(file_tab[i],"\n\tjal Exit\n");
-		fclose(file_tab[i]);
-		file_tab[i] = fopen(in_param,"r+");
-		fprintf(yyout_final,"%s",en_tetes[i]);
-		while (stop) {
-			read_size = fread(buf,1024,1,file_tab[i]);
-			if (read_size == 0)
-				stop = 0;
-			buf[strlen(buf)] = '\0';
-			printf("buf : |%s|\n",buf);
-			fwrite(buf,strlen(buf),1,yyout_final);
-			buf[0] = '\0';//on vide le buffer
-		}
-		fclose(file_tab[i]);
-
 	}
 }

@@ -27,6 +27,8 @@ typedef struct {
 	int nb_arg;	/**< nombres d'arguments pour une fonction, 4 max */
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
+	char *valeur; // concordance pour ma version 
+	int index_in_t; //concodrande pour ma version 
 	/*@}*/
 } champ;
 
@@ -125,9 +127,6 @@ int get_nb_args(char* name);
  */
 void free_tds();
 
-#endif
-
-
 /**** INSTRUCTION *****/
 /*	Création des fct : 
 /*		- 	instruction_data()
@@ -136,18 +135,6 @@ void free_tds();
 /*	Qui associe pour chaque instruction des lignes de mips à écrire
 /*	Dans le fichier en sortie 
 /**** FIN INSTRUCTION ******/
-
-typedef struct {
-	int index_in_t;
-	char *id;
-	char *valeur;
-} champ;
-
-struct table_symbole {
-	int cur_index;
-	int taille;
-	champ *champs;
-} table;
 
 
 /**

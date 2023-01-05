@@ -172,7 +172,7 @@ void echo_data(int *id,char *chaine) {
 	int cherche_res = 0;
 	if((cherche_res = cherche_id(chaine)) != -1) {
 		//on a trouver un id
-		printf("id associé : %s\n",table.champs[cherche_res].id);
+		printf("id associé : %s\n",table.champs[cherche_res].name);
 		//il faut qu'on remplace 
 	}
 	else { // cela ne concerne pas un id 
@@ -218,7 +218,7 @@ int cherche_id(char *id)
 {
 	int i = 0;
 	int size_table = table.taille;
-	while((strcmp(table.champs[i].id,id)!=0) 
+	while((strcmp(table.champs[i].name,id)!=0) 
 		&& (i < size_table))
 		i++;
 	if(i==size_table)
@@ -231,8 +231,8 @@ int ajout_chaine(char *id, char *chaine)
 	int result_cherche = 0;
 	if((result_cherche = cherche_id(id))!=-1)
 		return result_cherche;
-	snprintf(table.champs[table.taille].id,50,"%s",id);
-	table.champs[table.taille].id[strlen(id)] = '\0';
+	snprintf(table.champs[table.taille].name,50,"%s",id);
+	table.champs[table.taille].name[strlen(id)] = '\0';
 	snprintf(table.champs[table.taille].valeur,50,"%s",chaine);
 	table.champs[table.taille].valeur[strlen(chaine)] = '\0';
 	table.taille++;
@@ -242,5 +242,5 @@ int ajout_chaine(char *id, char *chaine)
 void print_table_symboles() {
 	int taille_table = table.taille;
 	for(int i = 0 ; i < taille_table; i++)
-		printf("id: %s, valeur : %s\n",table.champs[i].id,table.champs[i].valeur); 
+		printf("id: %s, valeur : %s\n",table.champs[i].name,table.champs[i].valeur); 
 }
