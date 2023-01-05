@@ -510,9 +510,12 @@ int test_echo_read_v2() {
 	printf("code : |%s|\n",code);
 	printf("corr : |%s|\n",corr);
 	int i = 0;
-	while(code[i] == corr[i])
+	int len_corr = strlen(corr);
+	int len_code = strlen(code);
+	while ((i < len_corr) && (code[i] == corr[i]))
 		i++;
-	printf("i : %d |%c| vs |%c| : len code -> %ld, len corr -> %ld\n",i,code[i],corr[i],strlen(code),strlen(corr));
+	printf("i : %d |%c| vs |%c| : len code -> %d, len corr -> %d\n",
+			i,code[i],corr[i],len_code,len_corr);
 	
 	printf("comparaison : %s\n",comp==0?"OK":"FAUX");
 

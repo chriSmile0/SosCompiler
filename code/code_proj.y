@@ -112,27 +112,26 @@ instruction : ID EG oper	// Affectation
 		li_count = 0;
 		}
 	| ECH operande { // Print
-		//check_echo_proc();
-		//pas de création demandé
 		int crea = findStr($2,ids,0);
-		if (!crea) { 
-			strcat(data,"_");
-			strcat(data,itoa(id_count));
+		if (crea == -1) { 
+			char rdm_str[16];
+			snprintf(rdm_str,17,"%s%s","_",itoa(id_count));
+			rdm_str[1+strlen(itoa(id_count))] = '\0';
+			printf("rdm str : |%s|\n",rdm_str);
+			strcpy(ids[id_count], rdm_str);
+			strcat(data,rdm_str);
 			strcat(data,":\t.asciiz \"");
 			strcat(data,$2);
 			strcat(data,"\"\n");
 			strcat(instructions,"li $a0, _");
 			strcat(instructions,itoa(id_count));
-			strcat(instructions,"\n");
 			id_count++;
 		}
 		else { // c'est un id ou une chaine déjà déjà déclaré 
-
+			strcat(instructions,"li $a0, ");
+			strcat(instructions,ids[crea]);
 		}
-		/*echo_data(cpt_id,$2);
-		echo_main(cpt_id,$2);*/
-		strcat(instructions,"li $v0 4\nsyscall\n");
-
+		strcat(instructions,"\nli $v0 4\nsyscall\n");
 		$$ = 0;
 		}			
 	| EXT { // Exit 
@@ -276,7 +275,7 @@ void operation(char *str) {
 int findStr (char *str, char strs[512][64], int crea) {
 	for (int i = 0; i < id_count; i++) {
 		if (strcmp(str, strs[i]) == 0) {
-			return 1;
+			return i;
 		}
 	}
 	if (crea) {
@@ -286,7 +285,7 @@ int findStr (char *str, char strs[512][64], int crea) {
 		id_count++;
 		return 1;
 	}
-	return 0;
+	return -1;
 }
 
 char* itoa(int x) {
