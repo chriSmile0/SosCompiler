@@ -71,6 +71,8 @@ instruction : ID EG expr 	// Affectation
 
 			if (ret >= max_length)
 				fprintf(stderr, "|ERREUR| Dépassement du buffer - Dec tab");
+
+			strcat(data, buff);
 		}
 ;
 
