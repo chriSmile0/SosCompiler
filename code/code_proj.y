@@ -17,9 +17,10 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int if_count = 0;
+	int if_count = 0;		// Nombre de if successifs
 	int if_desc_count = 0;
 	static int else_count = 0;	// Nombre de else
+	// Check .lex
 	extern int elsee;
 	extern int whilee;
 	extern int until;
@@ -247,8 +248,10 @@ void genElse(char *str) {
 			if_desc_count = 0;
 			if_count = 0;
 		}
-	} else
+	} else {
 		strcat(instructions, itoa(else_count-1));
+		if_count--;
+	}
 	strcat(instructions, ":\n");
 }
 
