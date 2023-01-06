@@ -28,7 +28,6 @@ typedef struct {
 	int nb_arg;	/**< nombres d'arguments pour une fonction, 4 max */
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
-	char *valeur; // concordance pour ma version 
 	/*@}*/
 } champ;
 

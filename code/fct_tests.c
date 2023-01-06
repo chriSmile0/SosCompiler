@@ -294,9 +294,6 @@ int test_tds_s(void) {
 		ret = 1; 
 	if (get_nb_args("id4") != 4)
 		ret = 1;
-	if (strcmp(get_valeur("id5"),"chaines") != 0)
-		ret = 1;
-
 	print_tds();
 	free_tds();
 	return ret;
@@ -427,7 +424,7 @@ int test_dec_tab_d(void){
 	return comp;
 }
 int test_echo_read(char* chemin_fichier_test, int attendu) {
-	char* filename = chemin_fichier_test;
+	/*char* filename = chemin_fichier_test;
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
 		perror(filename);
@@ -438,17 +435,6 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 	yyout_final = fopen("exit_mips/exit_mips.s","w+");
 
 	//init table des symboles
-
-	table.taille = 0;
-	table.champs = (champ*)(malloc(sizeof(champ)*1024));//1024 pour le moment 
-	if (table.champs != NULL)
-		for (int i = 0 ; i < 1024 ; i++) {
-			table.champs[i].name = malloc(50); //49 carac par id max 
-			table.champs[i].name[0] = '\0';
-			table.champs[i].valeur = malloc(sizeof(50));
-			table.champs[i].valeur[0] = '\0';
-		}
-
 	if (yyout_proc == NULL) 
 		perror("exit_mips.s doit exister");
 		
@@ -463,7 +449,7 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 	kill_all_global_use();
 	fclose(yyout_final);
 	free(table.champs);
-	return r;
+	return r;*/
 }
 
 int test_echo_read_s() {

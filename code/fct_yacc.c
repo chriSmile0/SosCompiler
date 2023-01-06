@@ -14,7 +14,6 @@ int add_tds(char* name, int type, int init, int dim,
     table.champs[table.taille].nb_arg = nb_arg;
     table.champs[table.taille].global = global;
     table.champs[table.taille].func = func;
-	table.champs[table.taille].valeur = valeur;
     return table.taille++;
 }
 
@@ -87,17 +86,6 @@ int get_nb_args(char* name) {
     //sinon erreur
     fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
     return -1;
-}
-
-char* get_valeur(char* name) {
-	int ind;
-    //si on trouve l'entrée
-    if ((ind = find_entry(name)) != -1){
-        return table.champs[ind].valeur;
-    }
-    //sinon erreur
-    fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
-    return "";
 }
 
 void free_tds() {
@@ -230,7 +218,6 @@ void kill_all_global_use() {
 	create_read_proc = false;
 	create_echo_proc = false;
 	fin_prog = false;
-	cpt = 0;
 }
 
 int cherche_id(char *id)
@@ -252,8 +239,6 @@ int ajout_chaine(char *id, char *chaine)
 		return result_cherche;
 	snprintf(table.champs[table.taille].name,50,"%s",id);
 	table.champs[table.taille].name[strlen(id)] = '\0';
-	snprintf(table.champs[table.taille].valeur,50,"%s",chaine);
-	table.champs[table.taille].valeur[strlen(chaine)] = '\0';
 	table.taille++;
 	return (table.taille-1);
 }
@@ -261,5 +246,5 @@ int ajout_chaine(char *id, char *chaine)
 void print_table_symboles() {
 	int taille_table = table.taille;
 	for(int i = 0 ; i < taille_table; i++)
-		printf("id: %s, valeur : %s\n",table.champs[i].name,table.champs[i].valeur); 
+		printf("id: %s\n",table.champs[i].name); 
 }
