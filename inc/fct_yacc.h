@@ -23,7 +23,7 @@ typedef struct {
 	char* name; 	/**< nom de l'id */
 	int type;	/**< type de l'id, def dans l'enum types */
 	int init;	/**< 0 si l'id est pas init, 1 sinon */
-	char* dim;	/**< dims pour un tableau, de la forme N,M ou N */
+	int dim;	/**< dims pour un tableau */
 	int nb_arg;	/**< nombres d'arguments pour une fonction, 4 max */
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
@@ -58,7 +58,7 @@ void init_tds();
  * @param func nom de la fonction mère si variable locale, NULL sinon
  * @return int 
  */
-int add_tds(char* name, int type, int init, char* dim,
+int add_tds(char* name, int type, int init, int dim,
 	int nb_arg, int global, char* func);
 
 /**
@@ -108,9 +108,9 @@ char * get_func(char* name);
  * @brief retourne les dimensions de la variable name
  * 
  * @param name nom de la variable
- * @return char* dimensions du tableau, NULL si ce n'est pas un tableau
+ * @return int dimensions du tableau, -1 si ce n'est pas un tableau
  */
-char * get_dim(char* name);
+int get_dim(char* name);
 
 /**
  * @brief retourne le nombre d'arguments de la variable name

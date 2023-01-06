@@ -1,0 +1,4 @@
+	.data
+tab:	.space	22
+	.text
+__start:

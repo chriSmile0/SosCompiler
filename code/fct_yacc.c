@@ -5,7 +5,7 @@ void init_tds(){
 	table.champs = (champ*) malloc(sizeof(champ)*10000);
 }
 
-int add_tds(char* name, int type, int init, char* dim,
+int add_tds(char* name, int type, int init, int dim,
     int nb_arg, int global, char* func) {
     table.champs[table.taille].name = name;
     table.champs[table.taille].type = type;
@@ -18,11 +18,12 @@ int add_tds(char* name, int type, int init, char* dim,
 }
 
 void print_entry(int index) {
-    printf("name : %s, type : %i, init : %i, dim : %s, nb_arg :%i,"
-    "global : %i, func : %s\n", table.champs[index].name, 
+    printf("name: %s | type: %i | init: %i | dim: %i | nb_arg: %i | "
+    "global: %i | func: %s\n", table.champs[index].name, 
     table.champs[index].type, table.champs[index].init, 
     table.champs[index].dim, table.champs[index].nb_arg,
-    table.champs[index].global, table.champs[index].func);
+    table.champs[index].global, 
+    table.champs[index].func[0] == '\0' ? "None" : table.champs[index].func);
 }
 
 void print_tds() {
@@ -65,7 +66,7 @@ char* get_func(char* name) {
     return "";
 }  
 
-char* get_dim(char* name) {
+int get_dim(char* name) {
     int ind;
     //si on trouve l'entrée
     if ((ind = find_entry(name)) != -1){
@@ -73,7 +74,7 @@ char* get_dim(char* name) {
     }
     //sinon erreur
     fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
-    return "";
+    return -1;
 }
 
 int get_nb_args(char* name) {
