@@ -53,8 +53,8 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					return ECH;
 ^{espace}*read{espace}+					return READ;
-^{espace}*exit{espace}+	    			return EXT;
-^{espace}*return{espace}+				return MR;
+^{espace}*exit{espace}+	    			{printf("exit\n");return EXT;}
+^{espace}*return{espace}+				{return RTN;}
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
@@ -86,16 +86,20 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{ yylval.chaine = strdup(yytext);return MOTS;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
-=								{return EG;}
-[+]								{return PL;}
-[-]								{return MN;}
-[*]								{return FX;}
-[/]								{return DV;}
-[(]								{return OP;}
-[)]								{return CP;}
-[;]								{return END;}
-[\[]							{return OB;}
-[\]]							{return CB;}
+=										{return EG;}
+[+]										{return PL;}
+[-]										{return MN;}
+[*]										{return FX;}
+[/]										{return DV;}
+[(]										{return OP;}
+[)]										{return CP;}
+[;]										{return END;}
+[\{]									{return OA;}
+[\}]									{return CA;}
+[$]										{return '$';}
+[\[]									{return OB;}
+[\]]									{return CB;}
+
 {endline}							
 . 									{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 

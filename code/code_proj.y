@@ -11,15 +11,6 @@
 	extern int yylex();
 	int yyerror(char *s);
 	void mips_struct_file();
-	extern FILE *yyin;
-	extern FILE *yyout_text;
-	extern FILE *yyout_data;
-	extern FILE *yyout_main;
-	extern FILE *yyout_proc;
-	extern FILE *yyout_final;
-	bool create_echo_proc = false;
-	bool create_read_proc = false;
-	bool fin_prog = false;
 	void check_create_echo_proc();
 	void check_create_read_proc();
 	void check_exit_proc();
@@ -72,12 +63,13 @@
 }
 
 
-%token '\n' READ N_ID ECH EXT PVG SPA OA CA '$'
+%token '\n' READ N_ID ECH EXT PVG SPA OA CA '$' OB CB RTN
 %token <id> ID
 %token <entier> NB
 %token <chaine> MOTS 
 %token <chaine> CC
 %type <chaine> operande 
+%type <entier> operande_entier
 %type <entier> instruction
 
 
@@ -131,11 +123,15 @@ instruction : ID EG oper	// Affectation
 		$$ = 0;
 		}			
 	| EXT { // Exit 
+			printf("passage ici \n");
 			strcat(instructions, "li $v0 10\nsyscall\n");
 			fin_prog = true;
 			$$ = 0;
 		}
-	| READ id_	{ // Affect bis 
+	| EXT NB { // Exit avec entier
+			// interruption ?? 
+		}
+	| READ ID	{ // Affect bis 
 			if (find_entry($2) == -1)
 				add_tds($2,ENT,1,0,0,1,"");
 			findStr($2,ids,1);
@@ -145,6 +141,61 @@ instruction : ID EG oper	// Affectation
 			strcat(instructions, "\n");
 			strcat(instructions, "li $v0 8\nsyscall\n");
 			$$ = 0;
+		}
+	| READ ID OB operande_entier CB  {
+			int crea = 0;
+			if ((crea = find_entry($2)) == -1)
+				add_tds($2,TAB,1,0,0,1,"");
+			//findStr($2,ids,1);
+			findStr($2,ids,0); // créa -1 cas particulier
+			int ent = $4 + 1;
+			if (crea == -1) {
+				//creation du tableau
+				strcpy(ids[id_count],$2);
+				strcat(data,$2);
+				strcat(data,":\t.space\t");
+				strcat(data,itoa(ent));
+				strcat(data,"\n");
+			}
+			strcat(instructions,"la $t");
+			int save_reg = reg_count;
+			strcat(instructions,itoa(reg_count));
+			strcat(instructions,", ");
+			strcat(instructions, $2);
+			strcat(instructions, "\naddi $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ",$t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions,", ");
+			strcat(instructions,itoa(4*$4)); //on se place au bon endroit
+			strcat(instructions, "\n");
+			//ensuite on demande : 
+			strcat(instructions, "li $v0 5\nsyscall\n");
+			//on déplace dans un registre tmp libre
+			strcat(instructions, "move $t");
+			reg_count++;
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", $v0\n");
+			strcat(instructions, "sw $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", ($t");
+			strcat(instructions, itoa(save_reg));
+			strcat(instructions, ")\n");
+			//on print pour tester 
+			strcat(instructions, "lw $a0, ($t");
+			strcat(instructions, itoa(save_reg));
+			strcat(instructions, ")\nli $v0, 1\nsyscall\n");
+			//ok 
+			$$ = 0;
+		}//bouchon}
+	
+	| RTN { // Return 
+			strcat(instructions, "jr $ra\n");
+		}
+
+	| RTN NB { // Return entier
+			strcat(instructions, "jr $ra\n");
+			// + statut dans $? 
 		}
 ;
 	| DEC ID OB NB CB { // Déclaration de tableau
@@ -177,6 +228,9 @@ operande : CC
 	| '$' OA ID CA {$$ = $3;}
 	| '$' NB {$$ = itoa($2);} //check des arguments ici 
 	| MOTS {$$ = $1; printf("mot \n");}
+	/*| '$' OA ID OB operande_entier CB CA {
+		
+	}//bouchon}*/
 	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
 
@@ -191,6 +245,7 @@ bool : NB
 	if_count++;
 	else_count++;
      }
+operande_entier : NB
 ;
 
 oper : unique
@@ -286,6 +341,7 @@ char* itoa(int x) {
 }
 
 int yyerror(char *s) {
+<<<<<<< HEAD
 	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 	return 1;
 }
@@ -456,4 +512,8 @@ void build_final_mips() {
 		}
 		close(desc);
 	}
+=======
+  fprintf(stderr, "Erreur de syntaxe : %s\n", s);
+  return 1;
+>>>>>>> read id operande entier ok , maintenant manque echo id operande_entier
 }

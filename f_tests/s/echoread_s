@@ -2,3 +2,4 @@ read ido ;
 echo "coco" ;
 echo ${ido} ; 
 exit ;
+

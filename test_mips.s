@@ -1,7 +1,7 @@
-	.data
-didi:	.space	1
-	.text
-__start:
+        .data
+didi:   .space  1
+        .text
+main:
 la $t1, didi
 addi $t1,$t1, 0
 li $v0 5

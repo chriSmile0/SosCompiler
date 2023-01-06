@@ -3,6 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+
+extern bool create_echo_proc;
+extern bool create_read_proc;
+extern bool fin_prog;
+extern FILE *yyout_proc;
 
 /**
  * Enum des types des identificateurs
