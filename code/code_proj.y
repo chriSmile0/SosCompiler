@@ -40,6 +40,10 @@
 %token <id> ID
 %token <entier> NB
 %token <chaine> CCS
+
+%token <chaine> TEST
+%token OU ET
+
 %token EG
 %token PL
 %token MN
@@ -70,6 +74,11 @@
 %token '$'
 %token <chaine> MOTS
 
+%type <entier> instruction
+%type <chaine> concatenation
+%type <boolean> test_bloc test_expr test_expr2 test_expr3 test_instruction
+%type <chaine> operande
+
 // Regles de grammaire
 %left PL MN
 %left FX DV
@@ -77,6 +86,7 @@
 %union {
 	char *id;
 	int entier;
+	int boolean;
 	char *chaine;
 }
 
@@ -95,11 +105,10 @@ programme : instruction END programme
 			genElse("Else");
 			elsee--;
 		}
-	  }
 ;
 
 instruction : ID EG oper	// Affectation
-	    {
+		{
 		if (find_entry($1) == -1)
 			add_tds($1, ENT, 1, 0, 0, 1, "");
 	    	findStr($1,ids,1);
@@ -301,24 +310,23 @@ operande : CCS {$$ = $1 ; printf("iki \n");}
 
 
 oper : unique
-     | oper PL oper {operation("add");}
-     | oper MN oper {operation("sub");}
-     | oper FX oper {operation("mul");}
-     | oper DV oper {operation("div");}
-     | OP oper CP 
-     | MN oper %prec MN
-     {
-	strcat(instructions, "li $t");
-	strcat(instructions, itoa(reg_count));
-	strcat(instructions, ", -1\n");
-     	strcat(instructions, "mul $t");
-	strcat(instructions, itoa(reg_count-1));
-	strcat(instructions, ", $t");
-	strcat(instructions, itoa(reg_count-1));
-	strcat(instructions, ", $t");
-	strcat(instructions, itoa(reg_count));
-	strcat(instructions, "\n");
-     }
+	| oper PL oper {operation("add");}
+	| oper MN oper {operation("sub");}
+	| oper FX oper {operation("mul");}
+	| oper DV oper {operation("div");}
+	| OP oper CP 
+	| MN oper %prec MN {
+		strcat(instructions, "li $t");
+		strcat(instructions, itoa(reg_count));
+		strcat(instructions, ", -1\n");
+		strcat(instructions, "mul $t");
+		strcat(instructions, itoa(reg_count-1));
+		strcat(instructions, ", $t");
+		strcat(instructions, itoa(reg_count-1));
+		strcat(instructions, ", $t");
+		strcat(instructions, itoa(reg_count));
+		strcat(instructions, "\n");
+	}
 ;
 
 operande_entier : NB
@@ -337,8 +345,7 @@ unique : ID
 		strcat(instructions,"\n");
 		reg_count++;
 	}
-	| NB
-	{
+	| NB {
 		li_count++;
 		strcat(instructions,"li $t");
 		strcat(instructions,itoa(reg_count));
@@ -349,6 +356,54 @@ unique : ID
 	}
 ;
 
+test_bloc : TEST test_expr {
+		$$ = 1;
+	}
+;
+
+test_expr : test_expr OU test_expr2 {
+		$$ = ($1+$3);
+	}
+	| test_expr2 
+;
+
+test_expr2 : test_expr2 ET test_expr3 {
+		$$ = ($1*$3);
+	}
+	| test_expr3 
+;
+
+test_expr3 : OP test_expr CP {
+		$$ = $2;
+	}
+	| '!' OP test_expr CP {
+		$$ = !$3;
+	}
+	| test_instruction {
+		$$ = $1;
+	}
+	| '!' test_instruction {
+		$$ = !$2;
+	}
+;
+
+test_instruction : concatenation '=' concatenation {
+		$$ = (strcmp($1,$3)==0);
+	}
+	| concatenation '~' concatenation {
+		$$ = (strcmp($1,$3)!=0);
+	}
+;
+
+concatenation : concatenation operande {
+					concat_data($1,$2);
+					$$ = $1;
+				}
+	| operande 
+;
+
+operande : CC
+;
 
 %%
 // Fonction qui execute une operation entre les deux derniers registres

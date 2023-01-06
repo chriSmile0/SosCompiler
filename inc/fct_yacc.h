@@ -36,6 +36,15 @@ typedef struct {
 	/*@}*/
 } champ;
 
+/**
+ * @brief
+ * 
+ * @param[:dst] la chaine destination de la concatenation
+ * @param[:str2] la chaine a concatener à la dst
+ * 
+ * @return la chaîne résultante dans dst
+*/
+void concat_data(char *dst, char *str2);
 
 /** 
  * Table des symboles
