@@ -15,6 +15,7 @@
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
 	int else_count = 0;		// Nombre de else
+	extern int elsee;
 %}
 
 %token <id> ID
@@ -31,6 +32,7 @@
 %token IF
 %token THEN
 %token FI
+%token ELSE
 
 // Regles de grammaire
 %left PL MN
@@ -43,7 +45,18 @@
 
 %%
 programme : instruction END programme 
-	  | instruction END
+	  | instruction END 
+	  {
+	  	if (elsee) {
+			elsee--;
+			strcat(instructions, "j Fi");
+			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, "\n");
+			strcat(instructions, "Else");
+			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, ":\n");
+		}
+	  }
 ;
 
 instruction : ID EG oper	// Affectation
@@ -62,6 +75,12 @@ instruction : ID EG oper	// Affectation
 	    | IF bool THEN programme FI
 	    {
 	    	strcat(instructions, "Else");
+		strcat(instructions, itoa(else_count-1));
+		strcat(instructions, ":\n");
+	    }
+	    | IF bool THEN programme ELSE programme FI
+	    {
+	    	strcat(instructions, "Fi");
 		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, ":\n");
 	    }

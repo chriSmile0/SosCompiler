@@ -15,6 +15,7 @@
 	bool testAscii;
 
 	int yaccc = 0;
+	int elsee = 0;
 
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
@@ -49,8 +50,8 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*exit{espace}*					return MR;
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
-^{espace}*else{endline}					return MR;
-^{espace}*fi{espace}				{if (yaccc) return FI; return MR;}
+^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
+^{espace}*fi{espace}					{if (yaccc) return FI; return MR;}
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
 
