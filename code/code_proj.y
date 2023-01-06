@@ -77,12 +77,14 @@ instruction : ID EG oper	// Affectation
 	    	strcat(instructions, "Else");
 		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, ":\n");
+		else_count--;
 	    }
 	    | IF bool THEN programme ELSE programme FI
 	    {
 	    	strcat(instructions, "Fi");
 		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, ":\n");
+		else_count--;
 	    }
 ;
 
