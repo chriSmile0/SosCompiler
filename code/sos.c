@@ -1,12 +1,11 @@
 #include "../inc/code_proj.tab.h"
 #include "../inc/fct_yacc.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <getopt.h>
+
 extern int yylex();
-extern char data[1024];
-extern char instructions[4096];
 
 int main(int argc, char *argv[]) {
 	static struct option options[] = {
@@ -16,7 +15,6 @@ int main(int argc, char *argv[]) {
 		{"g", no_argument, NULL, 'g'},
 		{NULL, 0, NULL, 0}
 	};
-	
 	init_tds();
 
 	int opt, index, flagTds, flagGen = 0;
@@ -33,8 +31,8 @@ int main(int argc, char *argv[]) {
 
 			/* Table des symboles */
 			case 't':
-                flagTds = 1;
-                break;
+				flagTds = 1;
+				break;
 
 			/* Fichier de sortie */
 			case 'o':
