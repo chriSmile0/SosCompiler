@@ -60,17 +60,22 @@ instruction : ID EG oper	// Affectation
 	    }
 	    | IF bool THEN instruction
 	    {
-	    	strcat(instructions, "beq $t0, $zero, Else");
-		strcat(instructions, itoa(else_count));
-		strcat(instructions, "\n");
-		strcat(instructions, "Else");
-		strcat(instructions, itoa(else_count));
+	    	strcat(instructions, "Else");
+		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, ":\n");
-		else_count++;
 	    }
 ;
 
-bool : NB
+bool : NB 
+     {
+     	strcat(instructions, "li $t0, ");
+	strcat(instructions, itoa($1));
+	strcat(instructions, "\n");
+	strcat(instructions, "beq $t0, $zero, Else");
+	strcat(instructions, itoa(else_count));
+	strcat(instructions, "\n");
+	else_count++;
+     }
 ;
 
 oper : unique
