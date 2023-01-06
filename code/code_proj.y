@@ -20,6 +20,7 @@
 	static int else_count = 0;	// Nombre de else
 	extern int elsee;
 	extern int whilee;
+	extern int until;
 %}
 
 %token <id> ID
@@ -40,6 +41,7 @@
 %token WHL
 %token DO
 %token DONE
+%token UTL
 %token DEC
 %token OB
 %token CB
@@ -117,6 +119,15 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, itoa(--if_count));
 		strcat(instructions, ":\n");
 	    }
+	    | UTL bool DO programme DONE
+	    {
+		strcat(instructions, "j While");
+		strcat(instructions, itoa(if_count-1));
+		strcat(instructions, "\n");
+	    	strcat(instructions, "Else");
+		strcat(instructions, itoa(--if_count));
+		strcat(instructions, ":\n");
+	    }
 ;
 
 bool : NB 
@@ -127,14 +138,27 @@ bool : NB
 		strcat(instructions, ":\n");
 		whilee--;
 	}
-     	strcat(instructions, "li $t0, ");
-	strcat(instructions, itoa($1));
-	strcat(instructions, "\n");
-	strcat(instructions, "beq $t0, $zero, Else");
-	strcat(instructions, itoa(else_count));
-	strcat(instructions, "\n");
-	if_count++;
-	else_count++;
+	if (until) {
+		strcat(instructions, "li $t0, ");
+		strcat(instructions, itoa($1));
+		strcat(instructions, "\nli $t1, ");
+		strcat(instructions, itoa(1));
+		strcat(instructions, "\nbeq $t0, $t1, Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, "\n");
+		until--;
+		if_count++;
+		else_count++;
+	} else {
+		strcat(instructions, "li $t0, ");
+		strcat(instructions, itoa($1));
+		strcat(instructions, "\n");
+		strcat(instructions, "beq $t0, $zero, Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, "\n");
+		if_count++;
+		else_count++;
+	}
      }
 ;
 
