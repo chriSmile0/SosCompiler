@@ -39,7 +39,7 @@ int test_simple() {
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
 	printf("- test_dec_tab\n");
-	tests += test_dec_tab();
+	tests += test_dec_tab_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :

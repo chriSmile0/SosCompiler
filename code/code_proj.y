@@ -48,18 +48,18 @@ programme : instruction END programme
 ;
 
 instruction : ID EG expr 	// Affectation
-	    {
-		if (find_entry($1) == -1)
-			add_tds($1, ENT, 1, 0, 0, 1, "");
-	    	findStr($1,ids);
-		strcat(instructions, "sw $t");
-		strcat(instructions, itoa(reg_count-1));
-		strcat(instructions, ", ");
-		strcat(instructions, $1);
-		strcat(instructions, "\n");
-		reg_count = 1;
-		li_count = 0;
-	    }
+		{
+			if (find_entry($1) == -1)
+				add_tds($1, ENT, 1, 0, 0, 1, "");
+			findStr($1,ids);
+			strcat(instructions, "sw $t");
+			strcat(instructions, itoa(reg_count-1));
+			strcat(instructions, ", ");
+			strcat(instructions, $1);
+			strcat(instructions, "\n");
+			reg_count = 1;
+			li_count = 0;
+		}
 		| DEC ID OB NB CB { // Déclaration de tableau
 			if (find_entry($2) == -1)
 				add_tds($2, TAB, 1, $4, -1, 1, "");
@@ -94,26 +94,30 @@ expr : unique
 	}
 ;
 
-unique : ID {
+unique : ID
+	{
 		li_count++;
-		findStr($1,ids);
+		if (find_entry($1) == -1)
+			yyerror("ID pas dans la table des symoles");
 		strcat(instructions,"lw $t");
-		strcat(instructions, itoa(reg_count));
+		strcat(instructions,itoa(reg_count));
 		strcat(instructions,", ");
 		strcat(instructions,$1);
 		strcat(instructions,"\n");
 		reg_count++;
 	}
-	| NB {
+	| NB
+	{
 		li_count++;
 		strcat(instructions,"li $t");
-		strcat(instructions, itoa(reg_count));
+		strcat(instructions,itoa(reg_count));
 		strcat(instructions,", ");
-		strcat(instructions, itoa($1));
+		strcat(instructions,itoa($1));
 		strcat(instructions,"\n");
 		reg_count++;
 	}
 ;
+
 
 %%
 // Fonction qui execute une operation entre les deux derniers registres

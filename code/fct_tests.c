@@ -298,7 +298,7 @@ int test_tds_s(void) {
 	return ret;
 }
 
-int test_dec_tab(void){
+int test_dec_tab_s(void){
 	char* filename = "f_tests/s/dec_tab_s";
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
@@ -306,7 +306,7 @@ int test_dec_tab(void){
 
 	int ret = 0;
 	init_tds();
-	while(yyparse() != 0);
+	yyparse();
 
 	if (strcmp(table.champs[0].name, "tab") != 0) {
 		fprintf(stderr, "Mauvais nom\n");
@@ -329,5 +329,9 @@ int test_dec_tab(void){
 	}
 
 	free_tds();
+	if (ret == 0) {
+		printf("comparaison : OK");
+	}
+
 	return ret;
 }

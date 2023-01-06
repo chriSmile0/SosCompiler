@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	init_tds();
 
 	int opt, index, flagTds, flagGen = 0;
-	while ((opt = getopt_long(argc, argv, "v:t:o:", options, &index)) != -1) {
+	while ((opt = getopt_long(argc, argv, "vto:g", options, &index)) != -1) {
 		switch (opt) {
 			/* Version */
 			case 'v':
@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
 				printf("*** Fichier de sortie ***\n");
 				printf("Fichier d'enregistrement : %s\n", optarg);
 				break;
+
 			case 'g':
 				flagGen = 1;
 				break;
@@ -66,9 +67,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (flagTds == 1){
-        printf("*** Table des symboles ***\n");
-        print_tds();
-    }
+		printf("*** Table des symboles ***\n");
+		print_tds();
+	}
+
 	free_tds();
 	return EXIT_SUCCESS;
 }
