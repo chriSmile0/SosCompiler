@@ -14,10 +14,10 @@
 	bool word_test(char * str);
 	bool testAscii;
 
-	int yaccc = 0;
-	int elsee = 0;
-	int whilee = 0;
-	int until = 0;
+	int yaccc = 0;		// Booleen pour la generation de code (et le return du bon token)
+	int elsee = 0;		// Nombre de else pris en compte
+	int whilee = 0;		// Nombre de while pris en compte
+	int until = 0;		// Nombre de until pris en compte
 
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648

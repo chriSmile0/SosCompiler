@@ -9,6 +9,7 @@
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
+	void genElse(char *str);
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -16,7 +17,8 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int if_count = 0;		// Nombre de conditions executées
+	int if_count = 0;
+	int if_desc_count = 0;
 	static int else_count = 0;	// Nombre de else
 	extern int elsee;
 	extern int whilee;
@@ -100,33 +102,25 @@ instruction : ID EG oper	// Affectation
 		}
 	    | IF bool THEN programme FI
 	    {
-	    	strcat(instructions, "Else");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genElse("Else");
 	    }
 	    | IF bool THEN programme ELSE programme FI
 	    {
-	    	strcat(instructions, "Fi");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genElse("Fi");
 	    }
 	    | WHL bool DO programme DONE
 	    {
 		strcat(instructions, "j While");
-		strcat(instructions, itoa(if_count-1));
+		strcat(instructions, itoa(else_count-1 - if_desc_count));
 		strcat(instructions, "\n");
-	    	strcat(instructions, "Else");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genElse("Else");
 	    }
 	    | UTL bool DO programme DONE
 	    {
 		strcat(instructions, "j While");
-		strcat(instructions, itoa(if_count-1));
+		strcat(instructions, itoa(else_count-1 - if_desc_count));
 		strcat(instructions, "\n");
-	    	strcat(instructions, "Else");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genElse("Else");
 	    }
 ;
 
@@ -242,6 +236,20 @@ void findStr (char *str, char strs[512][64]) {
 	strcat(data, str);
 	strcat(data, ":\t.word\t0\n");
 	id_count++;
+}
+
+void genElse(char *str) {
+	strcat(instructions, str);
+	if (if_count > 1) {
+		if_desc_count++;
+		strcat(instructions, itoa(else_count-1 - (if_desc_count-1)));
+		if (if_desc_count == if_count) {
+			if_desc_count = 0;
+			if_count = 0;
+		}
+	} else
+		strcat(instructions, itoa(else_count-1));
+	strcat(instructions, ":\n");
 }
 
 char* itoa(int x) {
