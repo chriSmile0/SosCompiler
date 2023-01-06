@@ -119,8 +119,8 @@ int test_difficile() {
 	tests += test_commentaires_d_v2();
 	printf("- test_nombres_d\n");
 	tests += test_nombres_d_v2();
-	/*printf("- test_motsreserves_d\n");
-	tests += test_motsreserves_d_v2();*/
+	printf("- test_motsreserves_d\n");
+	tests += test_motsreserves_d_v2();
 	printf("- test_id_d\n");
 	tests += test_id_d_v2();
 	printf("- test_mot_d\n");
@@ -129,7 +129,7 @@ int test_difficile() {
 	tests += test_oper_d_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
-	printf("- test_operations_d\n");
+	printf("- test_operations_d\n");*/
 	tests += test_mips_operations_d();
 	printf("- test_dec_tab_d\n");
 	tests += test_dec_tab_d();

@@ -229,16 +229,16 @@ int test_dec_tab_s(void);
 int test_dec_tab_m(void);
 int test_dec_tab_d(void);
 
-int test_mips_operations_s();
+int test_mips_operations_s(void);
 
-int test_mips_operations_m();
+int test_mips_operations_m(void);
 
-int test_mips_operations_d();
+int test_mips_operations_d(void);
 
-int test_mips_echoread_s();
+int test_mips_echoread_s(void);
 
-int test_mips_echoread_m();
+int test_mips_echoread_m(void);
 
-int test_mips_echoread_d();
+int test_mips_echoread_d(void);
 
 #endif // FCT_TESTS_H //
