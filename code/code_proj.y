@@ -10,6 +10,7 @@
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
 	void genElse(char *str);
+	void genFi(char *str);
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -19,6 +20,8 @@
 	int li_count = 0;		// Nombre d'affectations executées
 	int if_count = 0;		// Nombre de if successifs
 	int if_desc_count = 0;
+	int fi_count = 0;		// Nombre de fi successifs
+	int fi_desc_count = 0;
 	static int else_count = 0;	// Nombre de else
 	// Check .lex
 	extern int elsee;
@@ -63,13 +66,11 @@ programme : instruction END programme
 	  | instruction END 
 	  {
 	  	if (elsee) {
-			elsee--;
 			strcat(instructions, "j Fi");
-			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, itoa(else_count-1-if_desc_count));
 			strcat(instructions, "\n");
-			strcat(instructions, "Else");
-			strcat(instructions, itoa(else_count-1));
-			strcat(instructions, ":\n");
+			genElse("Else");
+			elsee--;
 		}
 	  }
 ;
@@ -107,7 +108,7 @@ instruction : ID EG oper	// Affectation
 	    }
 	    | IF bool THEN programme ELSE programme FI
 	    {
-	    	genElse("Fi");
+	    	genFi("Fi");
 	    }
 	    | WHL bool DO programme DONE
 	    {
@@ -143,6 +144,7 @@ bool : NB
 		strcat(instructions, "\n");
 		until--;
 		if_count++;
+		fi_count++;
 		else_count++;
 	} else {
 		strcat(instructions, "li $t0, ");
@@ -152,6 +154,7 @@ bool : NB
 		strcat(instructions, itoa(else_count));
 		strcat(instructions, "\n");
 		if_count++;
+		fi_count++;
 		else_count++;
 	}
      }
@@ -246,11 +249,35 @@ void genElse(char *str) {
 		strcat(instructions, itoa(else_count-1 - (if_desc_count-1)));
 		if (if_desc_count == if_count) {
 			if_desc_count = 0;
-			if_count = 0;
+			if (elsee)
+				if_count--;
+			else
+				if_count = 0;
 		}
 	} else {
 		strcat(instructions, itoa(else_count-1));
-		if_count--;
+		if (if_count)
+			if_count--;
+	}
+	strcat(instructions, ":\n");
+}
+
+void genFi(char *str) {
+	strcat(instructions, str);
+	if (fi_count > 1) {
+		fi_desc_count++;
+		strcat(instructions, itoa(else_count-1 - (fi_desc_count-1)));
+		if (fi_desc_count == if_count) {
+			fi_desc_count = 0;
+			if (elsee)
+				fi_count--;
+			else
+				fi_count = 0;
+		}
+	} else {
+		strcat(instructions, itoa(else_count-1));
+		if (fi_count)
+			fi_count--;
 	}
 	strcat(instructions, ":\n");
 }
