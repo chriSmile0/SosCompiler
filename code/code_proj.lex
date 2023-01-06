@@ -14,6 +14,8 @@
 	bool word_test(char * str);
 	bool testAscii;
 
+	int yaccc = 0;
+
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
 %}
@@ -30,7 +32,7 @@ ch_op_1 [anoz]
 operateur [+-/*]
 
 %%
-^{espace}*if{espace}					return MR;
+^{espace}*if{espace}					{if (yaccc) return IF; return MR;}
 {espace}+then({espace}+|{endline}) 		return MR;
 ^{espace}*for{espace}+					return MR;
 {espace}do({espace}+|{endline})			return MR;
@@ -38,7 +40,7 @@ operateur [+-/*]
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				return MR;
 ^{espace}*until{espace}+				return MR;
-test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));
+test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					return MR;

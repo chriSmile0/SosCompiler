@@ -26,6 +26,7 @@
 %token OP
 %token CP
 %token END
+%token IF
 
 // Regles de grammaire
 %left PL MN
@@ -53,6 +54,10 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, "\n");
 		reg_count = 1;
 		li_count = 0;
+	    }
+	    | IF
+	    {
+
 	    }
 ;
 
