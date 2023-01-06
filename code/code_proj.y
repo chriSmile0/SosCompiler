@@ -12,10 +12,13 @@
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
-	char ids[512][64];			// Tableau des identificateurs
-	int id_count = 0;			// Nombre d'identificateurs
-	int reg_count = 1;			// Sur quel registre temporaire doit-on ecrire
-	int li_count = 0;			// Nombre d'affectations executées
+	char ids[512][64];		// Tableau des identificateurs
+	int id_count = 0;		// Nombre d'identificateurs
+	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
+	int li_count = 0;		// Nombre d'affectations executées
+	int if_count = 0;		// Nombre de conditions executées
+	static int else_count = 0;	// Nombre de else
+	extern int elsee;
 %}
 
 %token <id> ID
@@ -29,6 +32,10 @@
 %token CP
 %token END
 
+%token IF
+%token THEN
+%token FI
+%token ELSE
 %token DEC
 %token OB
 %token CB
@@ -43,23 +50,34 @@
 }
 
 %%
-programme : instruction END programme
-		| instruction END
+programme : instruction END programme 
+	  | instruction END 
+	  {
+	  	if (elsee) {
+			elsee--;
+			strcat(instructions, "j Fi");
+			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, "\n");
+			strcat(instructions, "Else");
+			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, ":\n");
+		}
+	  }
 ;
 
-instruction : ID EG expr 	// Affectation
-		{
-			if (find_entry($1) == -1)
-				add_tds($1, ENT, 1, 0, 0, 1, "");
-			findStr($1,ids);
-			strcat(instructions, "sw $t");
-			strcat(instructions, itoa(reg_count-1));
-			strcat(instructions, ", ");
-			strcat(instructions, $1);
-			strcat(instructions, "\n");
-			reg_count = 1;
-			li_count = 0;
-		}
+instruction : ID EG oper	// Affectation
+	    {
+		if (find_entry($1) == -1)
+			add_tds($1, ENT, 1, 0, 0, 1, "");
+	    	findStr($1,ids);
+		strcat(instructions, "sw $t");
+		strcat(instructions, itoa(reg_count-1));
+		strcat(instructions, ", ");
+		strcat(instructions, $1);
+		strcat(instructions, "\n");
+		reg_count = 1;
+		li_count = 0;
+	    }
 		| DEC ID OB NB CB { // Déclaration de tableau
 			if (find_entry($2) == -1)
 				add_tds($2, TAB, 1, $4, -1, 1, "");
@@ -74,26 +92,52 @@ instruction : ID EG expr 	// Affectation
 
 			strcat(data, buff);
 		}
+	    | IF bool THEN programme FI
+	    {
+	    	strcat(instructions, "Else");
+		strcat(instructions, itoa(--if_count));
+		strcat(instructions, ":\n");
+	    }
+	    | IF bool THEN programme ELSE programme FI
+	    {
+	    	strcat(instructions, "Fi");
+		strcat(instructions, itoa(--if_count));
+		strcat(instructions, ":\n");
+	    }
 ;
 
-expr : unique
-	| expr PL expr {operation("add");}
-	| expr MN expr {operation("sub");}
-	| expr FX expr {operation("mul");}
-	| expr DV expr {operation("div");}
-	| OP expr CP
-	| MN expr %prec MN {
-		strcat(instructions, "li $t");
-		strcat(instructions, itoa(reg_count));
-		strcat(instructions, ", -1\n");
-		strcat(instructions, "mul $t");
-		strcat(instructions, itoa(reg_count-1));
-		strcat(instructions, ", $t");
-		strcat(instructions, itoa(reg_count-1));
-		strcat(instructions, ", $t");
-		strcat(instructions, itoa(reg_count));
-		strcat(instructions, "\n");
-	}
+bool : NB 
+     {
+     	strcat(instructions, "li $t0, ");
+	strcat(instructions, itoa($1));
+	strcat(instructions, "\n");
+	strcat(instructions, "beq $t0, $zero, Else");
+	strcat(instructions, itoa(else_count));
+	strcat(instructions, "\n");
+	if_count++;
+	else_count++;
+     }
+;
+
+oper : unique
+     | oper PL oper {operation("add");}
+     | oper MN oper {operation("sub");}
+     | oper FX oper {operation("mul");}
+     | oper DV oper {operation("div");}
+     | OP oper CP 
+     | MN oper %prec MN
+     {
+	strcat(instructions, "li $t");
+	strcat(instructions, itoa(reg_count));
+	strcat(instructions, ", -1\n");
+     	strcat(instructions, "mul $t");
+	strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, ", $t");
+	strcat(instructions, itoa(reg_count));
+	strcat(instructions, "\n");
+     }
 ;
 
 unique : ID

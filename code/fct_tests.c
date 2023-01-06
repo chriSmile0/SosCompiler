@@ -309,8 +309,10 @@ int test_dec_tab_s(void){
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
 	init_tds();
+	yaccc = 1;
 	yyparse();
 	free_tds();
+	yaccc = 0;
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
@@ -349,8 +351,10 @@ int test_dec_tab_m(void){
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
 	init_tds();
+	yaccc = 1;
 	yyparse();
 	free_tds();
+	yaccc = 0;
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
@@ -389,8 +393,10 @@ int test_dec_tab_d(void){
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
 	init_tds();
+	yaccc = 1;
 	yyparse();
 	free_tds();
+	yaccc = 0;
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);

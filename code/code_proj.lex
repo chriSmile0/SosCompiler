@@ -14,6 +14,9 @@
 	bool word_test(char * str);
 	bool testAscii;
 
+	int yaccc = 0;
+	int elsee = 0;
+
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
 %}
@@ -30,15 +33,15 @@ ch_op_1 [anoz]
 operateur [+-/*]
 
 %%
-^{espace}*if{espace}					return MR;
-{espace}+then({espace}+|{endline}) 		return MR;
+^{espace}*if{espace}					{if (yaccc) return IF; return MR;}
+{espace}+then({espace}+|{endline}) 			{if (yaccc) return THEN; return MR;}
 ^{espace}*for{espace}+					return MR;
 {espace}do({espace}+|{endline})			return MR;
 ^{espace}*done{espace};{endline}		return MR;
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				return MR;
 ^{espace}*until{espace}+				return MR;
-test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));
+test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					return MR;
@@ -47,9 +50,9 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*exit{espace}*					return MR;
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
-^{espace}*else{endline}					return MR;
-^{espace}*fi{espace};{endline}			return MR;
-^declare{espace}+						return DEC;
+^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
+^{espace}*fi{espace}					{if (yaccc) return FI; return MR;}
+^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
 
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
