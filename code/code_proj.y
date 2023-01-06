@@ -27,6 +27,10 @@
 	int if_count = 0;		// Nombre de conditions executées
 	static int else_count = 0;	// Nombre de else
 	extern int elsee;
+
+	bool fin_prog = false;
+	bool create_read_proc = false;
+	bool create_echo_proc = false;
 %}
 
 
@@ -63,7 +67,7 @@
 }
 
 
-%token '\n' READ N_ID ECH EXT PVG SPA OA CA '$' OB CB RTN
+%token '\n' READ N_ID ECH EXT PVG SPA OA CA '$' RTN
 %token <id> ID
 %token <entier> NB
 %token <chaine> MOTS 
@@ -130,7 +134,7 @@ instruction : ID EG oper	// Affectation
 			if (find_entry($4) == -1)
 				yyerror("ID pas dans la table des symboles");
 			int check_index = $6;
-			if ((check_index) >= (atoi(get_dim($4))))
+			if ((check_index) >= get_dim($4))
 				yyerror("index + grand que prévu ");	
 			strcat(instructions, "la $t");
 			strcat(instructions, itoa(reg_count));
@@ -170,7 +174,7 @@ instruction : ID EG oper	// Affectation
 	| READ ID OB operande_entier CB  {
 			int crea = 0;
 			if ((crea = find_entry($2)) == -1)
-				add_tds($2,TAB,1,itoa(($4+1)),0,1,"");
+				add_tds($2,TAB,1,$4+1,0,1,"");
 			//findStr($2,ids,1);
 			findStr($2,ids,0); // créa -1 cas particulier
 			int ent = $4 + 1;
@@ -361,179 +365,6 @@ char* itoa(int x) {
 }
 
 int yyerror(char *s) {
-<<<<<<< HEAD
 	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 	return 1;
-}
-
-#include "../code/fct_yacc.c"
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-void mips_struct_file() {
-	/*char buf[SIZE_LINE_MIPS];
-	char *line = ".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n";
-	snprintf(buf,SIZE_LINE_MIPS,"%s",line);
-	buf[strlen(line)] = '\0';
-	fwrite(buf,strlen(line),1,yyout);
-	line = "\nExit:\n\tli $v0 10\n\tsyscall\n";
-	snprintf(buf,SIZE_LINE_MIPS,"%s",line);
-	buf[strlen(line)] = '\0';
-	fwrite(buf,strlen(line),1,yyout);*/
-	//fprintf(yyout,".data\n\tbuffer: .space 4000\n.text\n.globl _start\n__start:\n");
-	//fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall\n");//fin 
-}
-
-void mips_read_all() {
-	//Create Lecture_*
-	char buf[1024] = "\nLecture_Int:\n\tli $v0 5\n\tsyscall\n\tjr $ra\n";
-	char buf2[1024] = "\nLecture_Str:\n\tli $v0 8\n\tsyscall\n\tjr $ra\n";
-	printf("buf : |%s|\n",buf);
-	printf("buf2 : |%s|\n",buf2);
-	fwrite(buf,strlen(buf),1,yyout_proc);
-	fwrite(buf2,strlen(buf2),1,yyout_proc);
-}
-void mips_print_all() {
-	//Create Affichage_*
-	char buf[1024] = "\nAffichage_Int:\n\tli $v0 1\n\tsyscall\n\tjr $ra\n";
-	char buf2[1024] = "\nAffichage_Str:\n\tli $v0 4\n\tsyscall\n\tjr $ra\n";
-	printf("buf : |%s|\n",buf);
-	printf("buf2 : |%s|\n",buf2);
-	fwrite(buf,strlen(buf),1,yyout_proc);
-	fwrite(buf2,strlen(buf2),1,yyout_proc);
-}
-
-
-//a placer avant la création des procédures 
-/*void mips_exit() {
-	fprintf(yyout,"\nExit:\n\tli $v0 10\n\tsyscall");
-}*/
-
-void check_create_echo_proc() {
-	if (!create_echo_proc) {
-		mips_print_all();
-		create_echo_proc = true;
-	}
-}
-
-void check_exit_proc() {
-	char buf[1024] = "\nExit:\n\tli $v0, 10\n\tsyscall\n";
-	buf[strlen(buf)] = '\0';
-	printf("buf ,: |%s|\n",buf);
-	fwrite(buf,strlen(buf),1,yyout_proc);
-}
-
-void check_create_read_proc() {
-	if (!create_read_proc) { 
-		mips_read_all();
-		create_read_proc = true;
-	}
-}
-
-void create_read_data() {
-	char buf[1024];
-	char space[] = ".space";
-	char buffer[] = "buffer";
-	char *taille = "50";
-	snprintf(buf,1024,"\n\t%s: %s %s",buffer,space,taille);
-	buf[strlen(buffer)+5+strlen(space)+strlen(taille)] = '\0';
-	printf("buf : %s\n",buf);
-	fwrite(buf,strlen(buf),1,yyout_data);
-}
-
-void read_main(char *id) {
-	int true_size = strlen(id);
-	char buf[1024];
-	for (int i = 0 ; i < true_size; i++) 
-		buf[i] = id[i];
-	buf[true_size] = '\0';
-	char buf_in_mips[1024];
-	char la[] = "\tla $a0, ";
-	snprintf(buf_in_mips,1024,"%s%s\n",la,buf);
-	buf_in_mips[strlen(la)+strlen(buf)+1] = '\0';
-	char li[] = "\tli $a1, 50\n";//taille du buffer que l'on connais (a opti pour plus tard)
-	snprintf(buf_in_mips+strlen(buf_in_mips),1024,"%s",li);
-	char jal_Lstr[] = "\tjal Lecture_Str \n";
-	snprintf(buf_in_mips+strlen(buf_in_mips),1024,"%s",jal_Lstr);
-	buf_in_mips[strlen(buf_in_mips)+strlen(jal_Lstr)] = '\0';
-	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_main);
-}
-
-void create_echo_data(char *id,char *chaine) {
-	int true_size = strlen(id);
-	char buf[1024];
-	char asciiz[] = ".asciiz";
-	snprintf(buf,1024,"\n\t%s: %s \"%s\"",id,asciiz,chaine);
-	buf[strlen(id)+7+strlen(asciiz)+strlen(chaine)] = '\0';
-	printf("buf : %s\n",buf);
-	fwrite(buf,strlen(buf),1,yyout_data);
-	for (int i = 0 ; i < true_size; i++) 
-		buf[i] = id[i];
-	buf[true_size+2] = '\0';
-	char true_chaine_s = strlen(chaine);
-	char buf_c[1024];
-	for (int i = 0 ; i < true_chaine_s; i++) 
-		buf_c[i] = chaine[i];
-	buf_c[true_chaine_s] = '\0';
-	char buf_in_mips[1024];
-	buf_in_mips[0] = '\0';
-	char asciiz[11];
-	char g1[12] = "\"";
-	g1[strlen(g1)] = '\0';
-	snprintf(asciiz,11,"%s",": .asciiz ");
-	asciiz[10] = '\0';
-	snprintf(buf_in_mips,1024,"%s%s%s%s%s",buf,asciiz,g1,buf_c,g1);
-	buf_in_mips[strlen(buf)+strlen(asciiz)+strlen(buf_c)+2*(strlen(g1))] = '\0';
-	fwrite(buf_in_mips,strlen(buf_in_mips),1,yyout_data);
-}
-
-void echo_main(char *id) {
-	char buf[1024];
-	int true_size = strlen(id);
-	for (int i = 0 ; i < true_size; i++) 
-		buf[i] = id[i];
-	buf[true_size] = '\0';
-	char buf_in_mips[1024];
-	char *jal_str = "\tjal Affichage_Str \n";
-	snprintf(buf_in_mips,1024,"\tla $a0, %s\n%s",buf,jal_str);
-	fwrite(buf_in_mips,10+strlen(buf)+strlen(jal_str),1,yyout_main);
-}
-
-//#### LAISSE DANS CE FICHIER ####//
-
-void build_final_mips() {
-	FILE *file_tab[4] = {yyout_data,yyout_text,yyout_main,yyout_proc};
-	char *en_tetes[4] = {".data\n","\n.text","\nmain:\n",""};
-	char *file_name[4] = {"data","text","main","proc"};
-
-	char buf[1024];
-	buf[0] = '\0';
-	int read_size = 0;
-	for	(int i = 0 ; i < 4 ; i++) {
-		int stop = 1;
-		char in_param[27];
-		snprintf(in_param,27,"exit_mips/exit_mips_%s.s",file_name[i]);
-		in_param[27] = '\0';
-		if (i == 2)
-			fprintf(file_tab[i],"\n\tjal Exit\n");
-		fclose(file_tab[i]);
-		int desc = open(in_param,O_RDWR,0666);
-		fprintf(yyout_final,"%s",en_tetes[i]);
-		while (stop) {
-			buf[0] = '\0';
-			read_size = read(desc,buf,1024); //règle le bug 
-			if (read_size <= 0)
-				stop = 0;
-			else {
-				buf[read_size] = '\0';
-				fwrite(buf,strlen(buf),1,yyout_final);
-				buf[0] = '\0';//on vide le buffer
-			}
-		}
-		close(desc);
-	}
-=======
-  fprintf(stderr, "Erreur de syntaxe : %s\n", s);
-  return 1;
->>>>>>> read id operande entier ok , maintenant manque echo id operande_entier
 }

@@ -60,8 +60,11 @@ doc_m:
 	mv *.pdf docs
 	-rm -f *.dot *.output
 
-test: all
+test: 
 	./bin/test $(ARGS)
+
+test_gen : 
+	./bin/test --g 
 
 clean:
 	-rm -r $(dir_objs) bin
