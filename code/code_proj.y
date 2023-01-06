@@ -63,9 +63,12 @@ instruction : ID EG expr 	// Affectation
 		| DEC ID OB NB CB { // Déclaration de tableau
 			if (find_entry($2) == -1)
 				add_tds($2, TAB, 1, $4, -1, 1, "");
+
+			// Buffer contenant la ligne à intégrer dans ".data" du MIPS
 			char buff[64];
 			size_t max_length = sizeof(buff);
 			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n", $2, $4);
+
 			if (ret >= max_length)
 				fprintf(stderr, "|ERREUR| Dépassement du buffer - Dec tab");
 		}

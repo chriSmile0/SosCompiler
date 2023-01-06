@@ -216,5 +216,6 @@ int test_operations_d(void);
 
 int test_tds_s(void);
 
+int test_dec_tab(void);
 
 #endif // FCT_TESTS_H //

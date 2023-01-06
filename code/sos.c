@@ -7,6 +7,9 @@
 
 extern int yylex();
 
+extern char data[1024];
+extern char instructions[4096];
+
 int main(int argc, char *argv[]) {
 	static struct option options[] = {
 		{"version", no_argument, NULL, 'v'},
@@ -61,6 +64,7 @@ int main(int argc, char *argv[]) {
 		while ((t = yylex()) != 0) 
 			printf("t : %d\n",t);
 	}
+
 	if (flagTds == 1){
         printf("*** Table des symboles ***\n");
         print_tds();

@@ -297,3 +297,37 @@ int test_tds_s(void) {
 	free_tds();
 	return ret;
 }
+
+int test_dec_tab(void){
+	char* filename = "f_tests/s/dec_tab_s";
+	yyin = fopen(filename,"r");
+	if (yyin == NULL) 
+		perror(filename);
+
+	int ret = 0;
+	init_tds();
+	while(yyparse() != 0);
+
+	if (strcmp(table.champs[0].name, "tab") != 0) {
+		fprintf(stderr, "Mauvais nom\n");
+		ret = 1;
+	}
+
+	if (table.champs[0].type != TAB) {
+		fprintf(stderr, "Mauvais type\n");
+		ret = 1;
+	}
+
+	if (table.champs[0].dim != 22) {
+		fprintf(stderr, "Mauvaise dimension\n");
+		ret = 1;
+	}
+
+	if (table.champs[0].global != 1) {
+		fprintf(stderr, "Pas global\n");
+		ret = 1;
+	}
+
+	free_tds();
+	return ret;
+}
