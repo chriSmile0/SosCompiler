@@ -50,7 +50,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					return MR;
-^{espace}*fi{espace};{endline}			return MR;
+^{espace}*fi{espace}				{if (yaccc) return FI; return MR;}
 ^declare{espace}+						return MR;
 {espace}+expr{espace}+					return MR;
 

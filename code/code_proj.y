@@ -30,6 +30,7 @@
 
 %token IF
 %token THEN
+%token FI
 
 // Regles de grammaire
 %left PL MN
@@ -58,7 +59,7 @@ instruction : ID EG oper	// Affectation
 		reg_count = 1;
 		li_count = 0;
 	    }
-	    | IF bool THEN instruction
+	    | IF bool THEN programme FI
 	    {
 	    	strcat(instructions, "Else");
 		strcat(instructions, itoa(else_count-1));
