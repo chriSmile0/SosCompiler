@@ -41,7 +41,7 @@ programme : instruction END programme
 	  | instruction END
 ;
 
-instruction : ID EG expr 	// Affectation
+instruction : ID EG oper	// Affectation
 	    {
 		if (find_entry($1) == -1)
 			add_tds($1, ENT, 1, 0, 0, 1, "");
@@ -56,13 +56,13 @@ instruction : ID EG expr 	// Affectation
 	    }
 ;
 
-expr : unique
-     | expr PL expr {operation("add");}
-     | expr MN expr {operation("sub");}
-     | expr FX expr {operation("mul");}
-     | expr DV expr {operation("div");}
-     | OP expr CP 
-     | MN expr %prec MN
+oper : unique
+     | oper PL oper {operation("add");}
+     | oper MN oper {operation("sub");}
+     | oper FX oper {operation("mul");}
+     | oper DV oper {operation("div");}
+     | OP oper CP 
+     | MN oper %prec MN
      {
 	strcat(instructions, "li $t");
 	strcat(instructions, itoa(reg_count));
