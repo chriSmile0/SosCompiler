@@ -12,6 +12,7 @@ extern FILE *yyin;
 extern char data[1024];
 extern char instructions[4096];
 extern int id_count;
+extern int yaccc;
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter

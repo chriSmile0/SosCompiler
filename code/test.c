@@ -38,7 +38,7 @@ int test_simple() {
 	tests += test_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
-	printf("- test_dec_tab\n");
+	printf("- test_dec_tab_s\n");
 	tests += test_dec_tab_s();
 	/*
 		Insertion du code du test simple
