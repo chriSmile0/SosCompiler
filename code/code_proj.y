@@ -121,7 +121,32 @@ instruction : ID EG oper	// Affectation
 		}
 		strcat(instructions,"\nli $v0 4\nsyscall\n");
 		$$ = 0;
-		}			
+		}
+	| ECH '$' OA ID OB operande_entier CB CA {
+			printf("ici \n");
+			//il faudrait idéalement encore checker la présence ou 
+			//pas dans la table des symboles et dans les ids 
+			//si pas dedans on échoue 
+			if (find_entry($4) == -1)
+				yyerror("ID pas dans la table des symboles");
+			int check_index = $6;
+			if ((check_index) >= (atoi(get_dim($4))))
+				yyerror("index + grand que prévu ");	
+			strcat(instructions, "la $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", ");
+			strcat(instructions, $4);
+			//on cherche la bonne place de ce que l'on cherche
+			strcat(instructions,"\naddi $t");
+			strcat(instructions,itoa(reg_count));
+			strcat(instructions, ",$t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", ");
+			strcat(instructions , itoa(4*check_index));
+			strcat(instructions, "\nlw $a0, ($t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ")\nli $v0, 1\nsyscall\n");
+		}		
 	| EXT { // Exit 
 			printf("passage ici \n");
 			strcat(instructions, "li $v0 10\nsyscall\n");
@@ -145,7 +170,7 @@ instruction : ID EG oper	// Affectation
 	| READ ID OB operande_entier CB  {
 			int crea = 0;
 			if ((crea = find_entry($2)) == -1)
-				add_tds($2,TAB,1,0,0,1,"");
+				add_tds($2,TAB,1,itoa(($4+1)),0,1,"");
 			//findStr($2,ids,1);
 			findStr($2,ids,0); // créa -1 cas particulier
 			int ent = $4 + 1;
@@ -181,10 +206,6 @@ instruction : ID EG oper	// Affectation
 			strcat(instructions, ", ($t");
 			strcat(instructions, itoa(save_reg));
 			strcat(instructions, ")\n");
-			//on print pour tester 
-			strcat(instructions, "lw $a0, ($t");
-			strcat(instructions, itoa(save_reg));
-			strcat(instructions, ")\nli $v0, 1\nsyscall\n");
 			//ok 
 			$$ = 0;
 		}//bouchon}
@@ -228,9 +249,8 @@ operande : CC
 	| '$' OA ID CA {$$ = $3;}
 	| '$' NB {$$ = itoa($2);} //check des arguments ici 
 	| MOTS {$$ = $1; printf("mot \n");}
-	/*| '$' OA ID OB operande_entier CB CA {
 		
-	}//bouchon}*/
+	//bouchon}*/
 	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
 
