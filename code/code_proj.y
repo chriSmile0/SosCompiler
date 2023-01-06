@@ -14,6 +14,7 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
+	int else_count = 0;		// Nombre de else
 %}
 
 %token <id> ID
@@ -26,7 +27,9 @@
 %token OP
 %token CP
 %token END
+
 %token IF
+%token THEN
 
 // Regles de grammaire
 %left PL MN
@@ -55,10 +58,19 @@ instruction : ID EG oper	// Affectation
 		reg_count = 1;
 		li_count = 0;
 	    }
-	    | IF
+	    | IF bool THEN instruction
 	    {
-
+	    	strcat(instructions, "beq $t0, $zero, Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, "\n");
+		strcat(instructions, "Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, ":\n");
+		else_count++;
 	    }
+;
+
+bool : NB
 ;
 
 oper : unique
