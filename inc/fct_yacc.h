@@ -23,8 +23,7 @@ typedef struct {
 	char* name; 	/**< nom de l'id */
 	int type;	/**< type de l'id, def dans l'enum types */
 	int init;	/**< 0 si l'id est pas init, 1 sinon */
-	char* dim;	/**< dims pour un tableau, de la forme N,M ou N */
-	int nb_arg;	/**< nombres d'arguments pour une fonction, 4 max */
+	int dim;	/**< dims pour un tableau, de la forme N,M ou N */
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
 	/*@}*/
@@ -52,14 +51,13 @@ void init_tds();
  * @param name nom de l'id
  * @param type type de l'id
  * @param init 1 si l'id est init, 0 sinon
- * @param dim dimension si tableau, NULL sinon
- * @param nb_arg nombre d'arguments si fonction, -1 sinon
+ * @param dim dimension si tableau, 0 sinon
  * @param global 1 si variable globale, 0 sinon
  * @param func nom de la fonction mère si variable locale, NULL sinon
  * @return int 
  */
-int add_tds(char* name, int type, int init, char* dim,
-	int nb_arg, int global, char* func);
+int add_tds(char* name, int type, int init, int dim,
+	int global, char* func);
 
 /**
  * @brief affiche l'entrée de rang index dans la table des symboles
@@ -111,14 +109,6 @@ char * get_func(char* name);
  * @return char* dimensions du tableau, NULL si ce n'est pas un tableau
  */
 char * get_dim(char* name);
-
-/**
- * @brief retourne le nombre d'arguments de la variable name
- * 
- * @param name nom de la variable
- * @return int le nombre d'arguments, -1 si ce n'est pas une fonction
- */
-int get_nb_args(char* name);
 
 /**
  * @brief free la tds

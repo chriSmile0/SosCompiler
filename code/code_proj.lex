@@ -27,7 +27,7 @@ signe [+-]
 n_in_word [;(){}=!$*+%|-]
 ch_op_r [aeglnqt] 
 ch_op_1 [anoz]
-operateur [+-/*]
+operateur [+-/\*]
 
 %%
 ^{espace}*if{espace}					return MR;
@@ -45,12 +45,12 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*read{espace}+					return MR;
 ^{espace}*return{espace}+				return MR;
 ^{espace}*exit{espace}*					return MR;
-({espace}+|{endline})local{espace}+		return MR;
+({espace}+|{endline})local{espace}+		return LOCAL;
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					return MR;
 ^{espace}*fi{espace};{endline}			return MR;
 ^declare{espace}+						return MR;
-{espace}+expr{espace}+					return MR;
+{espace}+expr{espace}+					return EXPR;
 
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
@@ -72,7 +72,10 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [/]								{return DV;}
 [(]								{return OP;}
 [)]								{return CP;}
-[;]								{return END;}
+[;]								{return SC;}
+[\{]							{return OB;}
+[}]								{return CB;}
+[\$]							{return DLR;}
 {endline}							
 . 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
