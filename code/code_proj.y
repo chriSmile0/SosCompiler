@@ -50,7 +50,6 @@
 }
 
 %%
-<<<<<<< code/code_proj.y
 programme : instruction END programme 
 	  | instruction END 
 	  {
