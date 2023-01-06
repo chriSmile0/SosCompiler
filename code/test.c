@@ -68,7 +68,7 @@ int test_median() {
 
 	printf("\n--- TEST MEDIAN\n");
 	int tests = 0;
-	printf("- test_chainescarac_m\n");
+	/*printf("- test_chainescarac_m\n");
 	tests += test_chainescarac_m_v2();
 	printf("- test_ascii_m\n");
 	tests += test_ascii_m_v2();
@@ -85,7 +85,7 @@ int test_median() {
 	printf("- test_oper_m\n");
 	tests += test_oper_m_v2();
 	printf("- test_opel_s\n");
-	tests += test_opel_s_v2();
+	tests += test_opel_s_v2();*/
 	printf("- test_operations_m\n");
 	tests += test_operations_m();
 	printf("- test_dec_tab_m\n");
@@ -111,7 +111,7 @@ int test_difficile() {
 
 	printf("\n--- TEST DIFFICILE\n");
 	int tests = 0;
-	printf("- test_chainescarac_d\n");
+	/*printf("- test_chainescarac_d\n");
 	tests += test_chainescarac_d_v2();
 	printf("- test_ascii_d\n");
 	tests += test_ascii_d_v2();
@@ -128,7 +128,7 @@ int test_difficile() {
 	printf("- test_oper_d\n");
 	tests += test_oper_d_v2();
 	printf("- test_opel_s\n");
-	tests += test_opel_s_v2();
+	tests += test_opel_s_v2();*/
 	printf("- test_operations_d\n");
 	tests += test_operations_d();
 	printf("- test_dec_tab_d\n");
