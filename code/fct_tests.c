@@ -402,7 +402,7 @@ int test_mips_operations_m() {
 }
 
 int test_mips_operations_d() {
-	return test_mips("f_tests/d/operations_d","f_tests/s/operations_d_corr");
+	return test_mips("f_tests/d/operations_d","f_tests/d/operations_d_corr");
 }
 
 int test_mips_echoread_s() {

@@ -1,11 +1,11 @@
-#define ID 5
+/*#define ID 5
 #define CC 50
 #define EXT 40
 #define READ 41
 #define ECH 42
 #define NB 2
 #define MOTS 6
-#define MR 3
+#define MR 3*/
 
 #define CHAR 10
 #define COM 4
