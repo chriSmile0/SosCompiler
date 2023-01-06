@@ -293,7 +293,10 @@ int test_tds_s(void) {
 	if (get_dim("id3") != 3)
 		ret = 1; 
 	if (get_nb_args("id4") != 4)
-		ret = 1;	
+		ret = 1;
+	if (strcmp(get_valeur("id5"),"chaines") != 0)
+		ret = 1;
+
 	print_tds();
 	free_tds();
 	return ret;
@@ -442,7 +445,6 @@ int test_echo_read(char* chemin_fichier_test, int attendu) {
 		for (int i = 0 ; i < 1024 ; i++) {
 			table.champs[i].name = malloc(50); //49 carac par id max 
 			table.champs[i].name[0] = '\0';
-			table.champs[i].index_in_t = i;
 			table.champs[i].valeur = malloc(sizeof(50));
 			table.champs[i].valeur[0] = '\0';
 		}
@@ -488,6 +490,7 @@ int test_echo_read_v2() {
 	strcat(instructions, "\t.text\n__start:\n");
 	init_tds();
 	yyparse();
+	print_tds();
 	free_tds();
 	fclose(yyin);
 	char code[BUFSIZ];

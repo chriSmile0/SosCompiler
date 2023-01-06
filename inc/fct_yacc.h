@@ -13,6 +13,7 @@ enum types{
 	FCT, 	/**< Fonction */
 	ENT, 	/**< Entier */
 	MOT, 	/**< Mot */
+	IDS, 	/**< Id */
 };
 
 /**
@@ -28,7 +29,6 @@ typedef struct {
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
 	char *valeur; // concordance pour ma version 
-	int index_in_t; //concodrande pour ma version 
 	/*@}*/
 } champ;
 
@@ -58,6 +58,7 @@ void init_tds();
  * @param nb_arg nombre d'arguments si fonction, -1 sinon
  * @param global 1 si variable globale, 0 sinon
  * @param func nom de la fonction mère si variable locale, NULL sinon
+ * @param valeur à quoi l'id fait réference ; par exemple une str, NULL sinon 
  * @return int 
  */
 int add_tds(char* name, int type, int init, int dim,
@@ -121,6 +122,8 @@ int get_dim(char* name);
  * @return int le nombre d'arguments, -1 si ce n'est pas une fonction
  */
 int get_nb_args(char* name);
+
+char* get_valeur(char* name);
 
 /**
  * @brief free la tds

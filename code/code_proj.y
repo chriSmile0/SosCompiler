@@ -114,11 +114,12 @@ instruction : ID EG oper	// Affectation
 	| ECH operande { // Print
 		int crea = findStr($2,ids,0);
 		if (crea == -1) { 
-			char rdm_str[16];
-			snprintf(rdm_str,17,"%s%s","_",itoa(id_count));
-			rdm_str[1+strlen(itoa(id_count))] = '\0';
-			strcpy(ids[id_count], rdm_str);
-			strcat(data,rdm_str);
+			char buf[16];
+			buf[0] = '\0';
+			snprintf(buf,2+strlen(itoa(id_count)),"%s%s","_",itoa(id_count));
+			strcpy(ids[id_count],buf);
+			add_tds(ids[id_count],CH,1,0,0,1,"",$2);
+			strcat(data,ids[id_count]);
 			strcat(data,":\t.asciiz \"");
 			strcat(data,$2);
 			strcat(data,"\"\n");
@@ -134,16 +135,13 @@ instruction : ID EG oper	// Affectation
 		$$ = 0;
 		}			
 	| EXT { // Exit 
-			//check_exit_proc();
 			strcat(instructions, "li $v0 10\nsyscall\n");
 			fin_prog = true;
 			$$ = 0;
-			//print_table_symboles();
 		}
 	| READ id_	{ // Affect bis 
-			check_read_proc();
-			/*read_data($2);
-			read_main($2);*/
+			if (find_entry($2) == -1)
+				add_tds($2,ENT,1,0,0,1,"","");
 			findStr($2,ids,1);
 			strcat(instructions, "la $a0");
 			strcat(instructions, ", ");

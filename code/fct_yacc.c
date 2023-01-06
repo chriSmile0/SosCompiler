@@ -14,6 +14,7 @@ int add_tds(char* name, int type, int init, int dim,
     table.champs[table.taille].nb_arg = nb_arg;
     table.champs[table.taille].global = global;
     table.champs[table.taille].func = func;
+	table.champs[table.taille].valeur = valeur;
     return table.taille++;
 }
 
@@ -86,6 +87,17 @@ int get_nb_args(char* name) {
     //sinon erreur
     fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
     return -1;
+}
+
+char* get_valeur(char* name) {
+	int ind;
+    //si on trouve l'entrée
+    if ((ind = find_entry(name)) != -1){
+        return table.champs[ind].valeur;
+    }
+    //sinon erreur
+    fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
+    return "";
 }
 
 void free_tds() {
