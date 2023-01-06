@@ -14,7 +14,8 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int else_count = 0;		// Nombre de else
+	int if_count = 0;		// Nombre de conditions executées
+	static int else_count = 0;	// Nombre de else
 	extern int elsee;
 %}
 
@@ -75,16 +76,14 @@ instruction : ID EG oper	// Affectation
 	    | IF bool THEN programme FI
 	    {
 	    	strcat(instructions, "Else");
-		strcat(instructions, itoa(else_count-1));
+		strcat(instructions, itoa(--if_count));
 		strcat(instructions, ":\n");
-		else_count--;
 	    }
 	    | IF bool THEN programme ELSE programme FI
 	    {
 	    	strcat(instructions, "Fi");
-		strcat(instructions, itoa(else_count-1));
+		strcat(instructions, itoa(--if_count));
 		strcat(instructions, ":\n");
-		else_count--;
 	    }
 ;
 
@@ -96,6 +95,7 @@ bool : NB
 	strcat(instructions, "beq $t0, $zero, Else");
 	strcat(instructions, itoa(else_count));
 	strcat(instructions, "\n");
+	if_count++;
 	else_count++;
      }
 ;
