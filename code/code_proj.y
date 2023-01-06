@@ -5,10 +5,12 @@
 	extern int yylex();
 	int yyerror(char *s);
 	extern FILE *yyin;
+
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
-	char data[1024];		// Partie declaration des variables
+
+	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
 	char ids[512][64];		// Tableau des identificateurs
 	int id_count = 0;		// Nombre d'identificateurs
@@ -20,8 +22,8 @@
 %}
 
 %token <id> ID
-%token <entier> NB 
-%token EG 
+%token <entier> NB
+%token EG
 %token PL
 %token MN
 %token FX
@@ -34,6 +36,9 @@
 %token THEN
 %token FI
 %token ELSE
+%token DEC
+%token OB
+%token CB
 
 // Regles de grammaire
 %left PL MN
@@ -45,6 +50,7 @@
 }
 
 %%
+<<<<<<< code/code_proj.y
 programme : instruction END programme 
 	  | instruction END 
 	  {
@@ -73,6 +79,20 @@ instruction : ID EG oper	// Affectation
 		reg_count = 1;
 		li_count = 0;
 	    }
+		| DEC ID OB NB CB { // Déclaration de tableau
+			if (find_entry($2) == -1)
+				add_tds($2, TAB, 1, $4, -1, 1, "");
+
+			// Buffer contenant la ligne à intégrer dans ".data" du MIPS
+			char buff[64];
+			size_t max_length = sizeof(buff);
+			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n", $2, $4);
+
+			if (ret >= max_length)
+				fprintf(stderr, "|ERREUR| Dépassement du buffer - Dec tab");
+
+			strcat(data, buff);
+		}
 	    | IF bool THEN programme FI
 	    {
 	    	strcat(instructions, "Else");
@@ -122,45 +142,51 @@ oper : unique
 ;
 
 unique : ID
-       {
-       	li_count++;
-       	if (find_entry($1) == -1)
-		yyerror("ID pas dans la table des symoles");
-	strcat(instructions,"lw $t");
-	strcat(instructions,itoa(reg_count));
-	strcat(instructions,", ");
-	strcat(instructions,$1);
-	strcat(instructions,"\n");
-	reg_count++;
+	{
+		li_count++;
+		if (find_entry($1) == -1)
+			yyerror("ID pas dans la table des symoles");
+		strcat(instructions,"lw $t");
+		strcat(instructions,itoa(reg_count));
+		strcat(instructions,", ");
+		strcat(instructions,$1);
+		strcat(instructions,"\n");
+		reg_count++;
 	}
-       | NB
-       {
-       	li_count++;
-	strcat(instructions,"li $t");
-	strcat(instructions,itoa(reg_count));
-	strcat(instructions,", ");
-	strcat(instructions,itoa($1));
-	strcat(instructions,"\n");
-	reg_count++;
+	| NB
+	{
+		li_count++;
+		strcat(instructions,"li $t");
+		strcat(instructions,itoa(reg_count));
+		strcat(instructions,", ");
+		strcat(instructions,itoa($1));
+		strcat(instructions,"\n");
+		reg_count++;
 	}
 ;
 
+
 %%
-// Fonction qui execute une operation entre les deux derniers registres temporaires utilisés
+// Fonction qui execute une operation entre les deux derniers registres
+// temporaires utilisés
 void operation(char *str) {
 	strcat(instructions, str);
 	strcat(instructions, " $t");
-	if (li_count <= 2) strcat(instructions,"0");
-	else strcat(instructions, itoa(reg_count-2));
+	if (li_count <= 2)
+		strcat(instructions,"0");
+	else
+		strcat(instructions, itoa(reg_count-2));
 	strcat(instructions, ", $t");
 	strcat(instructions, itoa(reg_count-2));
 	strcat(instructions, ", $t");
 	strcat(instructions, itoa(reg_count-1));
 	strcat(instructions, "\n");
 	reg_count--;
-	if (li_count <= 2) reg_count--;
+	if (li_count <= 2)
+		reg_count--;
 	li_count--;
-	if (reg_count <= 0) reg_count = 1;
+	if (reg_count <= 0)
+		reg_count = 1;
 }
 
 // Fonction qui cherche si un ID est déjà déclaré, sinon il le fait
@@ -177,12 +203,12 @@ void findStr (char *str, char strs[512][64]) {
 }
 
 char* itoa(int x) {
-    static char str[100];
-    sprintf(str, "%d", x);
-    return str;
+	static char str[100];
+	sprintf(str, "%d", x);
+	return str;
 }
 
 int yyerror(char *s) {
-  fprintf(stderr, "Erreur de syntaxe : %s\n", s);
-  return 1;
+	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
+	return 1;
 }

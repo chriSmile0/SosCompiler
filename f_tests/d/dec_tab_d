@@ -1,0 +1,3 @@
+id = 2;
+declare tab[2];
+fin = id + 2;

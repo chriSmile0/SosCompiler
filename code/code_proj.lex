@@ -52,7 +52,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
 ^{espace}*fi{espace}					{if (yaccc) return FI; return MR;}
-^declare{espace}+						return MR;
+^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
 
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
@@ -76,6 +76,8 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [(]								{return OP;}
 [)]								{return CP;}
 [;]								{return END;}
+[\[]							{return OB;}
+[\]]							{return CB;}
 {endline}							
 . 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 

@@ -1,10 +1,12 @@
 #include "../inc/code_proj.tab.h"
 #include "../inc/fct_yacc.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <getopt.h>
+
 extern int yylex();
+
 extern char data[1024];
 extern char instructions[4096];
 extern int yaccc;
@@ -17,11 +19,10 @@ int main(int argc, char *argv[]) {
 		{"g", no_argument, NULL, 'g'},
 		{NULL, 0, NULL, 0}
 	};
-	
 	init_tds();
 
 	int opt, index, flagTds, flagGen = 0;
-	while ((opt = getopt_long(argc, argv, "v:t:o:", options, &index)) != -1) {
+	while ((opt = getopt_long(argc, argv, "vto:g", options, &index)) != -1) {
 		switch (opt) {
 			/* Version */
 			case 'v':
@@ -34,14 +35,15 @@ int main(int argc, char *argv[]) {
 
 			/* Table des symboles */
 			case 't':
-                flagTds = 1;
-                break;
+				flagTds = 1;
+				break;
 
 			/* Fichier de sortie */
 			case 'o':
 				printf("*** Fichier de sortie ***\n");
 				printf("Fichier d'enregistrement : %s\n", optarg);
 				break;
+
 			case 'g':
 				flagGen = 1;
 				yaccc = 1;
@@ -65,10 +67,12 @@ int main(int argc, char *argv[]) {
 		while ((t = yylex()) != 0) 
 			printf("t : %d\n",t);
 	}
+
 	if (flagTds == 1){
-        printf("*** Table des symboles ***\n");
-        print_tds();
-    }
+		printf("*** Table des symboles ***\n");
+		print_tds();
+	}
+
 	free_tds();
 	return EXIT_SUCCESS;
 }
