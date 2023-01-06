@@ -16,6 +16,7 @@
 
 	int yaccc = 0;
 	int elsee = 0;
+	int whilee = 0;
 
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
@@ -36,10 +37,10 @@ operateur [+-/*]
 ^{espace}*if{espace}					{if (yaccc) return IF; return MR;}
 {espace}+then({espace}+|{endline}) 			{if (yaccc) return THEN; return MR;}
 ^{espace}*for{espace}+					return MR;
-{espace}do({espace}+|{endline})			return MR;
-^{espace}*done{espace};{endline}		return MR;
+{espace}do({espace}+|{endline})				{if (yaccc) return DO; return MR;}
+^{espace}*done{espace}					{if (yaccc) return DONE; return MR;}
 {espace}+in{espace}+					return MR;
-^{espace}*while{espace}+				return MR;
+^{espace}*while{espace}+				{if (yaccc) {whilee++; return WHL;} return MR;}
 ^{espace}*until{espace}+				return MR;
 test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;

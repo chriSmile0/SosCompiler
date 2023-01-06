@@ -19,6 +19,7 @@
 	int if_count = 0;		// Nombre de conditions executées
 	static int else_count = 0;	// Nombre de else
 	extern int elsee;
+	extern int whilee;
 %}
 
 %token <id> ID
@@ -36,6 +37,9 @@
 %token THEN
 %token FI
 %token ELSE
+%token WHL
+%token DO
+%token DONE
 %token DEC
 %token OB
 %token CB
@@ -104,10 +108,25 @@ instruction : ID EG oper	// Affectation
 		strcat(instructions, itoa(--if_count));
 		strcat(instructions, ":\n");
 	    }
+	    | WHL bool DO programme DONE
+	    {
+		strcat(instructions, "j While");
+		strcat(instructions, itoa(if_count-1));
+		strcat(instructions, "\n");
+	    	strcat(instructions, "Else");
+		strcat(instructions, itoa(--if_count));
+		strcat(instructions, ":\n");
+	    }
 ;
 
 bool : NB 
      {
+	if (whilee) {
+		strcat(instructions, "While");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, ":\n");
+		whilee--;
+	}
      	strcat(instructions, "li $t0, ");
 	strcat(instructions, itoa($1));
 	strcat(instructions, "\n");
