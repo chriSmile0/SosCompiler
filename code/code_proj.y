@@ -267,7 +267,7 @@ void genFi(char *str) {
 	if (fi_count > 1) {
 		fi_desc_count++;
 		strcat(instructions, itoa(else_count-1 - (fi_desc_count-1)));
-		if (fi_desc_count == if_count) {
+		if (fi_desc_count == fi_count) {
 			fi_desc_count = 0;
 			if (elsee)
 				fi_count--;
