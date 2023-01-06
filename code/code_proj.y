@@ -175,7 +175,7 @@ instruction : ID EG oper	// Affectation
 	    }
 operande : CC
 	| '$' OA ID CA {$$ = $3;}
-	| '$' NB {int_in_str($2,$$,0);} //check des arguments ici 
+	| '$' NB {$$ = itoa($2);} //check des arguments ici 
 	| MOTS {$$ = $1; printf("mot \n");}
 	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;

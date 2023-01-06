@@ -129,16 +129,6 @@ char* get_valeur(char* name);
  */
 void free_tds();
 
-/**** INSTRUCTION *****/
-/*	Création des fct : 
-/*		- 	instruction_data()
-		-	instruction_proc()
-		- 	instruction_main()
-/*	Qui associe pour chaque instruction des lignes de mips à écrire
-/*	Dans le fichier en sortie 
-/**** FIN INSTRUCTION ******/
-
-
 /**
  * @brief 	Lecture_Int et Lecture_Str combiné
  * 
@@ -146,7 +136,7 @@ void free_tds();
  * 
  * @return //
 */
-void mips_read_all();
+void mips_read_all(void);
 
 /**
  * @brief 	Affichage_Int et Affichage_Str combiné
@@ -155,7 +145,7 @@ void mips_read_all();
  * 
  * @return //
 */
-void mips_print_all() ;
+void mips_print_all(void);
 
 /**
  * @brief	Check qu'une procédure echo n'existe pas déjà
@@ -164,7 +154,7 @@ void mips_print_all() ;
  * 
  * @return //
 */
-void check_echo_proc();
+void check_echo_proc(void);
 
 /**
  * @brief 	Check qu'une procédure exit n'existe pas déjà
@@ -173,7 +163,7 @@ void check_echo_proc();
  * 
  * @return //
 */
-void check_exit_proc();
+void check_exit_proc(void);
 
 /**
  * @brief 	Check qu'une procédure read n'existe pas déjà 
@@ -182,54 +172,15 @@ void check_exit_proc();
  * 
  * @return //
 */
-void check_read_proc();
+void check_read_proc(void);
 
 /**
- * @brief 	Création des buffers pour read 
+ * @brief	Remise à zéro des booleens globales
  * 
  * @param //
  * 
  * @return //
 */
-void read_data(char *id);
-
-/**
- * @brief 	Création des lignes de code en mips dans le main pour read
- * 
- * @param //
- * 
- * @return //
-*/
-void read_main(char *id);
-
-/**
- * @brief 	Création des buffers pour echo
- * 
- * @param //
- * 
- * @return //
-*/
-void echo_data(int *id,char *chaine);
-
-/**
- * @brief 	Creéation des lignes de code en mips dans le main pour echo
- * 
- * @param //
- * 
- * @return //
-*/
-void echo_main(int *id, char *chaine);
-
-void kill_all_global_use();
-
-
-void int_in_str(int e, char tab[],int index_dep);
-
-int cherche_id(char *id);
-
-int ajout_chaine(char *id, char *chaine);
-
-void print_table_symboles();
-
+void kill_all_global_use(void);
 
 #endif // FCT_YACC //

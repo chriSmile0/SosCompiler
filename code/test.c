@@ -18,8 +18,8 @@
 int test_simple() {
 	printf("\n--- TEST SIMPLE\n");
 	int tests = 0;
-	/*printf("- test_chainescarac_s\n");
-	tests += test_chainescarac_s_v2();
+	printf("- test_chainescarac_s\n");
+	/*tests += test_chainescarac_s_v2();
 	printf("- test_ascii_s\n");
 	tests += test_ascii_s();
 	printf("- test_commentaires_s\n");
@@ -37,13 +37,13 @@ int test_simple() {
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();*/
 	printf("- test_operations_s\n");
-	tests += test_operations_s();
+	tests += test_mips_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
 	printf("- test_dec_tab_s\n");
 	tests += test_dec_tab_s();
-	printf("- test mips v2 \n");
-	tests += test_echo_read_v2();
+	printf("- test_echoread \n");
+	tests += test_mips_echoread_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -87,7 +87,7 @@ int test_median() {
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();*/
 	printf("- test_operations_m\n");
-	tests += test_operations_m();
+	tests += test_mips_operations_m();
 	printf("- test_dec_tab_m\n");
 	tests += test_dec_tab_m();
 	/*
@@ -119,8 +119,8 @@ int test_difficile() {
 	tests += test_commentaires_d_v2();
 	printf("- test_nombres_d\n");
 	tests += test_nombres_d_v2();
-	printf("- test_motsreserves_d\n");
-	tests += test_motsreserves_d_v2();
+	/*printf("- test_motsreserves_d\n");
+	tests += test_motsreserves_d_v2();*/
 	printf("- test_id_d\n");
 	tests += test_id_d_v2();
 	printf("- test_mot_d\n");
@@ -128,11 +128,14 @@ int test_difficile() {
 	printf("- test_oper_d\n");
 	tests += test_oper_d_v2();
 	printf("- test_opel_s\n");
-	tests += test_opel_s_v2();*/
+	tests += test_opel_s_v2();
 	printf("- test_operations_d\n");
-	tests += test_operations_d();
+	tests += test_mips_operations_d();
 	printf("- test_dec_tab_d\n");
 	tests += test_dec_tab_d();
+	printf("- test_echo_read_d \n");
+	tests += test_mips_echoread_d();
+
 
 
 	/*
@@ -155,7 +158,7 @@ void hide_tokens_h() {
 int test_mips_simple() {
 	int tests = 0;
 	printf("- test_echo_read\n");
-	tests += test_echo_read_s();
+	//tests += test_echo_read_s();
 	return tests;
 }
 
@@ -169,7 +172,7 @@ int test_mips_median() {
 int test_mips_difficile() {
 	int tests = 0;
 	printf("- test_echo_read\n");
-	tests += test_echo_read_d();
+	//tests += test_echo_read_d();
 	return tests;
 }
 

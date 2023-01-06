@@ -1,6 +1,0 @@
-read nb ; 
-echo "hihi" ;
-echo ${nb} ;
-echo $245 ;
-echo 1MOT ;
-exit ;
