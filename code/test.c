@@ -49,6 +49,8 @@ int test_simple() {
 		tests += test_mips_echoread_s();
 		printf("- test_if_s\n");
 		tests += test_mips_if_s();
+		printf("- test_operateurs_s\n");
+		tests += test_mips_operateurs_s();
 	}
 	/*
 		Insertion du code du test simple
@@ -104,6 +106,8 @@ int test_median() {
 		tests += test_mips_echoread_m();
 		printf("- test_if_m\n");
 		tests += test_mips_if_m();
+		printf("- test_operateurs_m\n");
+		tests += test_mips_operateurs_m();
 	}
 	/*
 		Insertion du code du test median
@@ -155,6 +159,8 @@ int test_difficile() {
 		tests += test_mips_echoread_d();
 		printf("- test_if_d\n");
 		tests += test_mips_if_d();
+		printf("- test_operateurs_d\n");
+		tests += test_mips_operateurs_d();
 	}
 	/*
 		Insertion du code du test difficile

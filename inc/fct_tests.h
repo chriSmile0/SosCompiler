@@ -237,4 +237,7 @@ int test_mips_if_s(void);
 int test_mips_if_m(void);
 int test_mips_if_d(void);
 
+int test_mips_operateurs_s(void);
+int test_mips_operateurs_m(void);
+int test_mips_operateurs_d(void);
 #endif // FCT_TESTS_H //

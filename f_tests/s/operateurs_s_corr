@@ -1,0 +1,5 @@
+	.data
+	.text
+__start:
+li $v0 10
+syscall

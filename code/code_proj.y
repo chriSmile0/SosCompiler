@@ -42,7 +42,7 @@
 %token <chaine> CCS
 
 %token <chaine> TEST
-%token OU ET
+%token YOU YET
 
 %token EG
 %token PL
@@ -74,7 +74,7 @@
 %token '$'
 %token <chaine> MOTS
 
-%token YCCNV YCCV YGE YGT YLE YLT YEQ YNE '!' '~'
+%token YCCNV YCCV YGE YGT YLE YLT YEQ YNE YNOP '!' '~'
 
 %type <entier> instruction
 %type <chaine> concatenation
@@ -93,7 +93,6 @@
 	char *chaine;
 }
 
-%type <chaine> operande 
 %type <entier> operande_entier
 
 %%
@@ -261,6 +260,8 @@ instruction : ID EG oper	// Affectation
 			strcat(instructions, "jr $ra\n");
 			// + statut dans $? 
 		}
+	| test_expr 
+	| test_bloc
 ;
 bool : NB 
      {
@@ -361,11 +362,11 @@ unique : ID
 
 test_bloc : TEST test_expr {
 		printf("========> YACC <========\n");
-		$$ = $2;
+		$$ = 1;
 	}
 ;
 
-test_expr : test_expr OU test_expr2 {
+test_expr : test_expr YOU test_expr2 {
 		sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
 		strcat(instructions, "or $t3, $t0, $t1\n");
@@ -374,14 +375,14 @@ test_expr : test_expr OU test_expr2 {
 	| test_expr2
 ;
 
-test_expr2 : test_expr2 ET test_expr3 {
+test_expr2 : test_expr2 YET test_expr3 {
 		sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
 		strcat(instructions, "and $t3, $t0, $t1\n");
 		//sprintf($$, "li $t0, %s\nli $t1, %s\n and $t3, t0, $t1\n",$1,$3);
 		$$ = ($1 && $3);
 	}
-	| test_expr3 
+	| test_expr3 {printf("expr 3 \n");$$ = $1;}
 ;
 
 test_expr3 : OP test_expr CP {	// (test_expr)
@@ -410,8 +411,14 @@ test_instruction : concatenation '=' concatenation {
 		//pas sur de ça 
 		$$ = 1;
 	}
+	| operande_entier operateur2 operande_entier {
+		//sprintf($$,"%s %s %s ",$1,$2,$3);
+		printf("operateur 2 : \n");
+		$$ = 1;
+	}
 	| operande operateur2 operande {
 		//sprintf($$,"%s %s %s ",$1,$2,$3);
+		printf("operateur 2 avec operande: \n");
 		$$ = 1;
 	}
 ;
@@ -433,9 +440,7 @@ concatenation : concatenation operande {
 		$$ = $1;
 	}
 	| operande
-;
-
-operande : CC
+	| operande_entier {printf("ici \n");$$ = itoa($1);}
 ;
 
 %%

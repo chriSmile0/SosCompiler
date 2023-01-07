@@ -43,7 +43,7 @@ operateur [+-/*]
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				{if (yaccc) {whilee++; return WHL;} return MR;}
 ^{espace}*until{espace}+				{if (yaccc) {until++; whilee++; return UTL;} return MR;}
-test{espace}+							{if (yaccc) {printf("========> TEST <========\n"); return TEST;}; return MR;}
+test{espace}							{if (yaccc) {printf("========> TEST <========\n"); return TEST;}; return MR;}
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					{if (yaccc) return ECH; return MR;}
@@ -70,7 +70,7 @@ test{espace}+							{if (yaccc) {printf("========> TEST <========\n"); return TE
 										else 
 											yyerror(" Caractère non ASCII");}
 
-{digit}+								{yylval.entier = atoi(yytext); return (checkNombres(yytext) ? NB : MOT);}
+{digit}+								{printf("yop \n");yylval.entier = atoi(yytext); return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
@@ -139,17 +139,17 @@ int checkOperateur(char *operateurStr, int taille)
 		// /a/n/o/z
 		switch (operateurStr[0]) {
 			case 'a':
-				return ET;
+				return (yaccc) ? YET : ET;
 				break;
 			case 'n':
-				return CCNV;
+				return (yaccc) ? YCCNV : CCNV;
 				break;
 			case 'o':
 				printf("========> OU <========\n");
-				return OU;
+				return (yaccc) ? YOU : OU;
 				break;
 			case 'z':
-				return CCV;
+				return (yaccc) ? YCCV : CCV;
 				break;
 			default:
 				break;
@@ -159,21 +159,27 @@ int checkOperateur(char *operateurStr, int taille)
 		// eq/ne/gt/ge/lt/le
 		switch (operateurStr[0]) {
 			case 'g':
-				return (operateurStr[1] == 'e') ? GE : GT;
+				return (operateurStr[1] == 'e') ? ((yaccc) ? YGE : GE ): (yaccc) ? YGT : GT;
 				break;
 			case 'l':
-				return (operateurStr[1] == 'e') ? LE : LT;
+				return (operateurStr[1] == 'e') ? ((yaccc) ? YLE : LE ): (yaccc) ? YLT : LT;
 				break;
 			case 'e':
-				return (operateurStr[1] == 'q') ? EQ : N_OP;
+				printf("yc \n");
+				int res =  (operateurStr[1] == 'q') ? ((yaccc) ? YEQ : EQ ): (yaccc) ? YNOP : N_OP;
+				printf("res : %d\n",res);
+				printf("YEQ : %d\n",YEQ);
+				printf("YNOP : %d\n",YNOP);
+				return res;
 				break;
 			case 'n':
-				return (operateurStr[1] == 'e') ? NE : N_OP;
+				return (operateurStr[1] == 'e') ? ((yaccc) ? YNE : NE ): (yaccc) ? YNOP : N_OP;
 				break;
 			default:
 				break;
 		}
 	}
+	printf("mauvais return : \n");
 	return N_OP;
 }
 

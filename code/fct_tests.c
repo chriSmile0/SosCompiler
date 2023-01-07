@@ -276,3 +276,16 @@ int test_mips_if_m() {
 int test_mips_if_d() {
 	return test_mips("f_tests/d/if_d","f_tests/d/if_d_corr");
 }
+
+int test_mips_operateurs_s() {
+	return test_mips("f_tests/s/operateurs_s","f_tests/s/operateurs_s_corr");
+}
+
+int test_mips_operateurs_m() {
+	return test_mips("f_tests/m/operateurs_m","f_tests/m/operateurs_m_corr");
+}
+
+int test_mips_operateurs_d() {
+	return test_mips("f_tests/d/operateurs_d","f_tests/d/operateurs_d_corr");
+}
+
