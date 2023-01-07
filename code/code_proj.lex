@@ -1,5 +1,5 @@
 %option nounput
-%option noyywrap 
+%option noyywrap
 %{
 	#include "../inc/code_proj.tab.h"
 	#include "tokens.h"
@@ -30,7 +30,7 @@ digit [0-9]
 char [a-zA-Z_]
 signe [+-]
 n_in_word [;(){}=!$*+%|-]
-ch_op_r [aeglnqt] 
+ch_op_r [aeglnqt]
 ch_op_1 [anoz]
 operateur [+-/*]
 
@@ -43,7 +43,7 @@ operateur [+-/*]
 {espace}+in{espace}+					return MR;
 ^{espace}*while{espace}+				{if (yaccc) {whilee++; return WHL;} return MR;}
 ^{espace}*until{espace}+				{if (yaccc) {until++; whilee++; return UTL;} return MR;}
-test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
+test{espace}+							{if (yaccc) {printf("========> TEST <========\n"); return TEST;}; return MR;}
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
 ^{espace}*echo{espace}+					{if (yaccc) return ECH; return MR;}
@@ -70,7 +70,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 										else 
 											yyerror(" Caractère non ASCII");}
 
-{digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
+{digit}+								{yylval.entier = atoi(yytext); return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
@@ -112,20 +112,19 @@ bool word_test(char * str) {
 			str++;
 			if (*str == 't')
 				str++;
-				if (*str == ' ') 
+				if (*str == ' ')
 					return true;
 	return false;
 }
 
-
-bool checkNombres(char *nombreStr) 
+bool checkNombres(char *nombreStr)
 {
 	char *ptrFin;
 	errno = 0;
 	long nombre = strtol(nombreStr, &ptrFin, 10); // On converti en base 10
 
 	if ((errno == ERANGE && (nombre == LONG_MAX || nombre == LONG_MIN)) ||
-			(errno != 0 && nombre == 0)) 
+			(errno != 0 && nombre == 0))
 		exit(EXIT_FAILURE);
 
 	return (nombre > MAX_NUM || nombre < MIN_NUM) ? false : true;
@@ -133,6 +132,7 @@ bool checkNombres(char *nombreStr)
 
 int checkOperateur(char *operateurStr, int taille)
 {
+	printf("========> OP <========\n");
 	if (taille == 1) {
 		// /a/n/o/z
 		switch (operateurStr[0]) {
@@ -142,10 +142,11 @@ int checkOperateur(char *operateurStr, int taille)
 			case 'n':
 				return CCNV;
 				break;
-			case 'o': 
+			case 'o':
+				printf("========> OU <========\n");
 				return OU;
 				break;
-			case 'z': 
+			case 'z':
 				return CCV;
 				break;
 			default:
@@ -155,8 +156,8 @@ int checkOperateur(char *operateurStr, int taille)
 	else if (taille == 2) {
 		// eq/ne/gt/ge/lt/le
 		switch (operateurStr[0]) {
-			case 'g': 
-				return (operateurStr[1] == 'e') ? GE : GT; 
+			case 'g':
+				return (operateurStr[1] == 'e') ? GE : GT;
 				break;
 			case 'l':
 				return (operateurStr[1] == 'e') ? LE : LT;
@@ -180,7 +181,7 @@ bool checkAscii(char * str, bool com) {
 	bool b = testAscii;
 	testAscii = false;
 	if (b && !com)
-		if(!(*str == '\"' || *str == '\'' || *str == '\\' 
+		if(!(*str == '\"' || *str == '\'' || *str == '\\'
 			|| *str == 't' || *str == 'n'))
 			return false;
 	if (b && com)
@@ -195,7 +196,7 @@ bool checkAscii(char * str, bool com) {
 		if (*str == '\\') {
 			if (com) {
 				str++;
-				if (!(*str == '\"' || *str == '\'' || *str == '\\' 
+				if (!(*str == '\"' || *str == '\'' || *str == '\\'
 					|| *str == 't' || *str == 'n'))
 					return false;
 			}

@@ -22,7 +22,6 @@ int test_type(char *chemin_fichier_test, int attendu, int token_d,
 	return (nbr_t == attendu) ? 0 : 1;
 }
 
-
 int test_ascii_s() {
 	char *filename = "f_tests/s/ascii_s";
 	yyin = fopen(filename, "r");
@@ -48,7 +47,6 @@ int test_ascii_m_v2() {
 int test_ascii_d_v2() {
 	return test_type("f_tests/d/ascii_d",2,1,1,"carac non ascii");
 }
-
 
 int test_motsreserves_s_v2() {
 	return test_type("f_tests/s/motsreserves_s",5,MR,MR,"mots reserves");

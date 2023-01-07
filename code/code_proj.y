@@ -74,6 +74,8 @@
 %token '$'
 %token <chaine> MOTS
 
+%token CCNV CCV GE GT LE LT EQ NE
+
 %type <entier> instruction
 %type <chaine> concatenation
 %type <boolean> test_bloc test_expr test_expr2 test_expr3 test_instruction
@@ -314,7 +316,7 @@ oper : unique
 	| oper MN oper {operation("sub");}
 	| oper FX oper {operation("mul");}
 	| oper DV oper {operation("div");}
-	| OP oper CP 
+	| OP oper CP
 	| MN oper %prec MN {
 		strcat(instructions, "li $t");
 		strcat(instructions, itoa(reg_count));
@@ -357,49 +359,68 @@ unique : ID
 ;
 
 test_bloc : TEST test_expr {
+		printf("========> YACC <========\n");
 		$$ = 1;
 	}
 ;
 
 test_expr : test_expr OU test_expr2 {
-		$$ = ($1+$3);
+		sprintf(instructions, "li $t0, %d\n", $1);
+		sprintf(instructions, "li $t1, %d\n", $3);
+		strcat(instructions, "or $t3, $t0, $t1\n");
 	}
-	| test_expr2 
+	| test_expr2
 ;
 
 test_expr2 : test_expr2 ET test_expr3 {
-		$$ = ($1*$3);
+		sprintf(instructions, "li $t0, %d\n", $1);
+		sprintf(instructions, "li $t1, %d\n", $3);
+		strcat(instructions, "and $t3, $t0, $t1\n");
 	}
-	| test_expr3 
+	| test_expr3
 ;
 
-test_expr3 : OP test_expr CP {
+test_expr3 : OP test_expr CP {	// (test_expr)
 		$$ = $2;
 	}
-	| '!' OP test_expr CP {
+	| '!' OP test_expr CP {		// !(test_expr)
 		$$ = !$3;
 	}
-	| test_instruction {
+	| test_instruction {		// test_instruction
 		$$ = $1;
 	}
-	| '!' test_instruction {
+	| '!' test_instruction {	// !test_instruction
 		$$ = !$2;
 	}
 ;
 
 test_instruction : concatenation '=' concatenation {
-		$$ = (strcmp($1,$3)==0);
+		$$ = (strcmp($1, $3) == 0);
 	}
 	| concatenation '~' concatenation {
-		$$ = (strcmp($1,$3)!=0);
+		$$ = (strcmp($1, $3) != 0);
 	}
+	// | operateur1 concatenation
+	// | operande operateur2 operande
+;
+
+operateur1 : CCNV
+	| CCV
+;
+
+operateur2 : EQ
+	| NE
+	| GT
+	| GE
+	| LT
+	| LE
 ;
 
 concatenation : concatenation operande {
-					concat_data($1,$2);
-					$$ = $1;
-				}
-	| operande 
+		concat_data($1, $2);
+		$$ = $1;
+	}
+	| operande
 ;
 
 operande : CC
