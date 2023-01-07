@@ -9,8 +9,9 @@
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
-	void genElse(char *str);
-	void genFi(char *str);
+	void genElse();
+	void genFi();
+	void genWhile();
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -18,7 +19,8 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int pileFi[512];		
+	int pileWhile[512];		
+	int i_while = 0;
 	int pileElse[512];		
 	int if_count = 0;		
 	int fi_count = 0;
@@ -28,15 +30,6 @@
 	extern int elsee;
 	extern int whilee;
 	extern int until;
-
-	void printPileFi() {
-		strcat(instructions,"pileFi :\n");
-		int i;
-		for(i=0; i<5; i++) {
-			strcat(instructions,itoa(pileFi[i]));
-			strcat(instructions,"\n");
-		}
-	}
 
 %}
 
@@ -115,25 +108,21 @@ instruction : ID EG oper	// Affectation
 		}
 	    | IF bool THEN programme FI
 	    {
-	    	genElse("Else");
+	    	genElse();
 	    }
 	    | IF bool THEN programme ELSE programme FI
 	    {
-	    	genFi("Fi");
+	    	genFi();
 	    }
 	    | WHL bool DO programme DONE
 	    {
-		strcat(instructions, "j While");
-		strcat(instructions, itoa(else_count-1));
-		strcat(instructions, "\n");
-	    	genElse("Else");
+		genWhile();
+	    	genElse();
 	    }
 	    | UTL bool DO programme DONE
 	    {
-		strcat(instructions, "j While");
-		strcat(instructions, itoa(else_count-1));
-		strcat(instructions, "\n");
-	    	genElse("Else");
+		genWhile();
+	    	genElse();
 	    }
 ;
 
@@ -143,8 +132,10 @@ bool : NB
 		strcat(instructions, "While");
 		strcat(instructions, itoa(while_count));
 		strcat(instructions, ":\n");
+		pileWhile[i_while] = while_count;
 		whilee--;
 		while_count++;
+		i_while++;
 		fi_count--;
 	}
 	if (until) {
@@ -254,16 +245,22 @@ void findStr (char *str, char strs[512][64]) {
 	id_count++;
 }
 
-void genElse(char *str) {
-	strcat(instructions, str);
+void genElse() {
+	strcat(instructions, "Else");
 	strcat(instructions, itoa(pileElse[--if_count]));
 	strcat(instructions, ":\n");
 }
 
-void genFi(char *str) {
-	strcat(instructions, str);
+void genFi() {
+	strcat(instructions, "Fi");
 	strcat(instructions, itoa(pileElse[--fi_count]));
 	strcat(instructions, ":\n");
+}
+
+void genWhile() {
+	strcat(instructions, "j While");
+	strcat(instructions, itoa(pileWhile[--i_while]));
+	strcat(instructions, "\n");
 }
 
 char* itoa(int x) {
