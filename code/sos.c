@@ -7,6 +7,7 @@
 extern int yylex();
 extern char data[1024];
 extern char instructions[4096];
+extern int yaccc;
 
 int main(int argc, char *argv[]) {
 	static struct option options[] = {
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]) {
 				break;
 			case 'g':
 				flagGen = 1;
+				yaccc = 1;
 				break;
 
 			/* Inconnu */

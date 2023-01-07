@@ -14,6 +14,10 @@
 	bool word_test(char * str);
 	bool testAscii;
 
+	int yaccc = 0;			//pour préserver les tests lex
+	int in_func = 0;		//pour savoir si on est dans une fonction
+	char * last_id = "";	//nom du dernier identificateur rencontré
+
 	#define MAX_NUM 2147483647
 	#define MIN_NUM -2147483648
 %}
@@ -45,12 +49,12 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^{espace}*read{espace}+					return MR;
 ^{espace}*return{espace}+				return MR;
 ^{espace}*exit{espace}*					return MR;
-({espace}+|{endline})local{espace}+		return LOCAL;
+({espace}+|{endline})local{espace}+		{if (yaccc) return LOCAL; return MR;}
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					return MR;
 ^{espace}*fi{espace};{endline}			return MR;
 ^declare{espace}+						return MR;
-{espace}+expr{espace}+					return EXPR;
+{espace}+expr{espace}+					{if (yaccc) return EXPR; return MR;}
 
 \"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
 \'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
@@ -62,7 +66,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {espace}-{ch_op_1}{espace}				{return checkOperateur(yytext=(yytext+2),1);}
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{ yylval.id = strdup(yytext); if (yaccc && !in_func) last_id = yylval.id; return ID;}
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =								{return EG;}
@@ -70,7 +74,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [-]								{return MN;}
 [*]								{return FX;}
 [/]								{return DV;}
-[(]								{return OP;}
+[(]								{if (yaccc) in_func = 1; return OP;}
 [)]								{return CP;}
 [;]								{return SC;}
 [\{]							{return OB;}

@@ -100,15 +100,25 @@ int get_type(char* name);
  * @param name nom de la variable à chercher
  * @return char* nom de la fonction mère ou chaine vide
  */
-char * get_func(char* name);
+char * get_fonc(char* name);
 
 /**
  * @brief retourne les dimensions de la variable name
  * 
  * @param name nom de la variable
- * @return char* dimensions du tableau, NULL si ce n'est pas un tableau
+ * @return dimensions du tableau, 0 sinon
  */
-char * get_dim(char* name);
+int get_dim(char* name);
+
+/**
+ * @brief set le nom de la fonction de la variable locale d'index ind 
+ * 
+ * @param ind rang de la variable locale dans la tds
+ * @param func nom de la fonction mère
+ * @return int 
+ */
+int set_fonc(int ind, char* func);
+
 
 /**
  * @brief free la tds

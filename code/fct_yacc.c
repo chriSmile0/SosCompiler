@@ -53,7 +53,7 @@ int get_type(char* name) {
     return -1;
 }
 
-char* get_func(char* name) {
+char* get_fonc(char* name) {
     int ind;
     //si on trouve l'entrée
     if ((ind = find_entry(name)) != -1){
@@ -72,6 +72,15 @@ int get_dim(char* name) {
     }
     //sinon erreur
     fprintf(stderr, "Erreur : var %s pas dans la tds.\n", name);
+    return -1;
+}
+
+int set_fonc(int ind, char* func){
+    if (!table.champs[ind].global){
+        table.champs[ind].func = func;
+        return ind;
+    }
+    //sinon erreur
     return -1;
 }
 

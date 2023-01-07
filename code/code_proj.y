@@ -5,16 +5,20 @@
 	extern int yylex();
 	int yyerror(char *s);
 	extern FILE *yyin;
+
 	void operation(char *str);
 	void findStr(char *str, char strs[512][64]);
 	char* itoa(int x);
+
 	char data[1024];		// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
 	char ids[512][64];		// Tableau des identificateurs
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	char * cur_func = "";
+	extern char * last_id;  // Nom du dernier id rencontré
+	extern int in_func; 	// Bool pour savoir si on est dans une fonction 
+	int set = 0;			// Bool pour la mise en place du label de fonction
 %}
 
 %union {
@@ -43,12 +47,15 @@
 %left FX DV
 
 %%
-programme : instruction SC programme 
-		  | instruction SC
+programme : %empty {printf("in liste_instruction empty\n");}
+		  | instruction SC programme {printf("in liste_instruction sc prog\n");}
+
 ;
 
-instruction : ID EG somme_e 	// Affectation
-	    {
+instruction : ID EG somme_e {	// Affectation
+		if (in_func){
+			yyerror("Déclaration d'un id global dans une fonction.\n");
+		}
 		if (find_entry($1) == -1)
 			add_tds($1, ENT, 1, 0, 1, "");
 	    findStr($1,ids);
@@ -60,14 +67,20 @@ instruction : ID EG somme_e 	// Affectation
 		reg_count = 1;
 		li_count = 0;
 	    }
-		| decl_fonc
-		| appel_fonc
+		| decl_fonc 
+		| appel_fonc 
 ;
 
 concat : concat operande
 	   | operande
 ;
 
+liste_operande : liste_operande operande 
+			   | operande 
+			   | DLR OB ID CB 
+			   
+
+;
 operande : DLR OP EXPR somme_e CP 
 		 | DLR OP appel_fonc CP 
 ;
@@ -113,27 +126,62 @@ unique : ID {
 	reg_count++;
 	}
 ;
-//id () { locales instructions }
+
 decl_fonc : ID OP CP OB decl_loc programme CB {
 		if (find_entry($1) != -1)
 			yyerror("ID de la fonction déjà dans la tds.\n");
 		add_tds($1, FCT, 1, 0, 1, "");
-		cur_func = $1;
-		//génération mips du label de la fonction
-		strcat(instructions, $1);
-		strcat(instructions, ":\t");
+		strcat(instructions, "jr $ra\n\n");
+		set = 0;
+		in_func = 0;
+		printf("in decl fonc\n");
 	}
 ;
 
-decl_loc : decl_loc LOCAL ID EG concat SC {
+decl_loc : %empty { 
+		//on print le label de la fonction courante (récupéré avec lex)
+		if (in_func && !set){
+			strcat(instructions, last_id);
+			strcat(instructions, ":\t");
+			set = 1;
+		} else {
+			yyerror("Declaration de locale hors fonction.\n");
+		}
+		//printf("end decl loc : last_id %s\n", last_id);
+}
+		 | decl_loc LOCAL ID EG concat SC {
+		if (in_func && !set){
+			strcat(instructions, last_id);
+			strcat(instructions, ":\t");
+			set = 1;
+		}
 		if (find_entry($3) != -1)
 			yyerror("ID de la variable locale déjà dans la tds.\n");
-		add_tds($3, CC);
-
+		add_tds($3, CH, 1, 0, 0, last_id);
+		printf("in decl loc\n");
 	}
 ;
 
-appel_fonc : ID 
+appel_fonc : ID {
+	if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
+	//Génération mips appel de la fonction
+		strcat(instructions, "jal ");
+		strcat(instructions, $1);
+		strcat(instructions, "\n");
+	} else {
+		printf("appel fonction sigh\n");
+	}
+}
+		   | ID liste_operande {
+	if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
+	//Génération mips appel de la fonction avec argument(s)
+
+
+		strcat(instructions, "jal ");
+		strcat(instructions, $1);
+		strcat(instructions, "\n");
+	}
+}
 
 
 %%
@@ -152,7 +200,7 @@ void operation(char *str) {
 	strcat(instructions, "\n");
 	reg_count--;
 	if (li_count <= 2) 
-		eg_count--;
+		reg_count--;
 	li_count--;
 	if (reg_count <= 0) 
 		reg_count = 1;
