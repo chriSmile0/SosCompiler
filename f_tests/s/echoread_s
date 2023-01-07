@@ -1,2 +1,4 @@
-echo ${id} ;
-exit ;
+read ido ; 
+echo "coco" ; 
+echo ${ido} ; 
+exit ; 

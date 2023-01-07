@@ -34,12 +34,14 @@ int test_simple() {
 	tests += test_oper_s_v2();
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
-	printf("- test_operations_s\n");
-	tests += test_operations_s();
 	printf("- test_tds_s\n");
 	tests += test_tds_s();
+	printf("- test_operations_s\n");
+	tests += test_mips_operations_s();
 	printf("- test_dec_tab_s\n");
-	tests += test_dec_tab_s();
+	tests += test_mips_dectab_s();
+	printf("- test_echoread_s\n");
+	tests += test_mips_echoread_s();
 	/*
 		Insertion du code du test simple
 		Exemple de la structure de la fonction :
@@ -83,9 +85,9 @@ int test_median() {
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
 	printf("- test_operations_m\n");
-	tests += test_operations_m();
+	tests += test_mips_operations_m();
 	printf("- test_dec_tab_m\n");
-	tests += test_dec_tab_m();
+	tests += test_mips_dectab_m();
 	/*
 		Insertion du code du test median
 		Exemple test_nombres_m();
@@ -126,9 +128,9 @@ int test_difficile() {
 	printf("- test_opel_s\n");
 	tests += test_opel_s_v2();
 	printf("- test_operations_d\n");
-	tests += test_operations_d();
+	tests += test_mips_operations_d();
 	printf("- test_dec_tab_d\n");
-	tests += test_dec_tab_d();
+	tests += test_mips_dectab_d();
 
 
 	/*
