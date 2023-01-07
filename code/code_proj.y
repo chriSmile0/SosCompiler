@@ -18,17 +18,15 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int if_count = 0;		// Nombre de if successifs
-	int if_desc_count = 0;
-	int fi_count = 0;		// Nombre de fi successifs
-	int fi_desc_count = 0;
-	int oldif = 0;
-	static int else_count = 0;	// Nombre de else
-	static int while_count = 0;	// Nombre de else
+	int pileElse[512];		// Pile des else
+	int if_count = 0;		
+	int else_count = 0;	
+	int while_count = 0;	
 	// Check .lex
 	extern int elsee;
 	extern int whilee;
 	extern int until;
+
 %}
 
 %token <id> ID
@@ -69,7 +67,6 @@ programme : instruction END programme
 	  {
 	  	if (elsee) {
 			strcat(instructions, "j Fi");
-			strcat(instructions, itoa(else_count-1-fi_desc_count));
 			strcat(instructions, "\n");
 			genElse("Else");
 			elsee--;
@@ -115,14 +112,14 @@ instruction : ID EG oper	// Affectation
 	    | WHL bool DO programme DONE
 	    {
 		strcat(instructions, "j While");
-		strcat(instructions, itoa(else_count-1 - if_desc_count));
+		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, "\n");
 	    	genElse("Else");
 	    }
 	    | UTL bool DO programme DONE
 	    {
 		strcat(instructions, "j While");
-		strcat(instructions, itoa(else_count-1 - if_desc_count));
+		strcat(instructions, itoa(else_count-1));
 		strcat(instructions, "\n");
 	    	genElse("Else");
 	    }
@@ -146,10 +143,7 @@ bool : NB
 		strcat(instructions, itoa(else_count));
 		strcat(instructions, "\n");
 		until--;
-		if_count++;
-		fi_count++;
 		else_count++;
-		fi_desc_count++;
 	} else {
 		strcat(instructions, "li $t0, ");
 		strcat(instructions, itoa($1));
@@ -157,10 +151,9 @@ bool : NB
 		strcat(instructions, "beq $t0, $zero, Else");
 		strcat(instructions, itoa(else_count));
 		strcat(instructions, "\n");
-		if_count++;
-		fi_count++;
+		pileElse[if_count] = else_count;
 		else_count++;
-		fi_desc_count++;
+		if_count++;
 	}
      }
 ;
@@ -248,56 +241,14 @@ void findStr (char *str, char strs[512][64]) {
 }
 
 void genElse(char *str) {
-	if (oldif == 0)
-		oldif = if_count;
 	strcat(instructions, str);
-	if (if_count > 1) {
-		if (oldif == if_count)
-			if_desc_count++;
-		strcat(instructions, itoa(else_count-1 - (if_desc_count-1)));
-		if (oldif != if_count)
-			if_desc_count++;
-		if (if_desc_count == if_count) {
-			if_desc_count = 0;
-			if (elsee)
-				if_count--;
-			else
-				if_count = 0;
-		}
-	} else {
-		strcat(instructions, itoa(else_count-1));
-		if (if_count)
-			if_count--;
-	}
+	strcat(instructions, itoa(pileElse[--if_count]));
 	strcat(instructions, ":\n");
-	oldif = if_count;
 }
 
 void genFi(char *str) {
 	strcat(instructions, str);
-	if (fi_count > 1) {
-		fi_desc_count++;
-		strcat(instructions, itoa(else_count-1 - (fi_desc_count-1)));
-		if (fi_desc_count == fi_count) {
-			fi_desc_count = 0;
-			if (elsee)
-				fi_count--;
-			else
-				fi_count = 0;
-		}
-	} else {
-		strcat(instructions, itoa(else_count-1));
-		if (fi_count)
-			fi_count--;
-	}
 	strcat(instructions, ":\n");
-	strcat(instructions, "ELSE_COUNT = ");
-	strcat(instructions, itoa(else_count));
-	strcat(instructions, " FI_COUNT = ");
-	strcat(instructions, itoa(fi_count));
-	strcat(instructions, " FI_DESC_COUNT = ");
-	strcat(instructions, itoa(fi_desc_count));
-	strcat(instructions, "\n");
 }
 
 char* itoa(int x) {
