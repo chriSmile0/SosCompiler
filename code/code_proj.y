@@ -535,9 +535,11 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	char buf[400];
 	printf("dans la fct de comparaison \n");
 	if (!compare_proc) {
-		char type_cmp[4];
-		if(strcmp(type,"beq")) {
-			sprintf(type_cmp, "%sz",type);
+		int type_not_equal = -10;
+		int type_end_cmp = -10;
+		if(strcmp(type,"beq")==0) {
+			type_not_equal = 1;
+			type_end_cmp = 0;
 		}
 		char strlen[200] = "strlen:\n\tli $t2, 0\n\tloop_len:\n\tlb $t1 , 0($a0)\n\tbeqz $t1, exit_fnclen\n\taddi $a0, $a0 , 1\n\taddi $t2 , $t2 , 1\n\tj loop_len\nexit_fnclen:\n\tmove $a0, $t2\n\tjr $ra\n\n";
 		char compare_s[1000];
@@ -545,7 +547,11 @@ int compare_chaine(char *type, char *str1, char *str2) {
 		strcat(compare_s, "li $t1 , 0\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\tli $t1 , 0\n\t loop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\t");
 		strcat(compare_s, "beqz $t2 , end_cmp\n\tmove $t4 , $t2\n\tmove $t5 , $t3\n\taddi $t4, $t4, -48\n\taddi $t5, $t5, -48\n\tmove $t6 , $a0\n\t");
 		strcat(compare_s, "bne $t4,$t5 not_equal\n\tli $v0 11\n\tmove $a0,$t2\n\tsyscall\n\tmove $a0 , $t6\n\taddi $a0, $a0 , 1\n\taddi $a1, $a1 , 1\n\tj loop_cmp\n");
-		strcat(compare_s, "not_equal:\n\tli $t0 , 1\n\tmove $a0 $t0\n\tjr $ra\nend_cmp:\n\tli $t0 , 0\n\tmove $a0 $t0\n\tjr $ra\n\n");
+		strcat(compare_s, "not_equal:\n\tli $t0 ,"); 
+		strcat(compare_s, itoa(type_not_equal));
+		strcat(compare_s, "\n\tmove $a0 $t0\n\tjr $ra\nend_cmp:\n\tli $t0 , ");
+		strcat(compare_s, itoa(type_end_cmp));
+		strcat(compare_s , "\n\tmove $a0 $t0\n\tjr $ra\n\n");
 		strcat(instructions ,strlen);
 		strcat(instructions ,compare_s);
 		printf("%s",strlen);
