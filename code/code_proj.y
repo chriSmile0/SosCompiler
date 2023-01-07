@@ -74,12 +74,13 @@
 %token '$'
 %token <chaine> MOTS
 
-%token CCNV CCV GE GT LE LT EQ NE
+%token YCCNV YCCV YGE YGT YLE YLT YEQ YNE '!' '~'
 
 %type <entier> instruction
 %type <chaine> concatenation
-%type <boolean> test_bloc test_expr test_expr2 test_expr3 test_instruction
+%type <entier> test_bloc test_expr test_expr2 test_expr3 test_instruction
 %type <chaine> operande
+%type <chaine> operateur2 operateur1
 
 // Regles de grammaire
 %left PL MN
@@ -360,7 +361,7 @@ unique : ID
 
 test_bloc : TEST test_expr {
 		printf("========> YACC <========\n");
-		$$ = 1;
+		$$ = $2;
 	}
 ;
 
@@ -368,6 +369,7 @@ test_expr : test_expr OU test_expr2 {
 		sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
 		strcat(instructions, "or $t3, $t0, $t1\n");
+		$$ = ($1 || $3);
 	}
 	| test_expr2
 ;
@@ -376,21 +378,23 @@ test_expr2 : test_expr2 ET test_expr3 {
 		sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
 		strcat(instructions, "and $t3, $t0, $t1\n");
+		//sprintf($$, "li $t0, %s\nli $t1, %s\n and $t3, t0, $t1\n",$1,$3);
+		$$ = ($1 && $3);
 	}
-	| test_expr3
+	| test_expr3 
 ;
 
 test_expr3 : OP test_expr CP {	// (test_expr)
-		$$ = $2;
+		//$$ = $2;
 	}
 	| '!' OP test_expr CP {		// !(test_expr)
-		$$ = !$3;
+		//$$ = !$3;
 	}
 	| test_instruction {		// test_instruction
 		$$ = $1;
 	}
 	| '!' test_instruction {	// !test_instruction
-		$$ = !$2;
+		//$$ = !$2;
 	}
 ;
 
@@ -399,21 +403,29 @@ test_instruction : concatenation '=' concatenation {
 	}
 	| concatenation '~' concatenation {
 		$$ = (strcmp($1, $3) != 0);
+		
 	}
-	// | operateur1 concatenation
-	// | operande operateur2 operande
+	| operateur1 concatenation {
+		//sprintf($$,"%s %s ",$1,$2);
+		//pas sur de ça 
+		$$ = 1;
+	}
+	| operande operateur2 operande {
+		//sprintf($$,"%s %s %s ",$1,$2,$3);
+		$$ = 1;
+	}
 ;
 
-operateur1 : CCNV
-	| CCV
+operateur1 : YCCNV {$$ = "beqz";}
+	| YCCV {$$ = "beqa";}
 ;
 
-operateur2 : EQ
-	| NE
-	| GT
-	| GE
-	| LT
-	| LE
+operateur2 : YEQ {$$ = "beq";}
+	| YNE {$$ = "bne";}
+	| YGT {$$ = "bgt";}
+	| YGE {$$ = "bge";}
+	| YLT {$$ = "blt";}
+	| YLE {$$ = "ble";}
 ;
 
 concatenation : concatenation operande {
@@ -504,4 +516,17 @@ void resetVars() {
 	elsee = 0;
 	whilee = 0;
 	until = 0;
+}
+
+char * compare_chaine(char type) {
+	/*if (type == '~') {
+
+	}
+
+
+	else if (type == '=') {
+		
+	}*/
+	(void) type;
+	return "";
 }

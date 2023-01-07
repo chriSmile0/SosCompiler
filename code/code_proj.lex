@@ -81,6 +81,8 @@ test{espace}+							{if (yaccc) {printf("========> TEST <========\n"); return TE
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =										{return EG;}
+"!="									{return '~';}
+!										{return '!';}
 [+]										{return PL;}
 [-]										{return MN;}
 [*]										{return FX;}
