@@ -77,10 +77,9 @@ concat : concat operande
 
 liste_operande : liste_operande operande 
 			   | operande 
-			   | DLR OB ID CB 
-			   
-
+			   | DLR OB ID CB 			   
 ;
+
 operande : DLR OP EXPR somme_e CP 
 		 | DLR OP appel_fonc CP 
 ;
@@ -147,7 +146,7 @@ decl_loc : %empty {
 		} else {
 			yyerror("Declaration de locale hors fonction.\n");
 		}
-		//printf("end decl loc : last_id %s\n", last_id);
+		printf("end decl loc : last_id %s\n", last_id);
 }
 		 | decl_loc LOCAL ID EG concat SC {
 		if (in_func && !set){
@@ -163,20 +162,22 @@ decl_loc : %empty {
 ;
 
 appel_fonc : ID {
-	if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
+	if (!in_func && strcmp(get_fonc($1), "") == 0 && get_type($1) == FCT){
 	//Génération mips appel de la fonction
+		printf("appel fonction\n");
 		strcat(instructions, "jal ");
 		strcat(instructions, $1);
 		strcat(instructions, "\n");
 	} else {
-		printf("appel fonction sigh\n");
+		printf("appel fonction pas bon : in_func %i, get_fonc = %s,"
+		" type = %s\n", in_func, get_fonc($1), (get_type($1) == FCT ? "FCT":
+		 "autre"));
 	}
 }
 		   | ID liste_operande {
 	if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
 	//Génération mips appel de la fonction avec argument(s)
-
-
+	//manque load arguments dans $a 
 		strcat(instructions, "jal ");
 		strcat(instructions, $1);
 		strcat(instructions, "\n");
