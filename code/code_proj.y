@@ -18,7 +18,7 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int pileElse[512];		// Pile des else
+	int pileElse[512];		
 	int if_count = 0;		
 	int else_count = 0;	
 	int while_count = 0;	
@@ -67,6 +67,7 @@ programme : instruction END programme
 	  {
 	  	if (elsee) {
 			strcat(instructions, "j Fi");
+			strcat(instructions, itoa(pileElse[if_count-1]));
 			strcat(instructions, "\n");
 			genElse("Else");
 			elsee--;
@@ -248,6 +249,7 @@ void genElse(char *str) {
 
 void genFi(char *str) {
 	strcat(instructions, str);
+	strcat(instructions, itoa(pileElse[if_count]));
 	strcat(instructions, ":\n");
 }
 
