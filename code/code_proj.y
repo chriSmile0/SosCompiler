@@ -7,7 +7,7 @@
 	extern FILE *yyin;
 
 	void operation(char *str);
-	void findStr(char *str, char strs[512][64]);
+	int findStr(char *str, char strs[512][64], int crea);
 	char* itoa(int x);
 	void genElse();
 	void genFi();
@@ -31,10 +31,15 @@
 	extern int whilee;
 	extern int until;
 
+	bool fin_prog = false;
+	bool create_read_proc = false;
+	bool create_echo_proc = false;
+
 %}
 
 %token <id> ID
 %token <entier> NB
+%token <chaine> CCS
 %token EG
 %token PL
 %token MN
@@ -43,6 +48,7 @@
 %token OP
 %token CP
 %token END
+%token MR
 
 %token IF
 %token THEN
@@ -55,6 +61,14 @@
 %token DEC
 %token OB
 %token CB
+%token ECH 
+%token READ 
+%token RTN
+%token EXT
+%token OA
+%token CA 
+%token '$'
+%token <chaine> MOTS
 
 // Regles de grammaire
 %left PL MN
@@ -63,7 +77,11 @@
 %union {
 	char *id;
 	int entier;
+	char *chaine;
 }
+
+%type <chaine> operande 
+%type <entier> operande_entier
 
 %%
 programme : instruction END programme 
@@ -84,7 +102,7 @@ instruction : ID EG oper	// Affectation
 	    {
 		if (find_entry($1) == -1)
 			add_tds($1, ENT, 1, 0, 0, 1, "");
-	    	findStr($1,ids);
+	    	findStr($1,ids,1);
 		strcat(instructions, "sw $t");
 		strcat(instructions, itoa(reg_count-1));
 		strcat(instructions, ", ");
@@ -93,25 +111,26 @@ instruction : ID EG oper	// Affectation
 		reg_count = 1;
 		li_count = 0;
 	    }
-		| DEC ID OB NB CB { // Déclaration de tableau
+	| DEC ID OB NB CB { // Déclaration de tableau
 			if (find_entry($2) == -1)
 				add_tds($2, TAB, 1, $4, -1, 1, "");
 
 			// Buffer contenant la ligne à intégrer dans ".data" du MIPS
 			char buff[64];
 			size_t max_length = sizeof(buff);
-			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n", $2, $4);
+			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n\t.align\t4"
+				"\n", $2, $4);
 
 			if (ret >= max_length)
 				fprintf(stderr, "|ERREUR| Dépassement du buffer - Dec tab");
 
 			strcat(data, buff);
 		}
-	    | IF bool THEN programme FI
+	| IF bool THEN programme FI
 	    {
 	    	genElse();
 	    }
-	    | IF bool THEN programme ELSE programme FI
+	| IF bool THEN programme ELSE programme FI
 	    {
 	    	genFi();
 	    }
@@ -125,8 +144,112 @@ instruction : ID EG oper	// Affectation
 		genWhile();
 	    	genElse();
 	    }
-;
+	| ECH operande { // Print
+		int crea = findStr($2,ids,0);
+		if (crea == -1) { 
+			strcat(data,"_");
+			strcat(data,itoa(id_count));
+			strcat(data,":\t.asciiz \"");
+			strcat(data,$2);
+			strcat(data,"\"\n");
+			strcat(instructions,"li $a0, _");
+			strcat(instructions,itoa(id_count));
+			id_count++;
+		}
+		else { // c'est un id ou une chaine déjà déjà déclaré 
+			strcat(instructions,"li $a0, ");
+			strcat(instructions,ids[crea]);
+		}
+		strcat(instructions,"\nli $v0 4\nsyscall\n");
+		}
+	| ECH '$' OA ID OB operande_entier CB CA {
+			printf("ici \n");
+			//il faudrait idéalement encore checker la présence ou 
+			//pas dans la table des symboles et dans les ids 
+			//si pas dedans on échoue 
+			if (find_entry($4) == -1)
+				yyerror("ID pas dans la table des symboles");
+			int check_index = $6;
+			if ((check_index) >= get_dim($4))
+				yyerror("index + grand que prévu ");
+			reg_count++;	
+			strcat(instructions, "la $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", ");
+			strcat(instructions, $4);
+			//on cherche la bonne place de ce que l'on cherche
+			strcat(instructions,"\naddi $t");
+			strcat(instructions,itoa(reg_count));
+			strcat(instructions, ", $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", ");
+			strcat(instructions , itoa(4*check_index));
+			strcat(instructions, "\nlw $a0, ($t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ")\nli $v0, 4\nsyscall\n");
+			reg_count--;
+		}
+	| EXT { // Exit 
+			printf("passage ici \n");
+			strcat(instructions, "li $v0 10\nsyscall\n");
+			fin_prog = true;
+		}
+	| EXT NB { // Exit avec entier
+			// interruption ?? 
+		}
+	| READ ID { // Affect bis 
+			if (find_entry($2) == -1)
+				add_tds($2,ENT,1,0,0,1,"");
+			findStr($2,ids,1);
+			strcat(instructions, "la $a0");
+			strcat(instructions, ", ");
+			strcat(instructions, $2);
+			strcat(instructions, "\n");
+			strcat(instructions, "li $v0 8\nsyscall\n");
+		}
+	| READ ID OB operande_entier CB  {
+			if (find_entry($2) == -1)
+				yyerror("ID pas dans la table des symboles");
 
+			if ($4 >= get_dim($2))
+				yyerror("Indice utilisé plus grand que le tableau");
+
+			// Créé un buffer dans ".data", s'il n'existe pas encore
+			if (find_entry("buffer") == -1){
+				add_tds("buffer", CH, 1, 0, -1, 1, "");
+				strcat(data, "buffer:\t.space\t10000\n");
+			}
+
+			// Paramétrage du "read string"
+			// Adresse de stockage de l'input
+			// Maximum de caractères à lire, puis syscall "read string"
+			strcat(instructions, "la $a0, buffer\n");
+			strcat(instructions, "li $a1, 10000\n");
+			strcat(instructions, "li $v0, 8\n");
+			strcat(instructions, "syscall\n");
+
+			// On détermine l'index du tableau souhaité
+			strcat(instructions, "addi $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", $zero, ");
+			strcat(instructions, itoa(4 * $4));
+			strcat(instructions, "\n");
+
+			// On enregistre
+			strcat(instructions, "sw $a0, ");
+			strcat(instructions, $2);
+			strcat(instructions, "($t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ")\n");
+		}
+	| RTN { // Return 
+			strcat(instructions, "jr $ra\n");
+		}
+	| RTN NB { // Return entier
+			strcat(instructions, "jr $ra\n");
+			// + statut dans $? 
+		}
+;
 bool : NB 
      {
 	if (whilee) { // Si l'instruction sur laquelle on est est un while, alors on est dans une instruction de type WHILE ... DO ... DONE
@@ -168,6 +291,15 @@ bool : NB
      }
 ;
 
+operande : CCS {$$ = $1 ; printf("iki \n");}
+	| '$' OA ID CA {$$ = $3;}
+	| '$' NB {$$ = itoa($2);} //check des arguments ici 
+	| MOTS {$$ = $1; printf("mot \n");}
+	//bouchon}*/
+	//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
+;
+
+
 oper : unique
      | oper PL oper {operation("add");}
      | oper MN oper {operation("sub");}
@@ -188,6 +320,10 @@ oper : unique
 	strcat(instructions, "\n");
      }
 ;
+
+operande_entier : NB
+;
+
 
 unique : ID
 	{
@@ -238,16 +374,20 @@ void operation(char *str) {
 }
 
 // Fonction qui cherche si un ID est déjà déclaré, sinon il le fait
-void findStr (char *str, char strs[512][64]) {
+int findStr (char *str, char strs[512][64], int crea) {
 	for (int i = 0; i < id_count; i++) {
 		if (strcmp(str, strs[i]) == 0) {
-			return;
+			return i;
 		}
 	}
-	strcpy(strs[id_count], str);
-	strcat(data, str);
-	strcat(data, ":\t.word\t0\n");
-	id_count++;
+	if (crea) {
+		strcpy(strs[id_count], str);
+		strcat(data, str);
+		strcat(data, ":\t.word\t0\n");
+		id_count++;
+		return 1;
+	}
+	return -1;
 }
 
 void genElse() {

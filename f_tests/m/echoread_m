@@ -1,0 +1,4 @@
+declare didi[10];
+read didi[2] ;
+echo ${didi[2]};
+exit ;

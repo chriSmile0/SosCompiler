@@ -36,7 +36,7 @@ operateur [+-/*]
 
 %%
 ^{espace}*if{espace}					{if (yaccc) return IF; return MR;}
-{espace}+then({espace}+|{endline}) 			{if (yaccc) return THEN; return MR;}
+{espace}+then({espace}+|{endline}) 		{if (yaccc) return THEN; return MR;}
 ^{espace}*for{espace}+					return MR;
 {espace}do({espace}+|{endline})				{if (yaccc) return DO; return MR;}
 ^{espace}*done{espace}					{if (yaccc) return DONE; return MR;}
@@ -46,10 +46,10 @@ operateur [+-/*]
 test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
-^{espace}*echo{espace}+					return MR;
-^{espace}*read{espace}+					return MR;
-^{espace}*return{espace}+				return MR;
-^{espace}*exit{espace}*					return MR;
+^{espace}*echo{espace}+					{if (yaccc) return ECH; return MR;}
+^{espace}*read{espace}+					{if (yaccc) return READ; return MR;}
+^{espace}*return{espace}+				{if (yaccc) return RTN;  return MR;}
+^{espace}*exit{espace}*					{if (yaccc) return EXT;  return MR;}
 ({espace}+|{endline})local{espace}+		return MR;
 ^{espace}*elif{espace}+test{espace}+	return MR;
 ^{espace}*else{endline}					{if (yaccc) {elsee++; return ELSE;} return MR;}
@@ -57,8 +57,18 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 ^declare{espace}+						{if (yaccc) return DEC; return MR;}
 {espace}+expr{espace}+					return MR;
 
-\"(\\.|[^\\\"])*\"						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
-\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
+\"(\\.|[^\\\"])*\"						{if(checkAscii(&yytext[1], true)) {
+											yylval.chaine = strdup(++yytext);
+											if(yaccc) return CCS; return CC; 
+										}		
+										else 
+											yyerror(" Caractère non ASCII");}
+\'(\\.|[^\\\'])*\'						{if(checkAscii(&yytext[1], true)) {
+											yylval.chaine = strdup(++yytext);
+											if(yaccc) return CCS; return CC; 
+										}		
+										else 
+											yyerror(" Caractère non ASCII");}
 
 {digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
@@ -70,16 +80,19 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
-=								{return EG;}
-[+]								{return PL;}
-[-]								{return MN;}
-[*]								{return FX;}
-[/]								{return DV;}
-[(]								{return OP;}
-[)]								{return CP;}
-[;]								{return END;}
-[\[]							{return OB;}
-[\]]							{return CB;}
+=										{return EG;}
+[+]										{return PL;}
+[-]										{return MN;}
+[*]										{return FX;}
+[/]										{return DV;}
+[(]										{return OP;}
+[)]										{return CP;}
+[;]										{return END;}
+[\[]									{return OB;}
+[\]]									{return CB;}
+[\{]									{return OA;}
+[\}]									{return CA;}
+[$]										{return '$';}
 {endline}							
 . 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
