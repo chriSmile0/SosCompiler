@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
 
 	int opt, index, flagTds, flagGen = 0;
 	char nomFichier[BUFSIZ];
+	nomFichier[0] = '\0';
 	while ((opt = getopt_long(argc, argv, "vto:g", options, &index)) != -1) {
 		switch (opt) {
 			/* Version */
