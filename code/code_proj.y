@@ -151,7 +151,8 @@ instruction : ID EG oper	// Affectation
 				yyerror("ID pas dans la table des symboles");
 			int check_index = $6;
 			if ((check_index) >= get_dim($4))
-				yyerror("index + grand que prévu ");	
+				yyerror("index + grand que prévu ");
+			reg_count++;	
 			strcat(instructions, "la $t");
 			strcat(instructions, itoa(reg_count));
 			strcat(instructions, ", ");
@@ -224,6 +225,7 @@ instruction : ID EG oper	// Affectation
 			strcat(instructions, ", ($t");
 			strcat(instructions, itoa(save_reg));
 			strcat(instructions, ")\n");
+			reg_count--;
 			//ok 
 
 		}//bouchon}

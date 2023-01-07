@@ -6,13 +6,13 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   before_script:
-    - echo "Execute this command before any 'script:' commands."
+    - echo "Installation des paquets"
     - apt-get update
     - apt-get install  --yes xutils-dev gcc make flex bison graphviz
   script:
-    - echo "Compiling the code..."
+    - echo "Compilation .. "
     - make 
-    - echo "Compile complete."
+    - echo "Compilation OK "
   only:
     - merge_requests
   
@@ -24,11 +24,16 @@ unit-test-job:   # This job runs in the test stage.
     - apt-get install  --yes xutils-dev gcc make flex bison graphviz  
   script:
     - make # peut-être inutile
-    - echo "Running unit tests... This will take about 60 seconds."
-    - make test ARGS=1
-    - make test ARGS=2
-    - make test ARGS=3
-    - echo "Tests are passed"
+    - echo "Tests lex .. "
+    - make test_lex ARGS=1
+    - make test_lex ARGS=2
+    - make test_lex ARGS=3
+    - echo "Tests lex OK "
+    - echo "Tests yacc .. "
+    - make test_yacc ARGS=1
+    - make test_yacc ARGS=2
+    - make test_yacc ARGS=3
+    - echo "Tests yacc OK "
   only:
     - merge_requests
 
@@ -36,7 +41,7 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - echo "Deploiement "
+    - echo "Deploiement OK "
   only:
     - merge_requests
