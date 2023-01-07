@@ -1,2 +1,3 @@
+declare didi[10];
 read didi[0] ;
 exit ;

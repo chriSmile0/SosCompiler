@@ -1,3 +1,4 @@
+declare didi[10];
 read didi[0] ;
 echo ${didi[0]} ;
 read id ;

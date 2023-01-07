@@ -209,8 +209,11 @@ int test_mips(char *filename, char *correct_file) {
 
 	// comparaison
 	int comp = strcmp(code,corr);
-	printf("code : |%s|\n",code);
-	printf("corr : |%s|\n",corr);
+	printf("\n------- Code --------\n");
+	printf("code : %s",code);
+	printf("------- Corrigé ------\n");
+	printf("corr : %s",corr);
+	printf("----------------------\n\n");
 	int i = 0;
 	int len_corr = strlen(corr);
 	int len_code = strlen(code);

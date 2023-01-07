@@ -187,20 +187,9 @@ instruction : ID EG oper	// Affectation
 			strcat(instructions, "li $v0 8\nsyscall\n");
 		}
 	| READ ID OB operande_entier CB  {
-			int crea = 0;
-			if ((crea = find_entry($2)) == -1)
-				add_tds($2,TAB,1,$4+1,0,1,"");
-			//findStr($2,ids,1);
-			findStr($2,ids,0); // créa -1 cas particulier
-			int ent = $4 + 1;
-			if (crea == -1) {
-				//creation du tableau
-				strcpy(ids[id_count],$2);
-				strcat(data,$2);
-				strcat(data,":\t.space\t");
-				strcat(data,itoa(ent));
-				strcat(data,"\n");
-			}
+			if (find_entry($2) == -1)
+				yyerror("ID pas dans la table des symboles");
+
 			strcat(instructions,"la $t");
 			int save_reg = reg_count;
 			strcat(instructions,itoa(reg_count));
