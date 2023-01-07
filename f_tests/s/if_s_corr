@@ -1,0 +1,13 @@
+	.data
+id:	.word	0
+	.text
+__start:
+li $t0, 1
+beq $t0, $zero, Else0
+li $t1, 1
+sw $t1, id
+j Fi0
+Else0:
+li $t1, 2
+sw $t1, id
+Fi0:

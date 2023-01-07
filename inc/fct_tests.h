@@ -232,4 +232,8 @@ int test_mips_echoread_s(void);
 int test_mips_echoread_m(void);
 int test_mips_echoread_d(void);
 
+int test_mips_if_s(void);
+int test_mips_if_m(void);
+int test_mips_if_d(void);
+
 #endif // FCT_TESTS_H //

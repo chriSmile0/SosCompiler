@@ -1,0 +1,25 @@
+	.data
+id:	.word	0
+	.text
+__start:
+While0:
+li $t0, 1
+beq $t0, $zero, Else0
+li $t1, 1
+sw $t1, id
+While1:
+li $t0, 2
+beq $t0, $zero, Else1
+li $t0, 3
+beq $t0, $zero, Else2
+li $t1, 3
+sw $t1, id
+j Fi0
+Else2:
+li $t1, 33
+sw $t1, id
+Fi0:
+j While1
+Else1:
+j While0
+Else0:
