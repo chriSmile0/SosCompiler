@@ -567,10 +567,16 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	if (!compare_proc) {
 		int type_not_equal = -10;
 		int type_end_cmp = -10;
-		if(strcmp(type,"beq")==0) {
+		/*if(strcmp(type,"beq")==0) {
 			type_not_equal = 1;
 			type_end_cmp = 0;
 		}
+		else if(strcmp(type,"bne")==0) {
+			type_not_equal = 0;
+			type_end_cmp = 1;
+		}*/
+		type_not_equal = 1; //modifiable 
+		type_end_cmp = 0; //modifiable 
 		char strlen[200] = "strlen:\n\tli $t2, 0\n\tloop_len:\n\tlb $t1 , 0($a0)\n\tbeqz $t1, exit_fnclen\n\taddi $a0, $a0 , 1\n\taddi $t2 , $t2 , 1\n\tj loop_len\nexit_fnclen:\n\tmove $a0, $t2\n\tjr $ra\n\n";
 		char compare_s[1000];
 		sprintf(compare_s, "compare_str:\n\tmove $t0 $a2\n\tmove $t1 $a3\n\tbeq $t0,$t1 not_equal\n\t");

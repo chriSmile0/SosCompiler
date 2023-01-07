@@ -1,5 +1,5 @@
 	.data
-id:     .asciiz "mot"
+id:     .asciiz "mote"
 str1:   .asciiz "egal"
 str2:   .asciiz "egal"
 	.text
@@ -75,7 +75,7 @@ move $t0 $a0
 jal print_int
 
 
-la $a0 , id
+la $a0 , str1
 jal strlen
 move $t1 $a0  
 jal print_int
@@ -84,7 +84,7 @@ jal strlen
 move $t2 $a0 
 jal print_int
 
-la $a0 id
+la $a0 str1
 la $a1 str2
 move $a2 $t1
 move $a3 $t2

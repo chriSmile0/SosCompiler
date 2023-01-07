@@ -108,4 +108,5 @@ void kill_all_global_use() {
 	create_read_proc = false;
 	create_echo_proc = false;
 	fin_prog = false;
+	compare_proc = false;
 }

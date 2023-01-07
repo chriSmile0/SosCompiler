@@ -8,6 +8,7 @@
 extern bool create_echo_proc;
 extern bool create_read_proc;
 extern bool fin_prog;
+extern bool compare_proc;
 
 
 /**
