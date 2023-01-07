@@ -191,6 +191,9 @@ instruction : ID EG oper	// Affectation
 			if (find_entry($2) == -1)
 				yyerror("ID pas dans la table des symboles");
 
+			if ($4 >= get_dim($2))
+				yyerror("Indice utilisé plus grand que le tableau");
+
 			// Créé un buffer dans ".data", s'il n'existe pas encore
 			if (find_entry("buffer") == -1){
 				add_tds("buffer", CH, 1, 0, -1, 1, "");
