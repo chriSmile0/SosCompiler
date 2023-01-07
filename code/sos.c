@@ -9,6 +9,7 @@
 #define DATA_SIZE		1024
 #define INSTR_SIZE		4096
 #define OUTPUT_FOLDER	"out"
+#define DEFAULT_FILE	"output.asm"
 
 extern int yylex();
 
@@ -45,17 +46,29 @@ int main(int argc, char *argv[]) {
 				break;
 
 			/* Fichier de sortie */
-			case 'o':
-				sprintf(nomFichier, "%s/%s", OUTPUT_FOLDER, optarg);
+			case 'o': {
+				size_t ret = 0;
+				ret = snprintf(nomFichier, sizeof(nomFichier), "%s/%s",
+					OUTPUT_FOLDER, optarg);
 
 				// Vérifie l'extension du fichier (.s ou .asm [par défaut])
 				char* ext;
-				if ((ext = strrchr(nomFichier, '.')) != NULL) {
-					if (strcmp(ext,".s") != 0 && strcmp(ext,".asm") != 0) {
-						sprintf(nomFichier, "%s%s", nomFichier, ".asm");
-					}
+				if (
+					ret < sizeof(nomFichier) &&
+					(ext = strrchr(nomFichier, '.')) != NULL
+				) {
+					if (strcmp(ext,".s") != 0 && strcmp(ext,".asm") != 0)
+						ret = snprintf(nomFichier, sizeof(nomFichier), "%s%s",
+							nomFichier, ".asm");
+				}
+
+				if (ret >= sizeof(nomFichier)) {
+					sprintf(nomFichier, "%s/%s", OUTPUT_FOLDER, DEFAULT_FILE);
+					fprintf(stderr, "Nom de fichier trop long\n"
+						"Usage de \"%s\" à la place\n", nomFichier);
 				}
 				break;
+			}
 
 			case 'g':
 				flagGen = 1;
@@ -76,42 +89,44 @@ int main(int argc, char *argv[]) {
 	}
 	else {
 		int t;
-		while ((t = yylex()) != 0) 
+		while ((t = yylex()) != 0)
 			printf("t : %d\n",t);
 	}
 
-	if (flagTds == 1){
+	if (flagTds == 1) {
 		printf("*** Table des symboles ***\n");
 		print_tds();
 	}
 
 	char code[DATA_SIZE + INSTR_SIZE];
-	sprintf(code, "%s%s", data, instructions);
-	if (strlen(nomFichier) > 0) {
+	size_t ret = snprintf(code, sizeof(code), "%s%s", data, instructions);
+	if (ret >= sizeof(code))
+		fprintf(stderr, "Erreur concaténation du code MIPS");
+	else if (strlen(nomFichier) > 0) {
 		printf("\n*** Fichier de sortie ***\n");
 
 		struct stat st;
 		if (stat(OUTPUT_FOLDER, &st) == -1) {
 			if (mkdir(OUTPUT_FOLDER, 0755) == -1) {
-				perror("Erreur création du dossier de sortie");
+				perror("Erreur création du dossier de sortie\n");
 				exit(EXIT_FAILURE);
 			}
 		}
 
 		FILE* fd;
 		if ((fd = fopen(nomFichier, "w")) == NULL) {
-			perror("Erreur ouverture du fichier de sortie");
+			perror("Erreur ouverture du fichier de sortie\n");
 			exit(EXIT_FAILURE);
 		}
 
 		size_t ret = fwrite(code, sizeof(char), strlen(code), fd);
 		if (ret != strlen(code)) {
-			perror("Erreur écriture du fichier de sortie");
+			perror("Erreur écriture du fichier de sortie\n");
 			exit(EXIT_FAILURE);
 		}
 
 		if (fclose(fd) == EOF) {
-			perror("Erreur fermeture du fichier de sortie");
+			perror("Erreur fermeture du fichier de sortie\n");
 			exit(EXIT_FAILURE);
 		}
 
