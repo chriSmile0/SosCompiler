@@ -29,7 +29,7 @@
 
 %token <id> ID
 %token <entier> NB
-%token <chaine> CC
+%token <chaine> CCS
 %token EG
 %token PL
 %token MN
@@ -249,7 +249,7 @@ bool : NB
      }
 ;
 
-operande : CC {$$ = $1 ; printf("iki \n");}
+operande : CCS {$$ = $1 ; printf("iki \n");}
 	| '$' OA ID CA {$$ = $3;}
 	| '$' NB {$$ = itoa($2);} //check des arguments ici 
 	| MOTS {$$ = $1; printf("mot \n");}

@@ -188,11 +188,9 @@ int test_mips(char *filename, char *correct_file) {
 	strcat(instructions, "\t.text\n__start:\n");
 	
 	init_tds();
-	yaccc = 1;
 	yyparse();
 	print_tds();
 	free_tds();
-	yaccc = 0;
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);

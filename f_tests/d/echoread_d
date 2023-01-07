@@ -1,0 +1,3 @@
+read didi[0] ;
+echo ${didi[0]} ;
+exit ;

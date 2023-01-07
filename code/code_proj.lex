@@ -44,7 +44,7 @@ operateur [+-/*]
 test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test"));	
 ^{espace}*case{espace}+					return MR;
 ^{espace}*esac{espace}+					return MR;
-^{espace}*echo{espace}+					{if (yaccc) return ECH ; return MR;}
+^{espace}*echo{espace}+					{if (yaccc) return ECH; return MR;}
 ^{espace}*read{espace}+					{if (yaccc) return READ; return MR;}
 ^{espace}*return{espace}+				{if (yaccc) return RTN;  return MR;}
 ^{espace}*exit{espace}*					{if (yaccc) return EXT;  return MR;}
@@ -57,12 +57,16 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 
 \"(\\.|[^\\\"])*\"						{if(checkAscii(&yytext[1], true)) {
 											yylval.chaine = strdup(++yytext);
-											printf("ici \n");
-											return CC; 
+											if(yaccc) return CCS; return CC; 
 										}		
 										else 
 											yyerror(" Caractère non ASCII");}
-\'(\\.|[^\\\'])*\'						return (checkAscii(&yytext[1], true) ? CC : yyerror(" Caractère non ASCII"));
+\'(\\.|[^\\\'])*\'						{if(checkAscii(&yytext[1], true)) {
+											yylval.chaine = strdup(++yytext);
+											if(yaccc) return CCS; return CC; 
+										}		
+										else 
+											yyerror(" Caractère non ASCII");}
 
 {digit}+						{yylval.entier = atoi(yytext);return (checkNombres(yytext) ? NB : MOT);}
 
@@ -71,7 +75,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 {espace}-{ch_op_1}{espace}				{return checkOperateur(yytext=(yytext+2),1);}
 {espace}-({ch_op_r}{2}){espace}			{return checkOperateur(yytext=(yytext+2),2);}
 {char}+(\\+([0-9]|[a-z]))+{char}+		{return N_ID;}//a ignorer printf("n_id|%s|\n",yytext);
-{char}({char}|{digit})*					{printf("idd \n"); yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
+{char}({char}|{digit})*					{ yylval.id = strdup(yytext);return ID;}//printf("id=|%s|\n",yytext);
 ({char}|{digit})+						{return MOT;}//printf("mot : |%s|\n",yytext);
 {operateur}{espace}*{operateur}+			// eviter les cas : 1+-1 et forcer : 1+(-1)
 =										{return EG;}
@@ -88,7 +92,7 @@ test{espace}							return (word_test(--yytext) ? MR : yyerror(" Pas de bloc test
 [\}]									{return CA;}
 [$]										{return '$';}
 {endline}							
-. 										{printf("space  \n");if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
+. 										{if (strcmp(yytext, " ")) return (checkAscii(yytext, false) ? CHAR : yyerror(" Caractère non ASCII"));}
 
 
 %%
