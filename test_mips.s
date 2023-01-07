@@ -36,36 +36,62 @@ print_int:
     jr $ra
 
 compare_str:
-    la $t0 , str1
-    la $t1 , str2
+    move $t0 $a2
+    move $t1 $a3 
+    beq $t0,$t1 not_equal
+    li $t1 , 0 
     loop_cmp:
-    lb $t2 , ($t0)
-    lb $t3 , ($t1)
+    lb $t2 , ($a0)
+    lb $t3 , ($a1)
     beqz $t2 , end_cmp
     move $t4 , $t2
     move $t5 , $t3
     addi $t4, $t4, -48
     addi $t5, $t5, -48
+    move $t6 , $a0
     bne $t4,$t5 not_equal 
     li $v0 11
     move $a0,$t2
     syscall 
-    addi $t0, $t0 , 1
-    addi $t1, $t1 , 1
+    move $a0 , $t6 
+    addi $a0, $a0 , 1
+    addi $a1, $a1 , 1
     j loop_cmp
 not_equal:
+    li $t0 , 1
+    li $v0 1
+    move $a0 $t0
+    syscall 
     jr $ra 
 end_cmp:
-    jr $ra
+    li $t0 , 0
+    li $v0 1
+    move $a0 $t0
+    syscall 
+    jr $ra 
 
 main:
 
 jal print_str_by_carac
 la $a0 , id 
 jal strlen
+move $t0 $a0 
 jal print_int
 
 
+la $a0 , id
+jal strlen
+move $t1 $a0  
+jal print_int
+la $a0 , str2 
+jal strlen 
+move $t2 $a0 
+jal print_int
+
+la $a0 id
+la $a1 str2
+move $a2 $t1
+move $a3 $t2
 jal compare_str
 
 jal Exit
