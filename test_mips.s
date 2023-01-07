@@ -59,15 +59,11 @@ compare_str:
     j loop_cmp
 not_equal:
     li $t0 , 1
-    li $v0 1
     move $a0 $t0
-    syscall 
     jr $ra 
 end_cmp:
     li $t0 , 0
-    li $v0 1
     move $a0 $t0
-    syscall 
     jr $ra 
 
 main:
@@ -93,6 +89,7 @@ la $a1 str2
 move $a2 $t1
 move $a3 $t2
 jal compare_str
+jal print_int
 
 jal Exit
 

@@ -12,6 +12,7 @@
 	void genElse();
 	void genFi();
 	void genWhile();
+	int compare_chaine(char *type, char *str1, char *str2);
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -34,6 +35,7 @@
 	bool fin_prog = false;
 	bool create_read_proc = false;
 	bool create_echo_proc = false;
+	bool compare_proc = false;
 
 %}
 
@@ -400,6 +402,8 @@ test_expr3 : OP test_expr CP {	// (test_expr)
 ;
 
 test_instruction : concatenation '=' concatenation {
+		compare_chaine("beq",$1,$3);
+		printf("compare_chaine \n");
 		$$ = (strcmp($1, $3) == 0);
 	}
 	| concatenation '~' concatenation {
@@ -416,8 +420,11 @@ test_instruction : concatenation '=' concatenation {
 		printf("operateur 2 : \n");
 		$$ = 1;
 	}
-	| operande operateur2 operande {
+	| CCS operateur2 CCS {
+		compare_chaine($2,$1,$3);
+		printf("compare chaine \n");
 		//sprintf($$,"%s %s %s ",$1,$2,$3);
+
 		printf("operateur 2 avec operande: \n");
 		$$ = 1;
 	}
@@ -523,7 +530,51 @@ void resetVars() {
 	until = 0;
 }
 
-char * compare_chaine(char type) {
+int compare_chaine(char *type, char *str1, char *str2) {
+	char buffer[400];
+	char buf[400];
+	printf("dans la fct de comparaison \n");
+	if (!compare_proc) {
+		char type_cmp[4];
+		if(strcmp(type,"beq")) {
+			sprintf(type_cmp, "%sz",type);
+		}
+		char strlen[200] = "strlen:\n\tli $t2, 0\n\tloop_len:\n\tlb $t1 , 0($a0)\n\tbeqz $t1, exit_fnclen\n\taddi $a0, $a0 , 1\n\taddi $t2 , $t2 , 1\n\tj loop_len\nexit_fnclen:\n\tmove $a0, $t2\n\tjr $ra\n\n";
+		char compare_s[1000];
+		sprintf(compare_s, "compare_str:\n\tmove $t0 $a2\n\tmove $t1 $a3\n\tbeq $t0,$t1 not_equal\n\t");
+		strcat(compare_s, "li $t1 , 0\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\tli $t1 , 0\n\t loop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\t");
+		strcat(compare_s, "beqz $t2 , end_cmp\n\tmove $t4 , $t2\n\tmove $t5 , $t3\n\taddi $t4, $t4, -48\n\taddi $t5, $t5, -48\n\tmove $t6 , $a0\n\t");
+		strcat(compare_s, "bne $t4,$t5 not_equal\n\tli $v0 11\n\tmove $a0,$t2\n\tsyscall\n\tmove $a0 , $t6\n\taddi $a0, $a0 , 1\n\taddi $a1, $a1 , 1\n\tj loop_cmp\n");
+		strcat(compare_s, "not_equal:\n\tli $t0 , 1\n\tmove $a0 $t0\n\tjr $ra\nend_cmp:\n\tli $t0 , 0\n\tmove $a0 $t0\n\tjr $ra\n\n");
+		strcat(instructions ,strlen);
+		strcat(instructions ,compare_s);
+		printf("%s",strlen);
+		printf("%s",compare_s);
+	}	
+	sprintf(buf, "la $a0 %s\n",str1);
+	printf("bufff : %s\n",buf);
+	strcat(buf, "jal strlen\nmove $t");
+	strcat(buf, itoa(reg_count));
+	strcat(buf, " $a0\nla $a0 ");
+	strcat(buf, str2);
+	strcat(buf, "\njal strlen\nmove $t");
+	strcat(buf, itoa(reg_count+1));
+	strcat(buf, " $a0\nla $a0 ");
+	strcat(buf, str1);
+	strcat(buf, "\nla $a1 ");
+	strcat(buf, str2);
+	strcat(buf, "\nmove $a2 $t");
+	strcat(buf, itoa(reg_count));
+	strcat(buf, "\nmove $a3 $t");
+	strcat(buf, itoa(reg_count+1));
+	strcat(buf, "\njal compare_str\n");
+	printf("buf :|%s|\n",buf);
+	sprintf(buffer,"%s",buf);
+	printf("buffer : %s\n",buffer);
+	// le resultat est dans $a0
+	strcat(instructions, buffer);
+	compare_proc = true;
+	
 	/*if (type == '~') {
 
 	}
@@ -533,5 +584,5 @@ char * compare_chaine(char type) {
 		
 	}*/
 	(void) type;
-	return "";
+	return 1;
 }
