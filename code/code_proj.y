@@ -9,6 +9,9 @@
 	void operation(char *str);
 	int findStr(char *str, char strs[512][64], int crea);
 	char* itoa(int x);
+	void genElse();
+	void genFi();
+	void genWhile();
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -16,9 +19,17 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int if_count = 0;		// Nombre de conditions executées
-	static int else_count = 0;	// Nombre de else
+	int pileWhile[512];		// Pile des while
+	int i_while = 0;		// Indice de la pile des while
+	int pileElse[512];		// Pile des else
+	int if_count = 0;		// Indice de la pile des else utilisé pour Else
+	int fi_count = 0;		// Indice de la pile des else utilisé pour Fi
+	int else_count = 0;		// Prochaine valeur entiere à coller au prochaine label else (ex : "Else4:")
+	int while_count = 0;		// Prochaine valeur entiere à coller au prochaine label while (ex : "While4:")
+	// Check .lex
 	extern int elsee;
+	extern int whilee;
+	extern int until;
 
 	bool fin_prog = false;
 	bool create_read_proc = false;
@@ -43,6 +54,10 @@
 %token THEN
 %token FI
 %token ELSE
+%token WHL
+%token DO
+%token DONE
+%token UTL
 %token DEC
 %token OB
 %token CB
@@ -72,14 +87,13 @@
 programme : instruction END programme 
 	  | instruction END 
 	  {
-	  	if (elsee) {
-			elsee--;
+	  	if (elsee) { // Si l'instruction sur laquelle on est est un else, alors on est dans une instruction de type IF ... THEN ... ELSE ... FI
+			// Il faut donc un label Fi pour sortir une fois la condition réussie
 			strcat(instructions, "j Fi");
-			strcat(instructions, itoa(else_count-1));
+			strcat(instructions, itoa(pileElse[fi_count-1]));
 			strcat(instructions, "\n");
-			strcat(instructions, "Else");
-			strcat(instructions, itoa(else_count-1));
-			strcat(instructions, ":\n");
+			genElse("Else");
+			elsee--;
 		}
 	  }
 ;
@@ -114,15 +128,21 @@ instruction : ID EG oper	// Affectation
 		}
 	| IF bool THEN programme FI
 	    {
-	    	strcat(instructions, "Else");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genElse();
 	    }
 	| IF bool THEN programme ELSE programme FI
 	    {
-	    	strcat(instructions, "Fi");
-		strcat(instructions, itoa(--if_count));
-		strcat(instructions, ":\n");
+	    	genFi();
+	    }
+	    | WHL bool DO programme DONE
+	    {
+		genWhile();
+	    	genElse();
+	    }
+	    | UTL bool DO programme DONE
+	    {
+		genWhile();
+	    	genElse();
 	    }
 	| ECH operande { // Print
 		int crea = findStr($2,ids,0);
@@ -232,14 +252,42 @@ instruction : ID EG oper	// Affectation
 ;
 bool : NB 
      {
-     	strcat(instructions, "li $t0, ");
-	strcat(instructions, itoa($1));
-	strcat(instructions, "\n");
-	strcat(instructions, "beq $t0, $zero, Else");
-	strcat(instructions, itoa(else_count));
-	strcat(instructions, "\n");
-	if_count++;
-	else_count++;
+	if (whilee) { // Si l'instruction sur laquelle on est est un while, alors on est dans une instruction de type WHILE ... DO ... DONE
+		// Il faut donc un label While pour y retourner
+		strcat(instructions, "While");
+		strcat(instructions, itoa(while_count));
+		strcat(instructions, ":\n");
+		pileWhile[i_while] = while_count;
+		whilee--;
+		while_count++;
+		i_while++;
+		fi_count--;
+	}
+	if (until) { // Si l'instruction sur laquelle on est est un until, alors on doit sortir uniquement si la condition réussit
+		strcat(instructions, "li $t0, ");
+		strcat(instructions, itoa($1));
+		strcat(instructions, "\nli $t1, ");
+		strcat(instructions, itoa(1));
+		strcat(instructions, "\nbeq $t0, $t1, Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, "\n");
+		until--;
+		pileElse[if_count] = else_count;
+		else_count++;
+		if_count++;
+		fi_count++;
+	} else { // Sinon, on doit sortir uniquement si la condition échoue
+		strcat(instructions, "li $t0, ");
+		strcat(instructions, itoa($1));
+		strcat(instructions, "\n");
+		strcat(instructions, "beq $t0, $zero, Else");
+		strcat(instructions, itoa(else_count));
+		strcat(instructions, "\n");
+		pileElse[if_count] = else_count;
+		else_count++;
+		if_count++;
+		fi_count++;
+	}
      }
 ;
 
@@ -342,6 +390,24 @@ int findStr (char *str, char strs[512][64], int crea) {
 	return -1;
 }
 
+void genElse() {
+	strcat(instructions, "Else");
+	strcat(instructions, itoa(pileElse[--if_count]));
+	strcat(instructions, ":\n");
+}
+
+void genFi() {
+	strcat(instructions, "Fi");
+	strcat(instructions, itoa(pileElse[--fi_count]));
+	strcat(instructions, ":\n");
+}
+
+void genWhile() {
+	strcat(instructions, "j While");
+	strcat(instructions, itoa(pileWhile[--i_while]));
+	strcat(instructions, "\n");
+}
+
 char* itoa(int x) {
 	static char str[100];
 	sprintf(str, "%d", x);
@@ -351,4 +417,15 @@ char* itoa(int x) {
 int yyerror(char *s) {
 	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 	return 1;
+}
+
+void resetVars() {
+	i_while = 0;
+	if_count = 0;
+	fi_count = 0;
+	else_count = 0;
+	while_count = 0;
+	elsee = 0;
+	whilee = 0;
+	until = 0;
 }

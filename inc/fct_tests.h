@@ -17,6 +17,7 @@ extern char data[DATA_SIZE];
 extern char instructions[INSTR_SIZE];
 extern int id_count;
 extern int yaccc;
+extern void resetVars();
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter
@@ -231,5 +232,9 @@ int test_mips_dectab_d(void);
 int test_mips_echoread_s(void);
 int test_mips_echoread_m(void);
 int test_mips_echoread_d(void);
+
+int test_mips_if_s(void);
+int test_mips_if_m(void);
+int test_mips_if_d(void);
 
 #endif // FCT_TESTS_H //

@@ -227,6 +227,7 @@ int test_mips(char *filename, char *correct_file) {
 	data[0] = '\0';
 	instructions[0] = '\0';
 	id_count = 0;
+	resetVars();
 	return comp;
 }
 
@@ -264,4 +265,16 @@ int test_mips_echoread_m() {
 
 int test_mips_echoread_d() {
 	return test_mips("f_tests/d/echoread_d","f_tests/d/echoread_d_corr");
+}
+
+int test_mips_if_s() {
+	return test_mips("f_tests/s/if_s","f_tests/s/if_s_corr");
+}
+
+int test_mips_if_m() {
+	return test_mips("f_tests/m/if_m","f_tests/m/if_m_corr");
+}
+
+int test_mips_if_d() {
+	return test_mips("f_tests/d/if_d","f_tests/d/if_d_corr");
 }
