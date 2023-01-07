@@ -1,18 +1,31 @@
 	.data
 didi:	.space	10
+	.align	4
+buffer:	.space	10000
 id:	.word	0
 	.text
 __start:
-la $t1, didi
-addi $t1,$t1, 0
-li $v0 5
+la $a0, buffer
+li $a1, 10000
+li $v0, 8
 syscall
-move $t2, $v0
-sw $t2, ($t1)
+addi $t1, $zero, 0
+sw $a0, didi($t1)
 la $t2, didi
-addi $t2,$t2, 0
+addi $t2, $t2, 0
 lw $a0, ($t2)
-li $v0, 1
+li $v0, 4
+syscall
+la $a0, buffer
+li $a1, 10000
+li $v0, 8
+syscall
+addi $t1, $zero, 4
+sw $a0, didi($t1)
+la $t2, didi
+addi $t2, $t2, 4
+lw $a0, ($t2)
+li $v0, 4
 syscall
 la $a0, id
 li $v0 8

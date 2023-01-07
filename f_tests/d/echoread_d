@@ -1,6 +1,8 @@
 declare didi[10];
 read didi[0] ;
 echo ${didi[0]} ;
+read didi[1] ;
+echo ${didi[1]} ;
 read id ;
 read id ; 
 exit ;

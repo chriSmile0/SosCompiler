@@ -1,6 +1,7 @@
 	.data
 id:	.word	0
 tab:	.space	2
+	.align	4
 fin:	.word	0
 	.text
 __start:

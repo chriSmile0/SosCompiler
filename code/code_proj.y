@@ -20,7 +20,6 @@
 	static int else_count = 0;	// Nombre de else
 	extern int elsee;
 
-
 	bool fin_prog = false;
 	bool create_read_proc = false;
 	bool create_echo_proc = false;
@@ -105,7 +104,8 @@ instruction : ID EG oper	// Affectation
 			// Buffer contenant la ligne à intégrer dans ".data" du MIPS
 			char buff[64];
 			size_t max_length = sizeof(buff);
-			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n", $2, $4);
+			int ret = snprintf(buff, max_length, "%s:\t.space\t%d\n\t.align\t4"
+				"\n", $2, $4);
 
 			if (ret >= max_length)
 				fprintf(stderr, "|ERREUR| Dépassement du buffer - Dec tab");
@@ -160,14 +160,15 @@ instruction : ID EG oper	// Affectation
 			//on cherche la bonne place de ce que l'on cherche
 			strcat(instructions,"\naddi $t");
 			strcat(instructions,itoa(reg_count));
-			strcat(instructions, ",$t");
+			strcat(instructions, ", $t");
 			strcat(instructions, itoa(reg_count));
 			strcat(instructions, ", ");
 			strcat(instructions , itoa(4*check_index));
 			strcat(instructions, "\nlw $a0, ($t");
 			strcat(instructions, itoa(reg_count));
-			strcat(instructions, ")\nli $v0, 1\nsyscall\n");
-		}		
+			strcat(instructions, ")\nli $v0, 4\nsyscall\n");
+			reg_count--;
+		}
 	| EXT { // Exit 
 			printf("passage ici \n");
 			strcat(instructions, "li $v0 10\nsyscall\n");
@@ -190,35 +191,34 @@ instruction : ID EG oper	// Affectation
 			if (find_entry($2) == -1)
 				yyerror("ID pas dans la table des symboles");
 
-			strcat(instructions,"la $t");
-			int save_reg = reg_count;
-			strcat(instructions,itoa(reg_count));
-			strcat(instructions,", ");
-			strcat(instructions, $2);
-			strcat(instructions, "\naddi $t");
-			strcat(instructions, itoa(reg_count));
-			strcat(instructions, ",$t");
-			strcat(instructions, itoa(reg_count));
-			strcat(instructions,", ");
-			strcat(instructions,itoa(4*$4)); //on se place au bon endroit
-			strcat(instructions, "\n");
-			//ensuite on demande : 
-			strcat(instructions, "li $v0 5\nsyscall\n");
-			//on déplace dans un registre tmp libre
-			strcat(instructions, "move $t");
-			reg_count++;
-			strcat(instructions, itoa(reg_count));
-			strcat(instructions, ", $v0\n");
-			strcat(instructions, "sw $t");
-			strcat(instructions, itoa(reg_count));
-			strcat(instructions, ", ($t");
-			strcat(instructions, itoa(save_reg));
-			strcat(instructions, ")\n");
-			reg_count--;
-			//ok 
+			// Créé un buffer dans ".data", s'il n'existe pas encore
+			if (find_entry("buffer") == -1){
+				add_tds("buffer", CH, 1, 0, -1, 1, "");
+				strcat(data, "buffer:\t.space\t10000\n");
+			}
 
-		}//bouchon}
-	
+			// Paramétrage du "read string"
+			// Adresse de stockage de l'input
+			// Maximum de caractères à lire, puis syscall "read string"
+			strcat(instructions, "la $a0, buffer\n");
+			strcat(instructions, "li $a1, 10000\n");
+			strcat(instructions, "li $v0, 8\n");
+			strcat(instructions, "syscall\n");
+
+			// On détermine l'index du tableau souhaité
+			strcat(instructions, "addi $t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ", $zero, ");
+			strcat(instructions, itoa(4 * $4));
+			strcat(instructions, "\n");
+
+			// On enregistre
+			strcat(instructions, "sw $a0, ");
+			strcat(instructions, $2);
+			strcat(instructions, "($t");
+			strcat(instructions, itoa(reg_count));
+			strcat(instructions, ")\n");
+		}
 	| RTN { // Return 
 			strcat(instructions, "jr $ra\n");
 		}
