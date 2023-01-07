@@ -37,10 +37,10 @@ int test_simple() {
 		tests += test_oper_s_v2();
 		printf("- test_opel_s\n");
 		tests += test_opel_s_v2();
-		printf("- test_tds_s\n");
-		tests += test_tds_s();
 	}
 	else {
+		printf("- test_tds_s\n");
+		tests += test_tds_s();
 		printf("- test_operations_s\n");
 		tests += test_mips_operations_s();
 		printf("- test_dec_tab_s\n");
