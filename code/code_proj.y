@@ -418,3 +418,14 @@ int yyerror(char *s) {
 	fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 	return 1;
 }
+
+void resetVars() {
+	i_while = 0;
+	if_count = 0;
+	fi_count = 0;
+	else_count = 0;
+	while_count = 0;
+	elsee = 0;
+	whilee = 0;
+	until = 0;
+}

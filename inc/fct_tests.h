@@ -17,6 +17,7 @@ extern char data[DATA_SIZE];
 extern char instructions[INSTR_SIZE];
 extern int id_count;
 extern int yaccc;
+extern void resetVars();
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter

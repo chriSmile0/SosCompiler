@@ -227,6 +227,7 @@ int test_mips(char *filename, char *correct_file) {
 	data[0] = '\0';
 	instructions[0] = '\0';
 	id_count = 0;
+	resetVars();
 	return comp;
 }
 
