@@ -7,5 +7,6 @@ code/*voc.c
 docs/*_proj.pdf
 inc/*.tab.*
 objs/
+out/
 *.dot
 *.output

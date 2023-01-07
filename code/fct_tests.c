@@ -192,7 +192,7 @@ int test_mips(char *filename, char *correct_file) {
 	print_tds();
 	free_tds();
 	fclose(yyin);
-	char code[BUFSIZ];
+	char code[DATA_SIZE + INSTR_SIZE];
 	sprintf(code,"%s%s",data,instructions);
 	
 	// overture et copie dans un buffer du fichier de correction

@@ -6,11 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define DATA_SIZE	1024
+#define INSTR_SIZE	4096
+
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
-extern char data[1024];
-extern char instructions[4096];
+extern char data[DATA_SIZE];
+extern char instructions[INSTR_SIZE];
 extern int id_count;
 extern int yaccc;
 
