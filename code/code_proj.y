@@ -421,7 +421,37 @@ test_instruction : concatenation '=' concatenation {
 		$$ = 1;
 	}
 	| CCS operateur2 CCS {
-		compare_chaine($2,$1,$3);
+		int crea = findStr($1,ids,0);
+		char id_str1[100];
+		char id_str2[100];
+		if (crea == -1) { 
+			strcat(data,"_");
+			strcat(data,itoa(id_count));
+			strcat(data,":\t.asciiz \"");
+			strcat(data,$1);
+			strcat(data,"\"\n");
+			sprintf(id_str1,"_%s",itoa(id_count));
+			id_count++;
+		}
+		else {
+			sprintf(id_str1, "%s", ids[crea]);
+		}
+		crea = findStr($3,ids,0);
+		if (crea == -1) { 
+			strcat(data,"_");
+			strcat(data,itoa(id_count));
+			strcat(data,":\t.asciiz \"");
+			strcat(data,$3);
+			strcat(data,"\"\n");
+			sprintf(id_str2,"_%s",itoa(id_count));
+			id_count++;
+		}
+		else {
+			sprintf(id_str2, "%s", ids[crea]);
+		}
+		printf("id _str1 : %s\n",id_str1);
+		printf("id _str2 : %s\n",id_str2);
+		compare_chaine($2,id_str1,id_str2);
 		printf("compare chaine \n");
 		//sprintf($$,"%s %s %s ",$1,$2,$3);
 
