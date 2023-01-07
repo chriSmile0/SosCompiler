@@ -18,14 +18,25 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
+	int pileFi[512];		
 	int pileElse[512];		
 	int if_count = 0;		
+	int fi_count = 0;
 	int else_count = 0;	
 	int while_count = 0;	
 	// Check .lex
 	extern int elsee;
 	extern int whilee;
 	extern int until;
+
+	void printPileFi() {
+		strcat(instructions,"pileFi :\n");
+		int i;
+		for(i=0; i<5; i++) {
+			strcat(instructions,itoa(pileFi[i]));
+			strcat(instructions,"\n");
+		}
+	}
 
 %}
 
@@ -67,7 +78,7 @@ programme : instruction END programme
 	  {
 	  	if (elsee) {
 			strcat(instructions, "j Fi");
-			strcat(instructions, itoa(pileElse[if_count-1]));
+			strcat(instructions, itoa(pileElse[fi_count-1]));
 			strcat(instructions, "\n");
 			genElse("Else");
 			elsee--;
@@ -134,6 +145,7 @@ bool : NB
 		strcat(instructions, ":\n");
 		whilee--;
 		while_count++;
+		fi_count--;
 	}
 	if (until) {
 		strcat(instructions, "li $t0, ");
@@ -155,6 +167,7 @@ bool : NB
 		pileElse[if_count] = else_count;
 		else_count++;
 		if_count++;
+		fi_count++;
 	}
      }
 ;
@@ -249,7 +262,7 @@ void genElse(char *str) {
 
 void genFi(char *str) {
 	strcat(instructions, str);
-	strcat(instructions, itoa(pileElse[if_count]));
+	strcat(instructions, itoa(pileElse[--fi_count]));
 	strcat(instructions, ":\n");
 }
 
