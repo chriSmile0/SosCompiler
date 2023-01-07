@@ -146,9 +146,10 @@ int test_opel_d_v2() {
 	return test_type("f_tests/d/opel_d",0,ET,CCNV,"Ope logique");
 }
 
-int test_operations_s() {
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/s/operations_s";
+int test_type_comp(char *str) {
+	// redirection de l'entrée standard (comme test_type)
+	char filename[100];
+	strcpy(filename, str);
 	yyin = fopen(filename,"r");
 	if (yyin == NULL) 
 		perror(filename);
@@ -157,16 +158,19 @@ int test_operations_s() {
 	strcat(data, "\t.data\n");
 	strcat(instructions, "\t.text\n__start:\n");
 	init_tds();
+	yaccc = 1;
 	yyparse();
 	free_tds();
+	yaccc = 0;
 	fclose(yyin);
 	char code[BUFSIZ];
 	sprintf(code,"%s%s",data,instructions);
 
 	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/s/operations_s_corr", "r");
+	strcat(filename,"_corr");
+	FILE *correction = fopen(filename, "r");
 	if (correction == NULL)
-		perror("f_tests/s/operations_s_corr");
+		perror(filename);
 	fseek(correction, 0, SEEK_END);
 	long size = ftell(correction);
 	rewind(correction);
@@ -177,93 +181,25 @@ int test_operations_s() {
 
 	// comparaison
 	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
+	printf("  comparaison : %s\n",comp==0?"ok":"faux");
 
 	// remise a zero du gencode
 	data[0] = '\0';
 	instructions[0] = '\0';
 	id_count = 0;
 	return comp;
+}
+
+int test_operations_s() {
+	return test_type_comp("f_tests/s/operations_s");
 }
 
 int test_operations_m() {
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/m/operations_m";
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-
-	// gencode
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	init_tds();
-	yyparse();
-	free_tds();
-	fclose(yyin);
-	char code[BUFSIZ];
-	sprintf(code,"%s%s",data,instructions);
-
-	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/m/operations_m_corr", "r");
-	if (correction == NULL)
-		perror("f_tests/m/operations_m_corr");
-	fseek(correction, 0, SEEK_END);
-	long size = ftell(correction);
-	rewind(correction);
-	char *corr = malloc(size + 1);
-	fread(corr, 1, size, correction);
-	fclose(correction);
-	corr[size] = '\0';
-
-	// comparaison
-	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
-
-	// remise a zero du gencode
-	data[0] = '\0';
-	instructions[0] = '\0';
-	id_count = 0;
-	return comp;
+	return test_type_comp("f_tests/m/operations_m");
 }
 
 int test_operations_d() {
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/d/operations_d";
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-
-	// gencode
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	init_tds();
-	yyparse();
-	free_tds();
-	fclose(yyin);
-	char code[BUFSIZ];
-	sprintf(code,"%s%s",data,instructions);
-
-	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/d/operations_d_corr", "r");
-	if (correction == NULL)
-		perror("f_tests/d/operations_d_corr");
-	fseek(correction, 0, SEEK_END);
-	long size = ftell(correction);
-	rewind(correction);
-	char *corr = malloc(size + 1);
-	fread(corr, 1, size, correction);
-	fclose(correction);
-	corr[size] = '\0';
-
-	// comparaison
-	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
-
-	// remise a zero du gencode
-	data[0] = '\0';
-	instructions[0] = '\0';
-	id_count = 0;
-	return comp;
+	return test_type_comp("f_tests/d/operations_d");
 }
 
 int test_tds_s(void) {
@@ -299,126 +235,19 @@ int test_tds_s(void) {
 }
 
 int test_dec_tab_s(void){
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/s/dec_tab_s";
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-
-	// gencode
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	init_tds();
-	yaccc = 1;
-	yyparse();
-	free_tds();
-	yaccc = 0;
-	fclose(yyin);
-	char code[BUFSIZ];
-	sprintf(code,"%s%s",data,instructions);
-
-	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/s/dec_tab_s_corr", "r");
-	if (correction == NULL)
-		perror("f_tests/s/dec_tab_s_corr");
-	fseek(correction, 0, SEEK_END);
-	long size = ftell(correction);
-	rewind(correction);
-	char *corr = malloc(size + 1);
-	fread(corr, 1, size, correction);
-	fclose(correction);
-	corr[size] = '\0';
-
-	// comparaison
-	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
-
-	// remise a zero du gencode
-	data[0] = '\0';
-	instructions[0] = '\0';
+	int rtn = test_type_comp("f_tests/s/dec_tab_s");
 	id_count = 0;
-	return comp;
+	return rtn;
 }
 
 int test_dec_tab_m(void){
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/m/dec_tab_m";
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-
-	// gencode
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	init_tds();
-	yaccc = 1;
-	yyparse();
-	free_tds();
-	yaccc = 0;
-	fclose(yyin);
-	char code[BUFSIZ];
-	sprintf(code,"%s%s",data,instructions);
-
-	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/m/dec_tab_m_corr", "r");
-	if (correction == NULL)
-		perror("f_tests/m/dec_tab_m_corr");
-	fseek(correction, 0, SEEK_END);
-	long size = ftell(correction);
-	rewind(correction);
-	char *corr = malloc(size + 1);
-	fread(corr, 1, size, correction);
-	fclose(correction);
-	corr[size] = '\0';
-
-	// comparaison
-	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
-
-	// remise a zero du gencode
-	data[0] = '\0';
-	instructions[0] = '\0';
+	int rtn = test_type_comp("f_tests/m/dec_tab_m");
 	id_count = 0;
-	return comp;
+	return rtn;
 }
 
 int test_dec_tab_d(void){
-	// Redirection de l'entrée standard (comme test_type)
-	char* filename = "f_tests/d/dec_tab_d";
-	yyin = fopen(filename,"r");
-	if (yyin == NULL) 
-		perror(filename);
-
-	// gencode
-	strcat(data, "\t.data\n");
-	strcat(instructions, "\t.text\n__start:\n");
-	init_tds();
-	yaccc = 1;
-	yyparse();
-	free_tds();
-	yaccc = 0;
-	fclose(yyin);
-	char code[BUFSIZ];
-	sprintf(code,"%s%s",data,instructions);
-
-	// overture et copie dans un buffer du fichier de correction
-	FILE *correction = fopen("f_tests/d/dec_tab_d_corr", "r");
-	if (correction == NULL)
-		perror("f_tests/d/dec_tab_d_corr");
-	fseek(correction, 0, SEEK_END);
-	long size = ftell(correction);
-	rewind(correction);
-	char *corr = malloc(size + 1);
-	fread(corr, 1, size, correction);
-	fclose(correction);
-	corr[size] = '\0';
-
-	int comp = strcmp(code,corr);
-	printf("  comparaison : %s\n",comp==0?"OK":"FAUX");
-
-	// remise a zero du gencode
-	data[0] = '\0';
-	instructions[0] = '\0';
+	int rtn = test_type_comp("f_tests/d/dec_tab_d");
 	id_count = 0;
-	return comp;
+	return rtn;
 }

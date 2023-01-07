@@ -19,13 +19,13 @@
 	int id_count = 0;		// Nombre d'identificateurs
 	int reg_count = 1;		// Sur quel registre temporaire doit-on ecrire
 	int li_count = 0;		// Nombre d'affectations executées
-	int pileWhile[512];		
-	int i_while = 0;
-	int pileElse[512];		
-	int if_count = 0;		
-	int fi_count = 0;
-	int else_count = 0;	
-	int while_count = 0;	
+	int pileWhile[512];		// Pile des while
+	int i_while = 0;		// Indice de la pile des while
+	int pileElse[512];		// Pile des else
+	int if_count = 0;		// Indice de la pile des else utilisé pour Else
+	int fi_count = 0;		// Indice de la pile des else utilisé pour Fi
+	int else_count = 0;		// Prochaine valeur entiere à coller au prochaine label else (ex : "Else4:")
+	int while_count = 0;		// Prochaine valeur entiere à coller au prochaine label while (ex : "While4:")
 	// Check .lex
 	extern int elsee;
 	extern int whilee;
@@ -69,7 +69,8 @@
 programme : instruction END programme 
 	  | instruction END 
 	  {
-	  	if (elsee) {
+	  	if (elsee) { // Si l'instruction sur laquelle on est est un else, alors on est dans une instruction de type IF ... THEN ... ELSE ... FI
+			// Il faut donc un label Fi pour sortir une fois la condition réussie
 			strcat(instructions, "j Fi");
 			strcat(instructions, itoa(pileElse[fi_count-1]));
 			strcat(instructions, "\n");
@@ -128,7 +129,8 @@ instruction : ID EG oper	// Affectation
 
 bool : NB 
      {
-	if (whilee) {
+	if (whilee) { // Si l'instruction sur laquelle on est est un while, alors on est dans une instruction de type WHILE ... DO ... DONE
+		// Il faut donc un label While pour y retourner
 		strcat(instructions, "While");
 		strcat(instructions, itoa(while_count));
 		strcat(instructions, ":\n");
@@ -138,7 +140,7 @@ bool : NB
 		i_while++;
 		fi_count--;
 	}
-	if (until) {
+	if (until) { // Si l'instruction sur laquelle on est est un until, alors on doit sortir uniquement si la condition réussit
 		strcat(instructions, "li $t0, ");
 		strcat(instructions, itoa($1));
 		strcat(instructions, "\nli $t1, ");
@@ -147,8 +149,11 @@ bool : NB
 		strcat(instructions, itoa(else_count));
 		strcat(instructions, "\n");
 		until--;
+		pileElse[if_count] = else_count;
 		else_count++;
-	} else {
+		if_count++;
+		fi_count++;
+	} else { // Sinon, on doit sortir uniquement si la condition échoue
 		strcat(instructions, "li $t0, ");
 		strcat(instructions, itoa($1));
 		strcat(instructions, "\n");
