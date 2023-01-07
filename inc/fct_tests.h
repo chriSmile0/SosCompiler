@@ -211,13 +211,21 @@ int test_opel_m_v2(void);
 
 int test_opel_d_v2(void);
 
-int test_operations_s(void);
-int test_operations_m(void);
-int test_operations_d(void);
+
 
 int test_tds_s(void);
 
-int test_dec_tab_s(void);
-int test_dec_tab_m(void);
-int test_dec_tab_d(void);
+
+int test_mips_operations_s(void);
+int test_mips_operations_m(void);
+int test_mips_operations_d(void);
+
+int test_mips_dectab_s(void);
+int test_mips_dectab_m(void);
+int test_mips_dectab_d(void);
+
+int test_mips_echoread_s(void);
+int test_mips_echoread_m(void);
+int test_mips_echoread_d(void);
+
 #endif // FCT_TESTS_H //
