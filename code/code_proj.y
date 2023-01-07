@@ -22,7 +22,9 @@
 	int if_desc_count = 0;
 	int fi_count = 0;		// Nombre de fi successifs
 	int fi_desc_count = 0;
+	int oldif = 0;
 	static int else_count = 0;	// Nombre de else
+	static int while_count = 0;	// Nombre de else
 	// Check .lex
 	extern int elsee;
 	extern int whilee;
@@ -67,7 +69,7 @@ programme : instruction END programme
 	  {
 	  	if (elsee) {
 			strcat(instructions, "j Fi");
-			strcat(instructions, itoa(else_count-1-if_desc_count));
+			strcat(instructions, itoa(else_count-1-fi_desc_count));
 			strcat(instructions, "\n");
 			genElse("Else");
 			elsee--;
@@ -130,9 +132,10 @@ bool : NB
      {
 	if (whilee) {
 		strcat(instructions, "While");
-		strcat(instructions, itoa(else_count));
+		strcat(instructions, itoa(while_count));
 		strcat(instructions, ":\n");
 		whilee--;
+		while_count++;
 	}
 	if (until) {
 		strcat(instructions, "li $t0, ");
@@ -146,6 +149,7 @@ bool : NB
 		if_count++;
 		fi_count++;
 		else_count++;
+		fi_desc_count++;
 	} else {
 		strcat(instructions, "li $t0, ");
 		strcat(instructions, itoa($1));
@@ -156,6 +160,7 @@ bool : NB
 		if_count++;
 		fi_count++;
 		else_count++;
+		fi_desc_count++;
 	}
      }
 ;
@@ -243,10 +248,15 @@ void findStr (char *str, char strs[512][64]) {
 }
 
 void genElse(char *str) {
+	if (oldif == 0)
+		oldif = if_count;
 	strcat(instructions, str);
 	if (if_count > 1) {
-		if_desc_count++;
+		if (oldif == if_count)
+			if_desc_count++;
 		strcat(instructions, itoa(else_count-1 - (if_desc_count-1)));
+		if (oldif != if_count)
+			if_desc_count++;
 		if (if_desc_count == if_count) {
 			if_desc_count = 0;
 			if (elsee)
@@ -260,6 +270,7 @@ void genElse(char *str) {
 			if_count--;
 	}
 	strcat(instructions, ":\n");
+	oldif = if_count;
 }
 
 void genFi(char *str) {
@@ -280,6 +291,13 @@ void genFi(char *str) {
 			fi_count--;
 	}
 	strcat(instructions, ":\n");
+	strcat(instructions, "ELSE_COUNT = ");
+	strcat(instructions, itoa(else_count));
+	strcat(instructions, " FI_COUNT = ");
+	strcat(instructions, itoa(fi_count));
+	strcat(instructions, " FI_DESC_COUNT = ");
+	strcat(instructions, itoa(fi_desc_count));
+	strcat(instructions, "\n");
 }
 
 char* itoa(int x) {
