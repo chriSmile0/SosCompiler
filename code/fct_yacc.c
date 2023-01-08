@@ -110,4 +110,6 @@ void kill_all_global_use() {
 	fin_prog = false;
 	compare_proc = false;
 	check_v_nv_proc = false;
+	check_and_proc = false;
+	check_or_proc = false;
 }

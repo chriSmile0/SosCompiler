@@ -188,6 +188,7 @@ int test_mips(char *filename, char *correct_file) {
 	init_tds();
 	yyparse();
 	print_tds();
+	kill_all_global_use();
 	free_tds();
 	fclose(yyin);
 	char code[DATA_SIZE + INSTR_SIZE];

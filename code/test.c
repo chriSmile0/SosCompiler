@@ -4,7 +4,18 @@
 #include <stdlib.h>
 
 extern int yaccc;
+extern int reg_count;
+extern int li_count;
+extern int if_count;
+extern int id_count;
 
+
+void isolate_test() {
+	id_count = 0;			// Nombre d'identificateurs
+	reg_count = 1;			// Sur quel registre temporaire doit-on ecrire
+	li_count = 0;			// Nombre d'affectations executées
+	if_count = 0;			// Nombre de conditions executées
+}
 
 /**
  * @brief	Suite de fonctions de type_*_s()
@@ -43,14 +54,17 @@ int test_simple() {
 		tests += test_tds_s();
 		printf("- test_operations_s\n");
 		tests += test_mips_operations_s();
+		isolate_test();
 		printf("- test_dec_tab_s\n");
 		tests += test_mips_dectab_s();
+		isolate_test();
 		printf("- test_echoread_s\n");
 		tests += test_mips_echoread_s();
 		printf("- test_if_s\n");
 		tests += test_mips_if_s();
 		printf("- test_operateurs_s\n");
 		tests += test_mips_operateurs_s();
+		isolate_test();
 	}
 	/*
 		Insertion du code du test simple
@@ -100,14 +114,17 @@ int test_median() {
 	else {
 		printf("- test_operations_m\n");
 		tests += test_mips_operations_m();
+		isolate_test();
 		printf("- test_dec_tab_m\n");
 		tests += test_mips_dectab_m();
+		isolate_test();
 		printf("- test_echoread_m\n");
 		tests += test_mips_echoread_m();
 		printf("- test_if_m\n");
 		tests += test_mips_if_m();
 		printf("- test_operateurs_m\n");
 		tests += test_mips_operateurs_m();
+		isolate_test();
 	}
 	/*
 		Insertion du code du test median
@@ -153,14 +170,17 @@ int test_difficile() {
 	else {
 		printf("- test_operations_d\n");
 		tests += test_mips_operations_d();
+		isolate_test();
 		printf("- test_dec_tab_d\n");
 		tests += test_mips_dectab_d();
+		isolate_test();
 		printf("- test_echoread_d\n");
 		tests += test_mips_echoread_d();
 		printf("- test_if_d\n");
 		tests += test_mips_if_d();
 		printf("- test_operateurs_d\n");
 		tests += test_mips_operateurs_d();
+		isolate_test();
 	}
 	/*
 		Insertion du code du test difficile

@@ -10,7 +10,8 @@ extern bool create_read_proc;
 extern bool fin_prog;
 extern bool compare_proc;
 extern bool check_v_nv_proc;
-
+extern bool check_and_proc;
+extern bool check_or_proc;
 
 /**
  * Enum des types des identificateurs

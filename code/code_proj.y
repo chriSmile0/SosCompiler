@@ -14,6 +14,8 @@
 	void genWhile();
 	int compare_chaine(char *type, char *str1, char *str2);
 	int chaine_vide_ou_non(int true_vide, char *type , char *chaine);
+	int proc_or(int left, int right);
+	int proc_and(int left, int right);
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -38,6 +40,8 @@
 	bool create_echo_proc = false;
 	bool compare_proc = false;
 	bool check_v_nv_proc = false;
+	bool check_and_proc = false;
+	bool check_or_proc = false;
 
 %}
 
@@ -371,44 +375,63 @@ test_bloc : TEST test_expr {
 ;
 
 test_expr : test_expr YOU test_expr2 {
-		sprintf(instructions, "li $t0, %d\n", $1);
+		/*sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
-		strcat(instructions, "or $t3, $t0, $t1\n");
-		$$ = ($1 || $3);
+		strcat(instructions, "or $t3, $t0, $t1\n");*/
+		$$ = proc_or($1,$3);
 	}
 	| test_expr2
 ;
 
 test_expr2 : test_expr2 YET test_expr3 {
-		sprintf(instructions, "li $t0, %d\n", $1);
+		/*sprintf(instructions, "li $t0, %d\n", $1);
 		sprintf(instructions, "li $t1, %d\n", $3);
-		strcat(instructions, "and $t3, $t0, $t1\n");
+		strcat(instructions, "and $t3, $t0, $t1\n");*/
 		//sprintf($$, "li $t0, %s\nli $t1, %s\n and $t3, t0, $t1\n",$1,$3);
-		$$ = ($1 && $3);
+		$$ = proc_and($1,$3);
 	}
 	| test_expr3 {printf("expr 3 \n");$$ = $1;}
 ;
 
-test_expr3 : OP test_expr CP {	// (test_expr)
-		//$$ = $2;
+test_expr3 : OP test_instruction CP {	// (test_expr)
+		$$ = $2;
 	}
 	| '!' OP test_expr CP {		// !(test_expr)
-		//$$ = !$3;
+		if($3 == 1)
+			strcat(instructions, "addi $a0 -1\n");
+		else 
+			strcat(instructions, "addi $a0 1\n");
+		$$ = !$3;
 	}
 	| test_instruction {		// test_instruction
+		//on a juste ici a recup la valeur dans $a0 dans un registre
+		/*strcat(instructions, "move $t");
+		strcat(instructions, itoa(reg_count));
+		strcat(instructions, " $a0\n");*/
 		$$ = $1;
 	}
 	| '!' test_instruction {	// !test_instruction
-		//$$ = !$2;
+		//on inverse la sortie 
+		if($2 == 1)
+			strcat(instructions, "addi $a0 -1\n");
+		else 
+			strcat(instructions, "addi $a0 1\n");
+		$$ = !$2;
 	}
 ;
 
 test_instruction : concatenation '=' concatenation {
+		//il faut stocker le resultat des concat 
+		//dans des chaines temporaires
 		compare_chaine("beq",$1,$3);
-		printf("compare_chaine \n");
+		printf("concat = ? \n");
 		$$ = (strcmp($1, $3) == 0);
 	}
 	| concatenation '~' concatenation {
+		//il faut stocker le resultat des concat
+		//dans des chaines temporaires
+		compare_chaine("bne",$1,$3);
+		printf("concat != ? \n");
 		$$ = (strcmp($1, $3) != 0);
 		
 	}
@@ -425,24 +448,21 @@ test_instruction : concatenation '=' concatenation {
 			strcat(data,$2);
 			strcat(data,"\"\n");
 			sprintf(id_str1,"_%s",itoa(id_count));
+			add_tds(id_str1, CH, 0, -1, -1, 0, $2);
 			id_count++;
 		}
 		else {
 			sprintf(id_str1, "%s", ids[crea]);
-			printf("%sids : %s\n",ids[crea]);
 		}
 		chaine_vide_ou_non(strlen($2),$1 , id_str1);
-		$$ = 1;
-	}
-	| operande_entier operateur2 operande_entier {
-		//sprintf($$,"%s %s %s ",$1,$2,$3);
-		printf("operateur 2 : \n");
-		$$ = 1;
+		$$ = strlen($2); // > 0 non vide 
 	}
 	| CCS operateur2 CCS {
+		int crea_entry = find_entry($1);
 		int crea = findStr($1,ids,0);
 		char id_str1[100];
 		char id_str2[100];
+		printf("crea :::: %d\n",crea);
 		if (crea == -1) { 
 			strcat(data,"_");
 			strcat(data,itoa(id_count));
@@ -450,32 +470,39 @@ test_instruction : concatenation '=' concatenation {
 			strcat(data,$1);
 			strcat(data,"\"\n");
 			sprintf(id_str1,"_%s",itoa(id_count));
+			add_tds(id_str1, CH, 0, -1, -1, 0, $1);
 			id_count++;
 		}
 		else {
 			sprintf(id_str1, "%s", ids[crea]);
 		}
+		crea_entry = find_entry($3);
 		crea = findStr($3,ids,0);
-		if (crea == -1) { 
+		printf("crea : :: / : %d\n",crea);
+		if (crea_entry == -1) { 
 			strcat(data,"_");
 			strcat(data,itoa(id_count));
 			strcat(data,":\t.asciiz \"");
 			strcat(data,$3);
 			strcat(data,"\"\n");
 			sprintf(id_str2,"_%s",itoa(id_count));
+			add_tds(id_str2, CH, 0, -1, -1, 0, $3);
 			id_count++;
 		}
 		else {
 			sprintf(id_str2, "%s", ids[crea]);
 		}
-		printf("id _str1 : %s\n",id_str1);
-		printf("id _str2 : %s\n",id_str2);
+		printf("id _str1 : %s sign : %s\n",id_str1,$1);
+		printf("id _str2 : %s sign : %s\n",id_str2,$3);
+		printf("table taille : %d\n",table.taille);
+		print_tds();
 		compare_chaine($2,id_str1,id_str2);
 		printf("compare chaine \n");
 		//sprintf($$,"%s %s %s ",$1,$2,$3);
 
 		printf("operateur 2 avec operande: \n");
-		$$ = 1;
+		$$ = (strcmp($1,$3)==0);
+		printf("$$ strcmp : %d\n",$$);
 	}
 ;
 
@@ -582,6 +609,7 @@ void resetVars() {
 int compare_chaine(char *type, char *str1, char *str2) {
 	char buffer[400];
 	char buf[400];
+	// 1 pour egal , 0 pour differentes 
 	printf("dans la fct de comparaison \n");
 	if (!compare_proc) {
 		int type_not_equal = -10;
@@ -594,12 +622,12 @@ int compare_chaine(char *type, char *str1, char *str2) {
 			type_not_equal = 0;
 			type_end_cmp = 1;
 		}*/
-		type_not_equal = 1; //modifiable 
-		type_end_cmp = 0; //modifiable 
+		type_not_equal = 0; //modifiable 
+		type_end_cmp = 1; //modifiable 
 		char strlen[200] = "strlen:\n\tli $t2, 0\n\tloop_len:\n\tlb $t1 , 0($a0)\n\tbeqz $t1, exit_fnclen\n\taddi $a0, $a0 , 1\n\taddi $t2 , $t2 , 1\n\tj loop_len\nexit_fnclen:\n\tmove $a0, $t2\n\tjr $ra\n\n";
 		char compare_s[1000];
 		sprintf(compare_s, "compare_str:\n\tmove $t0 $a2\n\tmove $t1 $a3\n\tbeq $t0,$t1 not_equal\n\t");
-		strcat(compare_s, "li $t1 , 0\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\tli $t1 , 0\n\t loop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\t");
+		strcat(compare_s, "li $t1 , 0\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\t");
 		strcat(compare_s, "beqz $t2 , end_cmp\n\tmove $t4 , $t2\n\tmove $t5 , $t3\n\taddi $t4, $t4, -48\n\taddi $t5, $t5, -48\n\tmove $t6 , $a0\n\t");
 		strcat(compare_s, "bne $t4,$t5 not_equal\n\tli $v0 11\n\tmove $a0,$t2\n\tsyscall\n\tmove $a0 , $t6\n\taddi $a0, $a0 , 1\n\taddi $a1, $a1 , 1\n\tj loop_cmp\n");
 		strcat(compare_s, "not_equal:\n\tli $t0 ,"); 
@@ -609,8 +637,6 @@ int compare_chaine(char *type, char *str1, char *str2) {
 		strcat(compare_s , "\n\tmove $a0 $t0\n\tjr $ra\n\n");
 		strcat(instructions ,strlen);
 		strcat(instructions ,compare_s);
-		printf("%s",strlen);
-		printf("%s",compare_s);
 	}	
 	sprintf(buf, "la $a0 %s\n",str1);
 	printf("bufff : %s\n",buf);
@@ -629,9 +655,11 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	strcat(buf, "\nmove $a3 $t");
 	strcat(buf, itoa(reg_count+1));
 	strcat(buf, "\njal compare_str\n");
-	printf("buf :|%s|\n",buf);
+	strcat(buf, "move $t");
+	strcat(buf, itoa(reg_count));
+	strcat(buf, " $a0\n"); //on force
+	reg_count++;
 	sprintf(buffer,"%s",buf);
-	printf("buffer : %s\n",buffer);
 	// le resultat est dans $a0
 	strcat(instructions, buffer);
 	compare_proc = true;
@@ -658,13 +686,36 @@ int chaine_vide_ou_non(int true_vide , char *type , char *chaine) {
 	strcat(instructions, "la $a0 ");
 	strcat(instructions, chaine);
 	strcat(instructions, "\njal proc_v_nv\n");
-	printf("true vide : %d\n",true_vide);
 	if (strcmp(type,"-n")==0) {
-		if(true_vide) //vraiment vide 
+		if(true_vide) //pas vide 
 			strcat(instructions, "addi $a0 , 1\n");
 	}
 
 	//print result avec print_int 
 	(void) type;
 	return 1;
+}
+
+int proc_or(int left, int right) {
+	if (!check_or_proc) {
+		strcat(instructions, "proc_or:\n\tor $t0 ,$a0,$a1\n\tmove $a0 $t0\n\tjr $ra\n\n");
+		check_or_proc = true;
+	}
+	strcat(instructions,"jal proc_or\n");
+	return (left || right);
+}
+
+int proc_and(int left, int right) {
+	if (!check_and_proc) {
+		strcat(instructions, "proc_and:\n\tand $t0 ,$a0,$a1\n\tmove $a0 $t0\n\tjr $ra\n\n");
+		check_and_proc = true;
+	}
+	strcat(instructions, "move $a1, $t");
+	strcat(instructions, itoa(reg_count-1));
+	strcat(instructions, "\nmove $a0, $t");
+	strcat(instructions, itoa(reg_count-2));
+	strcat(instructions, "\n");
+	reg_count -= 2;
+	strcat(instructions,"jal proc_and\n");
+	return (left && right);
 }

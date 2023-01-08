@@ -1,0 +1,2 @@
+test ("b" -eq "a") -a ("c" -eq "d") ;  
+exit ; 
