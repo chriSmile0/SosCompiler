@@ -40,6 +40,7 @@
 	extern char * last_id;  // Nom du dernier id rencontré
 	extern int in_func; 	// Bool pour savoir si on est dans une fonction 
 	int set = 0;			// Bool pour la mise en place du label de fonction
+
 %}
 
 %union {
@@ -160,15 +161,23 @@ instruction : ID EG oper {	// Affectation
 			strcat(data,":\t.asciiz \"");
 			strcat(data,$2);
 			strcat(data,"\"\n");
-			strcat(buf,"li $a0, _");
+			strcat(buf,"la $a0, _");
 			strcat(buf,itoa(id_count));
+			strcat(buf, "\n");
 			id_count++;
+			if (in_func) {
+				strcat(buf, "move $v1, $a0\n");
+			}
 		}
 		else { // c'est un id ou une chaine déjà déjà déclaré 
-			strcat(buf,"li $a0, ");
+			strcat(buf,"la $a0, ");
 			strcat(buf,ids[crea]);
+			strcat(buf, "\n");
+			if (in_func) {
+				strcat(buf, "move $v1, $a0\n");
+			}
 		}
-		strcat(buf,"\nli $v0 4\nsyscall\n");
+		strcat(buf,"li $v0 4\nsyscall\n");
 }
 			| ECH '$' OA ID OB operande_entier CB CA {
 		printf("ici \n");
@@ -194,11 +203,14 @@ instruction : ID EG oper {	// Affectation
 		strcat(buf , itoa(4*check_index));
 		strcat(buf, "\nlw $a0, ($t");
 		strcat(buf, itoa(reg_count));
-		strcat(buf, ")\nli $v0, 4\nsyscall\n");
+		strcat(buf, ")\n");
+		if (in_func) {
+			strcat(buf, "move $v1, $a0\n");
+		}
+		strcat(buf, "li $v0, 4\nsyscall\n");
 		reg_count--;
 }
 			| EXT { // Exit 
-			printf("passage ici \n");
 			strcat(buf, "li $v0 10\nsyscall\n");
 			fin_prog = true;
 }
@@ -254,8 +266,12 @@ instruction : ID EG oper {	// Affectation
 		strcat(buf, "jr $ra\n");
 }
 			| RTN NB { // Return entier
+		strcat(buf, "li $v0, ");
+		strcat(buf, itoa($2));
+		strcat(buf, "\n");
 		strcat(buf, "jr $ra\n");
-			// + statut dans $? 
+
+		
 }
 
 			| decl_fonc 
@@ -302,19 +318,15 @@ bool : NB {
 }
 ;
 
-concat : concat operande
-	   | operande
-;
-
 liste_operande : liste_operande operande 
-			   | operande 
-			   | '$' OB ID CB 			   
+			   | operande  			   
 ;
 
-operande : CCS {$$ = $1 ; printf("iki \n");}
+operande : CCS {$$ = $1 ;}
 		 | '$' OA ID CA {$$ = $3;}
 		 | '$' NB {$$ = itoa($2);} //check des arguments ici 
 		 | MOTS {$$ = $1; printf("mot \n");}
+	//	 | '$' OP appel_fonc CP
 		//bouchon}*/
 		//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
 ;
@@ -353,7 +365,7 @@ unique : ID {
 	strcat(buf,$1);
 	strcat(buf,"\n");
 	reg_count++;
-	}
+}
        | NB {
     li_count++;
 	strcat(buf,"li $t");
@@ -362,7 +374,7 @@ unique : ID {
 	strcat(buf,itoa($1));
 	strcat(buf,"\n");
 	reg_count++;
-	}
+}
 ;
 
 decl_fonc : ID OP CP OA decl_loc programme CA {
@@ -370,24 +382,28 @@ decl_fonc : ID OP CP OA decl_loc programme CA {
 			yyerror("ID de la fonction déjà dans la tds.\n");
 		add_tds($1, FCT, 1, 0, 1, "");
 		strcat(buf, "jr $ra\n\n");
+		//on remet en place les variables pour la sortie de fonction
 		set = 0;
 		in_func = 0;
 		buf = instructions;
-	}
+}
 ;
 
 decl_loc : %empty { 
 		//on print le label de la fonction courante (récupéré avec lex)
-		if (in_func && !set){
+		if (!set){
+			in_func = 1;
 			buf = procedures;
 			strcat(buf, last_id);
 			strcat(buf, ":\n");
 			set = 1;
 		} else {
 			yyerror("Declaration de locale hors fonction.\n");
-		}}
-		 | decl_loc LOCAL ID EG concat SC {
-		if (in_func && !set){
+		}
+}
+		 | decl_loc LOCAL ID EG oper SC {
+		if (!set){
+			in_func = 1;
 			buf = procedures;
 			strcat(buf, last_id);
 			strcat(buf, ":\tn");
@@ -398,7 +414,7 @@ decl_loc : %empty {
 		if (find_entry($3) != -1)
 			yyerror("ID de la variable locale déjà dans la tds.\n");
 		add_tds($3, CH, 1, 0, 0, last_id);
-	}
+}
 ;
 
 appel_fonc : ID {
@@ -418,12 +434,20 @@ appel_fonc : ID {
 		}
 }
 		   | ID liste_operande {
-	if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
+		if (!in_func && strcmp(get_fonc($1), "") != 0 && get_type($1) == FCT){
 	//Génération mips appel de la fonction avec argument(s)
 	//manque load arguments dans $a 
+		if(in_func){
+			strcat(buf, "addi $sp, $sp, -4\n");
+			strcat(buf, "sw $ra, 0($sp)\n");
+		}
 		strcat(buf, "jal ");
 		strcat(buf, $1);
 		strcat(buf, "\n");
+		if (in_func) {
+			strcat(buf, "lw $ra, 0($sp)\n");
+			strcat(buf, "add $sp, $sp, 4\n");
+		}
 	}
 }
 
