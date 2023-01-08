@@ -1,15 +1,9 @@
 #include "../inc/code_proj.tab.h"
 #include "../inc/fct_yacc.h"
 
-<<<<<<< HEAD
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-=======
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
->>>>>>> Appel_fonction
 #include <getopt.h>
 
 #define DATA_SIZE		1024
