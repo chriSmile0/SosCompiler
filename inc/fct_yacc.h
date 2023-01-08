@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+
+extern bool create_echo_proc;
+extern bool create_read_proc;
+extern bool fin_prog;
 
 /**
  * Enum des types des identificateurs
@@ -124,5 +129,14 @@ int set_fonc(int ind, char* func);
  * @brief free la tds
  */
 void free_tds();
+
+/**
+ * @brief	Remise à zéro des booleens globales
+ * 
+ * @param //
+ * 
+ * @return //
+*/
+void kill_all_global_use(void);
 
 #endif
