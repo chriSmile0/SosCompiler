@@ -612,83 +612,45 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	char buffer[400];
 	char buf[400];
 	// 1 pour egal , 0 pour differentes 
-	printf("dans la fct de comparaison \n");
+	// ** 0 -> != 1 -> = , 2 -> < , 3 -> <= , 4 -> > , 5-> >= ** //
+
+	int type_cmpr = -1;
+	if (strcmp(type,"bge")==0) 
+		type_cmpr = 5;
+	else if (strcmp(type,"bgt")==0)
+		type_cmpr = 4;
+	else if (strcmp(type,"ble")==0)
+		type_cmpr = 3;
+	else if (strcmp(type,"blt")==0)	
+		type_cmpr = 2;
+	else if (strcmp(type, "beq")==0)
+		type_cmpr = 1;
+	else if (strcmp(type, "bne")==0) 
+		type_cmpr = 0;
 	if (!compare_proc) {
-		int type_not_equal = -10;
-		int type_end_cmp = -10;
-		char reverse_type_cmp[4];
-		if (strcmp(type,"bge")==0) 
-			sprintf(reverse_type_cmp,"%s","blt");
-		else if (strcmp(type,"bgt")==0)
-			sprintf(reverse_type_cmp,"%s","ble");
-		else if (strcmp(type,"ble")==0)
-			sprintf(reverse_type_cmp,"%s","bgt");
-		else if (strcmp(type,"blt")==0)	
-			sprintf(reverse_type_cmp,"%s","bge");
-		else {
-			sprintf(reverse_type_cmp,"%s","bne");
-		}
-		/*if(strcmp(type,"beq")==0) {
-			type_not_equal = 1;
-			type_end_cmp = 0;
-		}
-		else if(strcmp(type,"bne")==0) {
-			type_not_equal = 0;
-			type_end_cmp = 1;
-		}*/
-		type_not_equal = 0; //modifiable 
-		type_end_cmp = 1; //modifiable 
-		char strlen[200] = "strlen:\n\tli $t2, 0\n\tloop_len:\n\tlb $t1 , 0($a0)\n\tbeqz $t1, exit_fnclen\n\taddi $a0, $a0 , 1\n\taddi $t2 , $t2 , 1\n\tj loop_len\nexit_fnclen:\n\tmove $a0, $t2\n\tjr $ra\n\n";
 		char compare_s[1000];
-		sprintf(compare_s, "compare_str:\n\tmove $t0 $a2\n\tmove $t1 $a3\n\t");
-		strcat(compare_s, type);
-		strcat(compare_s," $t0,$t1 not_equal\n\t");
-		strcat(compare_s, "li $t1 , 0\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\t");
-		strcat(compare_s, "beqz $t2 , end_cmp\n\tmove $t4 , $t2\n\tmove $t5 , $t3\n\taddi $t4, $t4, -48\n\taddi $t5, $t5, -48\n\tmove $t6 , $a0\n\t");
-		strcat(compare_s, reverse_type_cmp); 
-		strcat(compare_s, " $t4,$t5 not_equal\n\tli $v0 11\n\tmove $a0,$t2\n\tsyscall\n\tmove $a0 , $t6\n\taddi $a0, $a0 , 1\n\taddi $a1, $a1 , 1\n\tj loop_cmp\n");
-		strcat(compare_s, "not_equal:\n\tli $t0 ,"); 
-		strcat(compare_s, itoa(type_not_equal));
-		strcat(compare_s, "\n\tmove $a0 $t0\n\tjr $ra\nend_cmp:\n\tli $t0 , ");
-		strcat(compare_s, itoa(type_end_cmp));
-		strcat(compare_s , "\n\tmove $a0 $t0\n\tjr $ra\n\n");
-		strcat(procedures ,strlen);
-		strcat(procedures ,compare_s);
+        sprintf(compare_s,"%s","compare_strvdeux:\n\tli $t1 , 0\n\tla $v1 , ($a0)\n\tloop_cmp:\n\tlb $t2 , ($a0)\n\tlb $t3 , ($a1)\n\tbeqz $t2 , end_cmpv\n\tbeqz $t3 , end_cmpvf\n\tmove $t4 , $t2\n\tmove $t5 , $t3\n\t");
+		strcat(compare_s, "addi $t4, $t4, -48\n\taddi $t5, $t5, -48\n\tmove $t6 , $a0\n\tbne $t4,$t5 not_equalv\n\tli $v0 11\n\tmove $a0,$t2\n\tmove $a0 , $t6\n\t");
+		strcat(compare_s, "addi $a0, $a0 , 1\n\taddi $a1, $a1 , 1\n\tj loop_cmp\nnot_equalv:\n\tli $t4 ,0\n\tbeq $a2 ,2 true_little\n\tbeq $a2 ,3 egal_little\n\t");
+		strcat(compare_s, "move $a0 $t4\n\tjr $ra\ntrue_little:\n\taddi $a0 $zero 2\n\tjr $ra\negal_little:\n\taddi $a0 $zero 3\n\tjr $ra\nnot_equalvf:\n\tli $t4 ,0\n\t");
+        strcat(compare_s, "beq $a2 ,4 true_bigger\n\tbeq $a2 ,5 egal_bigger\n\tmove $a0 $t4\n\tjr $ra\ntrue_bigger:\n\taddi $a0 $zero 4\n\tjr $ra\negal_bigger:\n\t");
+        strcat(compare_s, "addi $a0 $zero 5\n\tjr $ra\nend_cmpv:\n\tli $t4 , 1\n\tmove $t5 , $a2\n\tlb $t3 , ($a1)\n\tla $v1 ($a1)\n\tbnez $t3 not_equalv\n\tmove $a0 , $t4\n\t");
+        strcat(compare_s, "jr $ra\nend_cmpvf:\n\tli $t4 , 1\n\tmove $t5 , $a2\n\tlb $t3 , ($a0)\n\tla $v1 ($a0)\n\tbnez $t3 not_equalvf\n\tmove $a0 , $t4\n\tjr $ra\n");
+		strcat(procedures,compare_s);
+		compare_proc = true;
 	}	
-	sprintf(buf, "la $a0 %s\n",str1);
-	printf("bufff : %s\n",buf);
-	strcat(buf, "jal strlen\nmove $t");
-	strcat(buf, itoa(reg_count));
-	strcat(buf, " $a0\nla $a0 ");
-	strcat(buf, str2);
-	strcat(buf, "\njal strlen\nmove $t");
-	strcat(buf, itoa(reg_count+1));
-	strcat(buf, " $a0\nla $a0 ");
-	strcat(buf, str1);
+	sprintf(buf,"la $a0 %s",str1);
 	strcat(buf, "\nla $a1 ");
 	strcat(buf, str2);
-	strcat(buf, "\nmove $a2 $t");
-	strcat(buf, itoa(reg_count));
-	strcat(buf, "\nmove $a3 $t");
-	strcat(buf, itoa(reg_count+1));
-	strcat(buf, "\njal compare_str\n");
+	strcat(buf, "\nli $a2 ");
+	strcat(buf, itoa(type_cmpr));
+	strcat(buf, "\njal compare_strvdeux\n");
 	strcat(buf, "move $t");
 	strcat(buf, itoa(reg_count));
-	strcat(buf, " $a0\n"); //on force
-	reg_count++;
+	strcat(buf, " $a0 \n");
 	sprintf(buffer,"%s",buf);
-	// le resultat est dans $a0
 	strcat(instructions, buffer);
-	compare_proc = true;
 	
-	/*if (type == '~') {
-
-	}
-
-
-	else if (type == '=') {
-		
-	}*/
 	(void) type;
 	return 1;
 }
