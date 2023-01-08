@@ -62,7 +62,7 @@ test_lex : all
 	./bin/test $(ARGS)
 	
 test_yacc : all
-	./bin/test $(ARGS) g
+	./bin/test $(ARGS) g 
 
 clean:
 	-rm -r $(dir_objs) bin

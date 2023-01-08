@@ -36,10 +36,12 @@
 	bool fin_prog = false;
 	bool create_read_proc = false;
 	bool create_echo_proc = false;
+	static int ccs_temp = 0;
 
 	extern char * last_id;  // Nom du dernier id rencontré
 	extern int in_func; 	// Bool pour savoir si on est dans une fonction 
 	int set = 0;			// Bool pour la mise en place du label de fonction
+	int returned = 0;
 
 %}
 
@@ -124,6 +126,28 @@ instruction : ID EG oper {	// Affectation
 		reg_count = 1;
 		li_count = 0;
 }
+			| ID EG CCS           // Affectation
+            {
+                strcat(data, "ccs_temp");
+                strcat(data, itoa(ccs_temp++));
+                strcat(data, ": .asciiz \"");
+                strcat(data, $3);
+                strcat(data, "\"\n");
+                if (find_entry($1) == -1) {
+                        add_tds($1, CH, 1, 0, 1, "");
+                        strcat(data, $1);
+                        strcat(data, ": .word ccs_temp");
+                        strcat(data, itoa(ccs_temp-1));
+                        strcat(data, "\n");
+                } else {
+                        strcat(buf, "la $t0, ccs_temp");
+                        strcat(buf, itoa(ccs_temp-1));
+                        strcat(buf, "\n");
+                        strcat(buf, "sw $t0, ");
+                        strcat(buf, $1);
+                        strcat(buf, "\n");
+                }
+}
 			| DEC ID OB NB CB { // Déclaration de tableau
 		if (find_entry($2) == -1)
 			add_tds($2, TAB, 1, $4, 1, "");
@@ -154,7 +178,8 @@ instruction : ID EG oper {	// Affectation
 		genElse();
 }
 			| ECH operande { // Print
-		int crea = findStr($2,ids,0);
+		int crea = find_entry($2);
+		int type = get_type($2);
 		if (crea == -1) { 
 			strcat(data,"_");
 			strcat(data,itoa(id_count));
@@ -168,19 +193,42 @@ instruction : ID EG oper {	// Affectation
 			if (in_func) {
 				strcat(buf, "move $v1, $a0\n");
 			}
+			//appel
+			strcat(buf, "li $v0 4\n");
+			strcat(buf, "syscall\n");
 		}
 		else { // c'est un id ou une chaine déjà déjà déclaré 
-			strcat(buf,"la $a0, ");
-			strcat(buf,ids[crea]);
-			strcat(buf, "\n");
+			if (type == CH || type == MOT){
+				strcat(buf,"la $a0, ");
+				strcat(buf, $2);
+				strcat(buf, "\n");
+			} 
+			else if (type == ENT) //entier
+			{
+				strcat(buf,"lw $a0, ");
+				strcat(buf, $2);
+				strcat(buf, "\n");
+			}
+			else
+			{
+				yyerror("mauvais type echo\n");
+			}
 			if (in_func) {
 				strcat(buf, "move $v1, $a0\n");
 			}
+			if (type == CH || type == MOT){
+				strcat(buf, "lw $a0, ($a0)\n");
+				strcat(buf, "li $v0 4\nsyscall\n");
+			}
+			else if (type == ENT) {
+				strcat(buf,"li $v0 1\nsyscall\n");
+			}
+			else {
+				yyerror("mauvais type echo syscall\n");
+			}
 		}
-		strcat(buf,"li $v0 4\nsyscall\n");
 }
 			| ECH '$' OA ID OB operande_entier CB CA {
-		printf("ici \n");
 		//il faudrait idéalement encore checker la présence ou 
 		//pas dans la table des symboles et dans les ids 
 		//si pas dedans on échoue 
@@ -263,17 +311,16 @@ instruction : ID EG oper {	// Affectation
 		strcat(buf, ")\n");
 }
 			| RTN { // Return 
-		strcat(buf, "jr $ra\n");
+		strcat(buf, "jr $ra\n\n");
+		returned = 1;
 }
 			| RTN NB { // Return entier
 		strcat(buf, "li $v0, ");
 		strcat(buf, itoa($2));
 		strcat(buf, "\n");
-		strcat(buf, "jr $ra\n");
-
-		
+		strcat(buf, "jr $ra\n\n");
+		returned = 1;
 }
-
 			| decl_fonc 
 			| appel_fonc 
 ;
@@ -325,7 +372,7 @@ liste_operande : liste_operande operande
 operande : CCS {$$ = $1 ;}
 		 | '$' OA ID CA {$$ = $3;}
 		 | '$' NB {$$ = itoa($2);} //check des arguments ici 
-		 | MOTS {$$ = $1; printf("mot \n");}
+		 | MOTS {$$ = $1;}
 	//	 | '$' OP appel_fonc CP
 		//bouchon}*/
 		//manque ici le $*,$? et ${id[<operande_entier>]} , et fini $NB
@@ -381,10 +428,12 @@ decl_fonc : ID OP CP OA decl_loc programme CA {
 		if (find_entry($1) != -1)
 			yyerror("ID de la fonction déjà dans la tds.\n");
 		add_tds($1, FCT, 1, 0, 1, "");
-		strcat(buf, "jr $ra\n\n");
+		if (!returned)
+			strcat(buf, "jr $ra\n\n");
 		//on remet en place les variables pour la sortie de fonction
 		set = 0;
 		in_func = 0;
+		returned = 0;
 		buf = instructions;
 }
 ;
@@ -530,4 +579,9 @@ void resetVars() {
 	elsee = 0;
 	whilee = 0;
 	until = 0;
+	in_func = 0; 	// Bool pour savoir si on est dans une fonction 
+	set = 0;			// Bool pour la mise en place du label de fonction
+	returned = 0;
+	ccs_temp = 0;
+	buf = instructions;
 }

@@ -1,0 +1,13 @@
+glob1=1;
+glob2=2;
+fonction() {
+    if 1 then
+    glob1=2;
+    glob2=3;
+    fi ;
+    return 0;
+};
+fonction;
+echo ${glob1};
+echo ${glob2};
+exit;

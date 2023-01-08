@@ -51,7 +51,7 @@ test{espace}							{return (word_test(--yytext) ? MR : yyerror("Pas de bloc test
 ^{espace}*esac{espace}+					{return MR;}
 ^{espace}*echo{espace}+					{if (yaccc) return ECH; return MR;}
 ^{espace}*read{espace}+					{if (yaccc) return READ; return MR;}
-^{espace}*return{espace}+				{if (yaccc) return RTN;  return MR;}
+{espace}*return{espace}+				{if (yaccc) return RTN;  return MR;}
 ^{espace}*exit{espace}*					{if (yaccc) return EXT;  return MR;}
 ({espace}+|{endline})local{espace}+		{if (yaccc) return LOCAL; return MR;}
 ^{espace}*elif{espace}+test{espace}+	{return MR;}
@@ -182,6 +182,7 @@ int checkOperateur(char *operateurStr, int taille)
 }
 
 bool checkAscii(char * str, bool com) {
+	printf("check : %s\n", str);
 	if (strcmp(str, "\t") == 0)
 		return true;
 	bool b = testAscii;

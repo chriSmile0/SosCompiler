@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 		print_tds();
 	}
 
-	char code[DATA_SIZE + INSTR_SIZE];
+	char code[DATA_SIZE + 2*INSTR_SIZE];
 	size_t ret = snprintf(code, sizeof(code), "%s%s\n%s", data, instructions, procedures);
 	if (ret >= sizeof(code))
 		fprintf(stderr, "Erreur concaténation du code MIPS");

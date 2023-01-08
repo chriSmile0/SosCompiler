@@ -310,8 +310,8 @@ int test_mips(char *filename, char *correct_file) {
 	print_tds();
 	free_tds();
 	fclose(yyin);
-	char code[DATA_SIZE + INSTR_SIZE];
-	sprintf(code,"%s%s",data,instructions);
+	char code[DATA_SIZE + 2*INSTR_SIZE];
+	sprintf(code,"%s%s%s",data,instructions,procedures);
 	
 	// overture et copie dans un buffer du fichier de correction
 	FILE *correction = fopen(correct_file, "r");
@@ -360,7 +360,7 @@ int test_mips_operations_m() {
 int test_mips_operations_d() {
 	return test_mips("f_tests/d/operations_d","f_tests/d/operations_d_corr");
 }
-
+/*
 int test_mips_dectab_s() {
 	return test_mips("f_tests/s/dec_tab_s","f_tests/s/dec_tab_s_corr");
 }
@@ -395,4 +395,16 @@ int test_mips_if_m() {
 
 int test_mips_if_d() {
 	return test_mips("f_tests/d/if_d","f_tests/d/if_d_corr");
+}
+*/
+int test_mips_fonction_s() {
+	return test_mips("f_tests/s/fonction_s", "f_tests/s/fonction_s_corr");
+}
+
+int test_mips_fonction_m() {
+	return test_mips("f_tests/m/fonction_m", "f_tests/m/fonction_m_corr");
+}
+
+int test_mips_fonction_d() {
+	return test_mips("f_tests/d/fonction_d", "f_tests/d/fonction_d_corr");
 }
