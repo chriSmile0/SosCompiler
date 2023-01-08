@@ -272,7 +272,6 @@ instruction : ID EG oper	// Affectation
 			// + statut dans $? 
 		}
 	| test_expr 
-	| test_bloc
 ;
 bool : NB 
      {
@@ -313,6 +312,7 @@ bool : NB
 		fi_count++;
 	}
      }
+	| test_bloc 
 ;
 
 operande : CCS {$$ = $1 ; printf("iki \n");}
@@ -590,7 +590,8 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	// ** 0 -> != 1 -> = , 2 -> < , 3 -> <= , 4 -> > , 5-> >= ** //
 
 	int type_cmpr = -1;
-	if (strcmp(type,"bge")==0) 
+	//int retour = 0;
+	if (strcmp(type,"bge")==0)
 		type_cmpr = 5;
 	else if (strcmp(type,"bgt")==0)
 		type_cmpr = 4;
@@ -627,7 +628,6 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	strcat(instructions, buffer);
 	
 	(void) type;
-	return 1;
 }
 
 int chaine_vide_ou_non(int true_vide , char *type , char *chaine) {

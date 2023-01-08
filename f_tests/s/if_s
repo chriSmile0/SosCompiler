@@ -1,4 +1,4 @@
-if 1 then
+if test ("abc" -eq "bgeft")  then
 id=1;
 else
 id=2;
