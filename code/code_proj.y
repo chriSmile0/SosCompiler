@@ -13,6 +13,7 @@
 	void genFi();
 	void genWhile();
 	int compare_chaine(char *type, char *str1, char *str2);
+	int chaine_vide_ou_non(int true_vide, char *type , char *chaine);
 
 	char data[1024];			// Partie declaration des variables
 	char instructions[4096];	// Partie instructions
@@ -36,6 +37,7 @@
 	bool create_read_proc = false;
 	bool create_echo_proc = false;
 	bool compare_proc = false;
+	bool check_v_nv_proc = false;
 
 %}
 
@@ -410,9 +412,26 @@ test_instruction : concatenation '=' concatenation {
 		$$ = (strcmp($1, $3) != 0);
 		
 	}
-	| operateur1 concatenation {
+	| operateur1 CCS {
 		//sprintf($$,"%s %s ",$1,$2);
 		//pas sur de ça 
+		int crea = findStr($2,ids,0);
+		printf("crea %d\n",crea);
+		char id_str1[100];
+		if (crea == -1) { 
+			strcat(data,"_");
+			strcat(data,itoa(id_count));
+			strcat(data,":\t.asciiz \"");
+			strcat(data,$2);
+			strcat(data,"\"\n");
+			sprintf(id_str1,"_%s",itoa(id_count));
+			id_count++;
+		}
+		else {
+			sprintf(id_str1, "%s", ids[crea]);
+			printf("%sids : %s\n",ids[crea]);
+		}
+		chaine_vide_ou_non(strlen($2),$1 , id_str1);
 		$$ = 1;
 	}
 	| operande_entier operateur2 operande_entier {
@@ -460,8 +479,8 @@ test_instruction : concatenation '=' concatenation {
 	}
 ;
 
-operateur1 : YCCNV {$$ = "beqz";}
-	| YCCV {$$ = "beqa";}
+operateur1 : YCCNV {$$ = "-n";}
+	| YCCV {$$ = "-z";}
 ;
 
 operateur2 : YEQ {$$ = "beq";}
@@ -625,6 +644,27 @@ int compare_chaine(char *type, char *str1, char *str2) {
 	else if (type == '=') {
 		
 	}*/
+	(void) type;
+	return 1;
+}
+
+int chaine_vide_ou_non(int true_vide , char *type , char *chaine) {
+	//1 pour vide, 0 pour non vide si type == -z
+	//0 pour vide, 1 pour non vide si type == -n
+	if (!check_v_nv_proc) {
+		strcat(instructions , "proc_v_nv:\n\tlb $t0 ($a0)\n\tbeqz $t0 pasvide\n\taddi $a0 , $zero , 0\n\tjr $ra\npasvide:\n\taddi $a0 , $zero , 1\n\tjr $ra\n\n");
+		check_v_nv_proc = true;
+	}
+	strcat(instructions, "la $a0 ");
+	strcat(instructions, chaine);
+	strcat(instructions, "\njal proc_v_nv\n");
+	printf("true vide : %d\n",true_vide);
+	if (strcmp(type,"-n")==0) {
+		if(true_vide) //vraiment vide 
+			strcat(instructions, "addi $a0 , 1\n");
+	}
+
+	//print result avec print_int 
 	(void) type;
 	return 1;
 }

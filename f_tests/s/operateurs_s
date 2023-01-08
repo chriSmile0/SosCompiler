@@ -1,2 +1,5 @@
-test "a" -eq "b" ;
+test  -z "" ; 
+test  -n "abc" ;
+test  -n "bcdf" ;
+test "b" -eq "a" ; 
 exit ; 

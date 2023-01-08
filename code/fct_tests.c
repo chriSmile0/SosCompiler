@@ -217,8 +217,8 @@ int test_mips(char *filename, char *correct_file) {
 	int len_code = strlen(code);
 	while ((i < len_corr) && (code[i] == corr[i]))
 		i++;
-	printf("i : %d |%c| vs |%c| : len code -> %d, len corr -> %d\n",
-			i,code[i],corr[i],len_code,len_corr);
+	printf("i : %d |%c%c| vs |%c| : len code -> %d, len corr -> %d\n",
+			i,code[i],code[i+1],corr[i],len_code,len_corr);
 	
 	printf("comparaison : %s\n",comp?"FAUX":"OK");
 	// remise a zero du gencode

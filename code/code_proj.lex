@@ -136,6 +136,7 @@ int checkOperateur(char *operateurStr, int taille)
 {
 	printf("========> OP <========\n");
 	if (taille == 1) {
+		printf("op simple \n");
 		// /a/n/o/z
 		switch (operateurStr[0]) {
 			case 'a':

@@ -1,8 +1,28 @@
 	.data
-_0:	.asciiz "a"
-_1:	.asciiz "b"
+_0:	.asciiz ""
+_1:	.asciiz "abc"
+_2:	.asciiz "bcdf"
+_3:	.asciiz "b"
+_4:	.asciiz "a"
 	.text
 __start:
+proc_v_nv:
+	lb $t0 ($a0)
+	beqz $t0 pasvide
+	addi $a0 , $zero , 0
+	jr $ra
+pasvide:
+	addi $a0 , $zero , 1
+	jr $ra
+
+la $a0 _0
+jal proc_v_nv
+la $a0 _1
+jal proc_v_nv
+addi $a0 , 1
+la $a0 _2
+jal proc_v_nv
+addi $a0 , 1
 strlen:
 	li $t2, 0
 	loop_len:
@@ -50,14 +70,14 @@ end_cmp:
 	move $a0 $t0
 	jr $ra
 
-la $a0 _0
+la $a0 _3
 jal strlen
 move $t1 $a0
-la $a0 _1
+la $a0 _4
 jal strlen
 move $t2 $a0
-la $a0 _0
-la $a1 _1
+la $a0 _3
+la $a1 _4
 move $a2 $t1
 move $a3 $t2
 jal compare_str
