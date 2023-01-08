@@ -109,4 +109,5 @@ void kill_all_global_use() {
 	create_echo_proc = false;
 	fin_prog = false;
 	compare_proc = false;
+	check_v_nv_proc = false;
 }
