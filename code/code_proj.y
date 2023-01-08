@@ -117,6 +117,7 @@ programme : instruction END programme
 			genElse("Else");
 			elsee--;
 		}
+	  }
 ;
 
 instruction : ID EG oper	// Affectation
@@ -371,28 +372,20 @@ unique : ID
 ;
 
 test_bloc : TEST test_expr {
-		printf("========> YACC <========\n");
-		$$ = 1;
+		$$ = $2;
 	}
 ;
 
 test_expr : test_expr YOU test_expr2 {
-		/*sprintf(instructions, "li $t0, %d\n", $1);
-		sprintf(instructions, "li $t1, %d\n", $3);
-		strcat(instructions, "or $t3, $t0, $t1\n");*/
 		$$ = proc_or($1,$3);
 	}
 	| test_expr2
 ;
 
 test_expr2 : test_expr2 YET test_expr3 {
-		/*sprintf(instructions, "li $t0, %d\n", $1);
-		sprintf(instructions, "li $t1, %d\n", $3);
-		strcat(instructions, "and $t3, $t0, $t1\n");*/
-		//sprintf($$, "li $t0, %s\nli $t1, %s\n and $t3, t0, $t1\n",$1,$3);
 		$$ = proc_and($1,$3);
 	}
-	| test_expr3 {printf("expr 3 \n");$$ = $1;}
+	| test_expr3
 ;
 
 test_expr3 : OP test_instruction CP {	// (test_expr)
@@ -406,10 +399,6 @@ test_expr3 : OP test_instruction CP {	// (test_expr)
 		$$ = !$3;
 	}
 	| test_instruction {		// test_instruction
-		//on a juste ici a recup la valeur dans $a0 dans un registre
-		/*strcat(instructions, "move $t");
-		strcat(instructions, itoa(reg_count));
-		strcat(instructions, " $a0\n");*/
 		$$ = $1;
 	}
 	| '!' test_instruction {	// !test_instruction
@@ -426,14 +415,12 @@ test_instruction : concatenation '=' concatenation {
 		//il faut stocker le resultat des concat 
 		//dans des chaines temporaires
 		compare_chaine("beq",$1,$3);
-		printf("concat = ? \n");
 		$$ = (strcmp($1, $3) == 0);
 	}
 	| concatenation '~' concatenation {
 		//il faut stocker le resultat des concat
 		//dans des chaines temporaires
 		compare_chaine("bne",$1,$3);
-		printf("concat != ? \n");
 		$$ = (strcmp($1, $3) != 0);
 		
 	}
@@ -441,7 +428,6 @@ test_instruction : concatenation '=' concatenation {
 		//sprintf($$,"%s %s ",$1,$2);
 		//pas sur de ça 
 		int crea = findStr($2,ids,0);
-		printf("crea %d\n",crea);
 		char id_str1[100];
 		if (crea == -1) { 
 			strcat(data,"_");
@@ -464,7 +450,6 @@ test_instruction : concatenation '=' concatenation {
 		int crea = findStr($1,ids,0);
 		char id_str1[100];
 		char id_str2[100];
-		printf("crea :::: %d\n",crea);
 		if (crea == -1) { 
 			strcat(data,"_");
 			strcat(data,itoa(id_count));
@@ -480,7 +465,6 @@ test_instruction : concatenation '=' concatenation {
 		}
 		crea_entry = find_entry($3);
 		crea = findStr($3,ids,0);
-		printf("crea : :: / : %d\n",crea);
 		if (crea_entry == -1) { 
 			strcat(data,"_");
 			strcat(data,itoa(id_count));
@@ -494,17 +478,8 @@ test_instruction : concatenation '=' concatenation {
 		else {
 			sprintf(id_str2, "%s", ids[crea]);
 		}
-		printf("id _str1 : %s sign : %s\n",id_str1,$1);
-		printf("id _str2 : %s sign : %s\n",id_str2,$3);
-		printf("table taille : %d\n",table.taille);
-		print_tds();
 		compare_chaine($2,id_str1,id_str2);
-		printf("compare chaine \n");
-		//sprintf($$,"%s %s %s ",$1,$2,$3);
-
-		printf("operateur 2 avec operande: \n");
 		$$ = (strcmp($1,$3)==0);
-		printf("$$ strcmp : %d\n",$$);
 	}
 ;
 

@@ -70,7 +70,7 @@ test{espace}							{if (yaccc) {printf("========> TEST <========\n"); return TES
 										else 
 											yyerror(" Caractère non ASCII");}
 
-{digit}+								{printf("yop \n");yylval.entier = atoi(yytext); return (checkNombres(yytext) ? NB : MOT);}
+{digit}+								{yylval.entier = atoi(yytext); return (checkNombres(yytext) ? NB : MOT);}
 
 {com}+.*{endline}						return COM;
 
