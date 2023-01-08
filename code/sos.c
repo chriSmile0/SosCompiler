@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 				printf("Christopher Spitz\n");
 				printf("Loïc Diebolt\n");
 				printf("Matthieu Lefevre\n");
-				printf("Vincent Chebbli-Disdier");
+				printf("Vincent Chebbli--Disdier");
 				return EXIT_SUCCESS;
 
 			/* Table des symboles */
