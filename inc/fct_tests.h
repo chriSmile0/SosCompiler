@@ -9,12 +9,14 @@
 
 #define DATA_SIZE	1024
 #define INSTR_SIZE	4096
+#define PROC_SIZE	2048
 
 extern int yylex();
 extern void yyerror();
 extern FILE *yyin;
-extern char data[DATA_SIZE];
-extern char instructions[INSTR_SIZE];
+extern char data[1024];
+extern char instructions[4096];
+extern char procedures[2048];
 extern int id_count;
 extern int yaccc;
 extern void resetVars();

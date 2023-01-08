@@ -191,8 +191,8 @@ int test_mips(char *filename, char *correct_file) {
 	kill_all_global_use();
 	free_tds();
 	fclose(yyin);
-	char code[DATA_SIZE + INSTR_SIZE];
-	sprintf(code,"%s%s",data,instructions);
+	char code[DATA_SIZE + INSTR_SIZE + PROC_SIZE];
+	sprintf(code,"%s%s%s",data,instructions,procedures);
 	
 	// overture et copie dans un buffer du fichier de correction
 	FILE *correction = fopen(correct_file, "r");
@@ -225,6 +225,7 @@ int test_mips(char *filename, char *correct_file) {
 	// remise a zero du gencode
 	data[0] = '\0';
 	instructions[0] = '\0';
+	procedures[0] = '\0';
 	id_count = 0;
 	resetVars();
 	return comp;

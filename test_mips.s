@@ -1,8 +1,6 @@
         .data
-_0:     .asciiz "b"
-_1:     .asciiz "a"
-_2:     .asciiz "c"
-_3:     .asciiz "d"
+_0:     .asciiz "23"
+_1:     .asciiz "22"
         .text
 strlen:
         li $t2, 0
@@ -19,6 +17,7 @@ exit_fnclen:
 compare_str:
         move $t0 $a2
         move $t1 $a3
+        bgt $t0,$t1 bigger
         beq $t0,$t1 not_equal
         li $t1 , 0
         loop_cmp:
@@ -30,7 +29,7 @@ compare_str:
         addi $t4, $t4, -48
         addi $t5, $t5, -48
         move $t6 , $a0
-        bne $t4,$t5 not_equal
+        bgt $t4,$t5 little
         li $v0 11
         move $a0,$t2
         syscall
@@ -38,6 +37,23 @@ compare_str:
         addi $a0, $a0 , 1
         addi $a1, $a1 , 1
         j loop_cmp
+n_bigger:
+        li $t0 , 0
+        move $a0 $t0 
+        jr $ra 
+n_little: 
+        li $t0 , 0
+        move $a0 $t0
+        jr $ra 
+bigger:
+        li $t0 , 8
+        move $a0 $t0 
+        jr $ra 
+little: 
+        blt $t4 , $t5 bigger
+        li $t0 , 9 
+        move $a0 $t0 
+        jr $ra 
 not_equal:
         li $t0 ,0
         move $a0 $t0
@@ -47,18 +63,13 @@ end_cmp:
         move $a0 $t0
         jr $ra
 
-proc_and:
-        and $t0,$a0,$a1
-        move $a0 $t0
-        jr $ra
-
 print_int:
     li $v0 1
     syscall 
     jr $ra
 
-main:
 
+main:
 la $a0 _0
 jal strlen
 move $t1 $a0
@@ -70,22 +81,7 @@ la $a1 _1
 move $a2 $t1
 move $a3 $t2
 jal compare_str
+jal print_int
 move $t1 $a0
-la $a0 _2
-jal strlen
-move $t2 $a0
-la $a0 _3
-jal strlen
-move $t3 $a0
-la $a0 _2
-la $a1 _3
-move $a2 $t2
-move $a3 $t3
-jal compare_str
-move $t2 $a0
-move $a1 , $t2
-move $a0 , $t1
-jal proc_and
-jal print_int 
 li $v0 10
 syscall
