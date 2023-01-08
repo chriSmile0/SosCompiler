@@ -11,3 +11,4 @@ Else0:
 li $t1, 2
 sw $t1, id
 Fi0:
+

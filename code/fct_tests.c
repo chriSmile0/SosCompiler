@@ -150,13 +150,13 @@ int test_tds_s(void) {
 	int ret = 0;
 	init_tds();
 	//var locale
-	add_tds("id1", CH, 0, -1, -1, 0, "fonction_xy");
+	add_tds("id1", CH, 0, 0, 0, "fonction_xy");
 	//var globale
-	add_tds("id2", CH, 0, -1, -1, 1, "");
+	add_tds("id2", CH, 0, 0, 1, "");
 	//tableau 3*3
-	add_tds("id3", TAB, 0, 3, -1, 1, "");
+	add_tds("id3", TAB, 0, 3, 1, "");
 	//fonction à 4 arguments
-	add_tds("id4", FCT, 0, -1, 4, 1, "");
+	add_tds("id4", FCT, 0, 0, 1, "");
 	int ind;
 	if ((ind = find_entry("id2"))!= -1){
 		update_entry(ind, MOT);
@@ -165,14 +165,12 @@ int test_tds_s(void) {
 	}
 	if (get_type("id2") != MOT)
 		ret = 1;
-	if (strcmp(get_func("id1"), "fonction_xy") != 0)
+	if (strcmp(get_fonc("id1"), "fonction_xy") != 0)
 		ret = 1;
-	if (strcmp(get_func("id2"), "") != 0)
+	if (strcmp(get_fonc("id2"), "") != 0)
 		ret = 1;
-	if (get_dim("id3") != 3)
-		ret = 1; 
-	if (get_nb_args("id4") != 4)
-		ret = 1;	
+	if ((get_dim("id3") != 3))
+		ret = 1; 	
 	print_tds();
 	free_tds();
 	return ret;
@@ -192,8 +190,8 @@ int test_mips(char *filename, char *correct_file) {
 	print_tds();
 	free_tds();
 	fclose(yyin);
-	char code[DATA_SIZE + INSTR_SIZE];
-	sprintf(code,"%s%s",data,instructions);
+	char code[DATA_SIZE + 2*INSTR_SIZE];
+	sprintf(code,"%s%s\n%s",data,instructions,procedures);
 	
 	// overture et copie dans un buffer du fichier de correction
 	FILE *correction = fopen(correct_file, "r");
@@ -226,6 +224,7 @@ int test_mips(char *filename, char *correct_file) {
 	// remise a zero du gencode
 	data[0] = '\0';
 	instructions[0] = '\0';
+	procedures[0] = '\0';
 	id_count = 0;
 	resetVars();
 	return comp;
@@ -277,4 +276,16 @@ int test_mips_if_m() {
 
 int test_mips_if_d() {
 	return test_mips("f_tests/d/if_d","f_tests/d/if_d_corr");
+}
+
+int test_mips_fonction_s() {
+	return test_mips("f_tests/s/fonction_s", "f_tests/s/fonction_s_corr");
+}
+
+int test_mips_fonction_m() {
+	return test_mips("f_tests/m/fonction_m", "f_tests/m/fonction_m_corr");
+}
+
+int test_mips_fonction_d() {
+	return test_mips("f_tests/d/fonction_d", "f_tests/d/fonction_d_corr");
 }

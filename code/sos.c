@@ -1,9 +1,15 @@
 #include "../inc/code_proj.tab.h"
 #include "../inc/fct_yacc.h"
 
+<<<<<<< HEAD
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
+=======
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+>>>>>>> Appel_fonction
 #include <getopt.h>
 
 #define DATA_SIZE		1024
@@ -15,6 +21,7 @@ extern int yylex();
 
 extern char data[DATA_SIZE];
 extern char instructions[INSTR_SIZE];
+extern char procedures[INSTR_SIZE];
 extern int yaccc;
 
 int main(int argc, char *argv[]) {
@@ -98,8 +105,8 @@ int main(int argc, char *argv[]) {
 		print_tds();
 	}
 
-	char code[DATA_SIZE + INSTR_SIZE];
-	size_t ret = snprintf(code, sizeof(code), "%s%s", data, instructions);
+	char code[DATA_SIZE + 2*INSTR_SIZE];
+	size_t ret = snprintf(code, sizeof(code), "%s%s\n%s", data, instructions, procedures);
 	if (ret >= sizeof(code))
 		fprintf(stderr, "Erreur concaténation du code MIPS");
 	else if (strlen(nomFichier) > 0) {

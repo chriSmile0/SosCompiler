@@ -15,9 +15,11 @@ extern void yyerror();
 extern FILE *yyin;
 extern char data[DATA_SIZE];
 extern char instructions[INSTR_SIZE];
+extern char procedures[INSTR_SIZE];
 extern int id_count;
 extern int yaccc;
 extern void resetVars();
+
 
 /** 
 * @brief	Il s'agit d'une fonction généraliste pour pouvoir éxécuter
@@ -216,10 +218,27 @@ int test_opel_m_v2(void);
 
 int test_opel_d_v2(void);
 
-
-
 int test_tds_s(void);
 
+int test_mips_operations_s(void);
+int test_mips_operations_m(void);
+int test_mips_operations_d(void);
+
+int test_mips_dectab_s(void);
+int test_mips_dectab_m(void);
+int test_mips_dectab_d(void);
+
+int test_mips_echoread_s(void);
+int test_mips_echoread_m(void);
+int test_mips_echoread_d(void);
+
+int test_mips_if_s(void);
+int test_mips_if_m(void);
+int test_mips_if_d(void);
+
+int test_mips_fonction_s(void);
+int test_mips_fonction_m(void);
+int test_mips_fonction_d(void);
 
 int test_mips_operations_s(void);
 int test_mips_operations_m(void);

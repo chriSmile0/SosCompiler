@@ -1,0 +1,10 @@
+	.data
+	.text
+__start:
+jal fonction
+li $v0 10
+syscall
+
+fonction:
+jr $ra
+

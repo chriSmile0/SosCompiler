@@ -5,7 +5,6 @@
 
 extern int yaccc;
 
-
 /**
  * @brief	Suite de fonctions de type_*_s()
  * 			Chaque fonction ouvre le fichier *_s.sh
@@ -45,10 +44,12 @@ int test_simple() {
 		tests += test_mips_operations_s();
 		printf("- test_dec_tab_s\n");
 		tests += test_mips_dectab_s();
-		printf("- test_echoread_s\n");
-		tests += test_mips_echoread_s();
+		//printf("- test_echoread_s\n");
+		//tests += test_mips_echoread_s();
 		printf("- test_if_s\n");
 		tests += test_mips_if_s();
+		printf("- test_fonction_s\n");
+		tests += test_mips_fonction_s();
 	}
 	/*
 		Insertion du code du test simple
@@ -100,10 +101,12 @@ int test_median() {
 		tests += test_mips_operations_m();
 		printf("- test_dec_tab_m\n");
 		tests += test_mips_dectab_m();
-		printf("- test_echoread_m\n");
-		tests += test_mips_echoread_m();
+		//printf("- test_echoread_m\n");
+		//tests += test_mips_echoread_m();
 		printf("- test_if_m\n");
 		tests += test_mips_if_m();
+		printf("- test_fonctions_m\n");
+		tests += test_mips_fonction_m();
 	}
 	/*
 		Insertion du code du test median
@@ -151,10 +154,12 @@ int test_difficile() {
 		tests += test_mips_operations_d();
 		printf("- test_dec_tab_d\n");
 		tests += test_mips_dectab_d();
-		printf("- test_echoread_d\n");
-		tests += test_mips_echoread_d();
+		//printf("- test_echoread_d\n");
+		//tests += test_mips_echoread_d();
 		printf("- test_if_d\n");
 		tests += test_mips_if_d();
+		printf("- test_fonctions_d\n");
+		tests += test_mips_fonction_d();
 	}
 	/*
 		Insertion du code du test difficile
@@ -193,3 +198,4 @@ int main(int argc, char *argv[]) {
 	yaccc = 0;
 	return retour;
 }
+

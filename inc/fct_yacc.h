@@ -9,7 +9,6 @@ extern bool create_echo_proc;
 extern bool create_read_proc;
 extern bool fin_prog;
 
-
 /**
  * Enum des types des identificateurs
  */
@@ -29,8 +28,7 @@ typedef struct {
 	char* name; 	/**< nom de l'id */
 	int type;	/**< type de l'id, def dans l'enum types */
 	int init;	/**< 0 si l'id est pas init, 1 sinon */
-	int dim;	/**< dims pour un tableau */
-	int nb_arg;	/**< nombres d'arguments pour une fonction, 4 max */
+	int dim;	/**< dims pour un tableau, de la forme N,M ou N */
 	int global; 	/**< 1 si variable globale, 0 sinon */
 	char* func;	/**< nom de la fonction où est la variable locale */
 	/*@}*/
@@ -58,14 +56,13 @@ void init_tds();
  * @param name nom de l'id
  * @param type type de l'id
  * @param init 1 si l'id est init, 0 sinon
- * @param dim dimension si tableau, NULL sinon
- * @param nb_arg nombre d'arguments si fonction, -1 sinon
+ * @param dim dimension si tableau, 0 sinon
  * @param global 1 si variable globale, 0 sinon
  * @param func nom de la fonction mère si variable locale, NULL sinon
  * @return int 
  */
 int add_tds(char* name, int type, int init, int dim,
-	int nb_arg, int global, char* func);
+	int global, char* func);
 
 /**
  * @brief affiche l'entrée de rang index dans la table des symboles
@@ -108,23 +105,29 @@ int get_type(char* name);
  * @param name nom de la variable à chercher
  * @return char* nom de la fonction mère ou chaine vide
  */
-char * get_func(char* name);
+char * get_fonc(char* name);
 
 /**
  * @brief retourne les dimensions de la variable name
  * 
  * @param name nom de la variable
+<<<<<<< HEAD
  * @return int dimensions du tableau, -1 si ce n'est pas un tableau
+=======
+ * @return dimensions du tableau, 0 sinon
+>>>>>>> Appel_fonction
  */
 int get_dim(char* name);
 
 /**
- * @brief retourne le nombre d'arguments de la variable name
+ * @brief set le nom de la fonction de la variable locale d'index ind 
  * 
- * @param name nom de la variable
- * @return int le nombre d'arguments, -1 si ce n'est pas une fonction
+ * @param ind rang de la variable locale dans la tds
+ * @param func nom de la fonction mère
+ * @return int 
  */
-int get_nb_args(char* name);
+int set_fonc(int ind, char* func);
+
 
 /**
  * @brief free la tds

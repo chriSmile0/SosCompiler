@@ -1,0 +1,75 @@
+	.data
+ccs_temp0:	.asciiz	"oui\n"
+glob1:	.word	ccs_temp0
+glob2:	.word	0
+ccs_temp1:	.asciiz	"Avant les modifs\n"
+text1:	.word	ccs_temp1
+ccs_temp2:	.asciiz	"Apres les modifs\n"
+text2:	.word	ccs_temp2
+ccs_temp3:	.asciiz	"non\n"
+	.text
+__start:
+li $t1, 0
+sw $t1, glob2
+la $a0, text1
+lw $a0, ($a0)
+li $v0 4
+syscall
+la $a0, glob1
+lw $a0, ($a0)
+li $v0 4
+syscall
+lw $a0, glob2
+li $v0 1
+syscall
+jal fonction3
+la $a0, text2
+lw $a0, ($a0)
+li $v0 4
+syscall
+la $a0, glob1
+lw $a0, ($a0)
+li $v0 4
+syscall
+lw $a0, glob2
+li $v0 1
+syscall
+li $v0 10
+syscall
+
+fonction1:
+li $t1, 1
+sw $t1, glob2
+lw $a0, glob2
+move $v1, $a0
+li $v0 1
+syscall
+li $v0, 0
+jr $ra
+
+fonction2:
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+jal fonction1
+lw $ra, 0($sp)
+add $sp, $sp, 4
+li $t1, 2
+sw $t1, glob2
+lw $a0, glob2
+move $v1, $a0
+li $v0 1
+syscall
+jr $ra
+
+fonction3:
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+jal fonction2
+lw $ra, 0($sp)
+add $sp, $sp, 4
+li $t1, 3
+sw $t1, glob2
+la $t0, ccs_temp3
+sw $t0, glob1
+jr $ra
+

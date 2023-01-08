@@ -3,3 +3,4 @@ tab:	.space	22
 	.align	4
 	.text
 __start:
+

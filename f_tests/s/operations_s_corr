@@ -4,3 +4,4 @@ id:	.word	0
 __start:
 li $t1, 3
 sw $t1, id
+

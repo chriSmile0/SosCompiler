@@ -1,0 +1,27 @@
+glob1="oui\n" ;
+glob2=0 ;
+text1 = "Avant les modifs\n" ;
+text2 = "Apres les modifs\n" ;
+fonction1(){
+glob2=1 ;
+echo ${glob2} ;
+return 0 ;
+} ;
+fonction2() {
+fonction1 ;
+glob2=2 ;
+echo ${glob2} ;
+} ;
+fonction3() {
+fonction2 ;
+glob2=3 ;
+glob1="non\n" ;
+} ;
+echo ${text1} ;
+echo ${glob1} ;
+echo ${glob2} ;
+fonction3 ;
+echo ${text2} ;
+echo ${glob1} ;
+echo ${glob2} ;
+exit ;
