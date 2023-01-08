@@ -1,12 +1,12 @@
 	.data
-ccs_temp0:	.asciiz	"oui\n"
-glob1:	.word	ccs_temp0
+ccs_temp0: .asciiz "oui\n"
+glob1: .word ccs_temp0
 glob2:	.word	0
-ccs_temp1:	.asciiz	"Avant les modifs\n"
-text1:	.word	ccs_temp1
-ccs_temp2:	.asciiz	"Apres les modifs\n"
-text2:	.word	ccs_temp2
-ccs_temp3:	.asciiz	"non\n"
+ccs_temp1: .asciiz "Avant les modifs\n"
+text1: .word ccs_temp1
+ccs_temp2: .asciiz "Apres les modifs\n"
+text2: .word ccs_temp2
+ccs_temp3: .asciiz "non\n"
 	.text
 __start:
 li $t1, 0

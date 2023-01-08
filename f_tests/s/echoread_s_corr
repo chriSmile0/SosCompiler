@@ -1,0 +1,17 @@
+	.data
+ido:	.word	0
+_1:	.asciiz "coco"
+	.text
+__start:
+la $a0, ido
+li $v0 8
+syscall
+li $a0, _1
+li $v0 4
+syscall
+li $a0, ido
+li $v0 4
+syscall
+li $v0 10
+syscall
+

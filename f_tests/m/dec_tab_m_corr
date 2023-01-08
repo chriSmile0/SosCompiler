@@ -1,0 +1,8 @@
+	.data
+tab:	.space	23
+	.align	4
+tabo:	.space	2
+	.align	4
+	.text
+__start:
+

@@ -130,13 +130,13 @@ instruction : ID EG oper {	// Affectation
             {
                 strcat(data, "ccs_temp");
                 strcat(data, itoa(ccs_temp++));
-                strcat(data, ": .asciiz \"");
+                strcat(data, ":\t.asciiz\t\"");
                 strcat(data, $3);
                 strcat(data, "\"\n");
                 if (find_entry($1) == -1) {
                         add_tds($1, CH, 1, 0, 1, "");
                         strcat(data, $1);
-                        strcat(data, ": .word ccs_temp");
+                        strcat(data, ":\t.word\tccs_temp");
                         strcat(data, itoa(ccs_temp-1));
                         strcat(data, "\n");
                 } else {

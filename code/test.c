@@ -42,14 +42,12 @@ int test_simple() {
 		tests += test_tds_s();
 		printf("- test_operations_s\n");
 		tests += test_mips_operations_s();
-		/*
 		printf("- test_dec_tab_s\n");
 		tests += test_mips_dectab_s();
-		printf("- test_echoread_s\n");
-		tests += test_mips_echoread_s();
+		//printf("- test_echoread_s\n");
+		//tests += test_mips_echoread_s();
 		printf("- test_if_s\n");
 		tests += test_mips_if_s();
-		*/
 		printf("- test_fonction_s\n");
 		tests += test_mips_fonction_s();
 	}
@@ -101,14 +99,12 @@ int test_median() {
 	else {
 		printf("- test_operations_m\n");
 		tests += test_mips_operations_m();
-		/*
 		printf("- test_dec_tab_m\n");
 		tests += test_mips_dectab_m();
-		printf("- test_echoread_m\n");
-		tests += test_mips_echoread_m();
+		//printf("- test_echoread_m\n");
+		//tests += test_mips_echoread_m();
 		printf("- test_if_m\n");
 		tests += test_mips_if_m();
-		*/
 		printf("- test_fonctions_m\n");
 		tests += test_mips_fonction_m();
 	}
@@ -156,14 +152,13 @@ int test_difficile() {
 	else {
 		printf("- test_operations_d\n");
 		tests += test_mips_operations_d();
-	/*	printf("- test_dec_tab_d\n");
+		printf("- test_dec_tab_d\n");
 		tests += test_mips_dectab_d();
-		printf("- test_echoread_d\n");
-		tests += test_mips_echoread_d();
+		//printf("- test_echoread_d\n");
+		//tests += test_mips_echoread_d();
 		printf("- test_if_d\n");
 		tests += test_mips_if_d();
-	*/
-		printf("- test_fonctions_m\n");
+		printf("- test_fonctions_d\n");
 		tests += test_mips_fonction_d();
 	}
 	/*

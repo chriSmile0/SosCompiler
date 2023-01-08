@@ -311,7 +311,7 @@ int test_mips(char *filename, char *correct_file) {
 	free_tds();
 	fclose(yyin);
 	char code[DATA_SIZE + 2*INSTR_SIZE];
-	sprintf(code,"%s%s%s",data,instructions,procedures);
+	sprintf(code,"%s%s\n%s",data,instructions,procedures);
 	
 	// overture et copie dans un buffer du fichier de correction
 	FILE *correction = fopen(correct_file, "r");
@@ -344,6 +344,7 @@ int test_mips(char *filename, char *correct_file) {
 	// remise a zero du gencode
 	data[0] = '\0';
 	instructions[0] = '\0';
+	procedures[0] = '\0';
 	id_count = 0;
 	resetVars();
 	return comp;
@@ -360,7 +361,7 @@ int test_mips_operations_m() {
 int test_mips_operations_d() {
 	return test_mips("f_tests/d/operations_d","f_tests/d/operations_d_corr");
 }
-/*
+
 int test_mips_dectab_s() {
 	return test_mips("f_tests/s/dec_tab_s","f_tests/s/dec_tab_s_corr");
 }
@@ -396,7 +397,7 @@ int test_mips_if_m() {
 int test_mips_if_d() {
 	return test_mips("f_tests/d/if_d","f_tests/d/if_d_corr");
 }
-*/
+
 int test_mips_fonction_s() {
 	return test_mips("f_tests/s/fonction_s", "f_tests/s/fonction_s_corr");
 }

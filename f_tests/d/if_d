@@ -1,0 +1,10 @@
+while 1 do
+id = 1;
+while 2 do
+if 3 then
+id=3;
+else
+id = 33;
+fi ;
+done ;
+done ;

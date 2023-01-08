@@ -1,7 +1,7 @@
-        .data
-glob1:  .word   0
-glob2:  .word   0
-        .text
+	.data
+glob1:	.word	0
+glob2:	.word	0
+	.text
 __start:
 li $t1, 1
 sw $t1, glob1
@@ -27,3 +27,4 @@ sw $t1, glob2
 Else0:
 li $v0, 0
 jr $ra
+

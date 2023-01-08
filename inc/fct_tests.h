@@ -223,7 +223,7 @@ int test_tds_s(void);
 int test_mips_operations_s(void);
 int test_mips_operations_m(void);
 int test_mips_operations_d(void);
-/*
+
 int test_mips_dectab_s(void);
 int test_mips_dectab_m(void);
 int test_mips_dectab_d(void);
@@ -235,7 +235,7 @@ int test_mips_echoread_d(void);
 int test_mips_if_s(void);
 int test_mips_if_m(void);
 int test_mips_if_d(void);
-*/
+
 int test_mips_fonction_s(void);
 int test_mips_fonction_m(void);
 int test_mips_fonction_d(void);
